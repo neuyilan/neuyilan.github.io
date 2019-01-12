@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="罗韩梅-资源调度项目背景 目标是整合集群硬件资源, 对外提供统一的标准接口, 海量任务的管理以及资源调配. 自研 vs 开源. 开源主要是关注Yarn, Mesos, swarm, kubernetes. 使用开源, 减少用户迁移的成本.  规模: 1.7亿container, 10000+资源,  微服务  介绍总体架构, 使用在线和离线混部, 利用不同任务的资源使用特点.">
+<meta name="keywords" content="会议">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BDTC2017总结">
+<meta property="og:url" content="http://neuyilan.github.io/2018/04/20/BDTC2017总结/index.html">
+<meta property="og:site_name" content="yilan">
+<meta property="og:description" content="罗韩梅-资源调度项目背景 目标是整合集群硬件资源, 对外提供统一的标准接口, 海量任务的管理以及资源调配. 自研 vs 开源. 开源主要是关注Yarn, Mesos, swarm, kubernetes. 使用开源, 减少用户迁移的成本.  规模: 1.7亿container, 10000+资源,  微服务  介绍总体架构, 使用在线和离线混部, 利用不同任务的资源使用特点.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://yiwenshao.github.io/blogGraph/2017/12/max_compute.png">
+<meta property="og:image" content="https://yiwenshao.github.io/blogGraph/2017/12/partation_method.png">
+<meta property="og:image" content="https://yiwenshao.github.io/blogGraph/2017/12/query_opt.png">
+<meta property="og:image" content="https://yiwenshao.github.io/blogGraph/2017/12/hbase_usage.png">
+<meta property="og:image" content="https://yiwenshao.github.io/blogGraph/2017/12/hbase_together.png">
+<meta property="og:image" content="https://yiwenshao.github.io/blogGraph/2017/12/pingtai_nengli.png">
+<meta property="og:image" content="https://yiwenshao.github.io/blogGraph/2017/12/pingtai_nengli_2.png">
+<meta property="og:image" content="https://yiwenshao.github.io/blogGraph/2017/12/storage.png">
+<meta property="og:image" content="https://yiwenshao.github.io/blogGraph/2017/12/storage-hirechy.png">
+<meta property="og:image" content="https://yiwenshao.github.io/blogGraph/2017/12/storage_hierachy_2.png">
+<meta property="og:image" content="https://yiwenshao.github.io/blogGraph/2017/12/system_2014.png">
+<meta property="og:updated_time" content="2019-01-12T01:32:20.130Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="BDTC2017总结">
+<meta name="twitter:description" content="罗韩梅-资源调度项目背景 目标是整合集群硬件资源, 对外提供统一的标准接口, 海量任务的管理以及资源调配. 自研 vs 开源. 开源主要是关注Yarn, Mesos, swarm, kubernetes. 使用开源, 减少用户迁移的成本.  规模: 1.7亿container, 10000+资源,  微服务  介绍总体架构, 使用在线和离线混部, 利用不同任务的资源使用特点.">
+<meta name="twitter:image" content="https://yiwenshao.github.io/blogGraph/2017/12/max_compute.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://neuyilan.github.io/2018/04/20/BDTC2017总结/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>BDTC2017总结 | yilan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">yilan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://neuyilan.github.io/2018/04/20/BDTC2017总结/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="伊蓝">
+      <meta itemprop="description" content="记录点滴">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yilan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">BDTC2017总结
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-04-20 10:07:41" itemprop="dateCreated datePublished" datetime="2018-04-20T10:07:41+08:00">2018-04-20</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-12 09:32:20" itemprop="dateModified" datetime="2019-01-12T09:32:20+08:00">2019-01-12</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="罗韩梅-资源调度"><a href="#罗韩梅-资源调度" class="headerlink" title="罗韩梅-资源调度"></a>罗韩梅-资源调度</h1><h3 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h3><ul>
+<li>目标是整合集群硬件资源, 对外提供统一的标准接口, 海量任务的管理以及资源调配.</li>
+<li><p>自研 vs 开源. 开源主要是关注Yarn, Mesos, swarm, kubernetes. 使用开源, 减少用户迁移的成本.</p>
+</li>
+<li><p>规模: 1.7亿container, 10000+资源,</p>
+</li>
+<li><p>微服务</p>
+</li>
+<li><p>介绍总体架构, 使用在线和离线混部, 利用不同任务的资源使用特点.</p>
+<a id="more"></a>
+</li>
+</ul>
+<h3 id="研发介绍"><a href="#研发介绍" class="headerlink" title="研发介绍"></a>研发介绍</h3><h4 id="kernel方面"><a href="#kernel方面" class="headerlink" title="kernel方面"></a>kernel方面</h4><ul>
+<li><p>增加了资源隔离的唯独, 包括了CPU, 内存, 磁盘容量, 网络出带宽, 网络入带宽, Disk IO, Buffer IO的控制.</p>
+</li>
+<li><p>首先对于网络IO的控制, 主要是多个进程竞争网络带宽的时候, 需要提供带宽和时延的保证. 设计的时候, 希望能够设置弹性目标, 充分利用资源, 又保证配额不被占用, 并且支持优先级.  具体实现: ECN标记, 滑动窗口, 令牌桶…(tc+cgroups)</p>
+</li>
+<li><p>对于Disk IO的控制: cgroup 通过识别pid控制磁盘IO. 但在buffer io中没有pid. 这方面做了修改. 并且解决了当前cgroups对io控制模式是hard(不会超过配额)的问题.以及解决io weight 通过cfq机制分割导致的数据波动我难题.</p>
+</li>
+</ul>
+<h4 id="docker方面"><a href="#docker方面" class="headerlink" title="docker方面"></a>docker方面</h4><ul>
+<li>bug fix</li>
+<li>热升级</li>
+<li>网络插件</li>
+<li>弹性内存控制</li>
+<li>RBD插件</li>
+</ul>
+<h4 id="ceph"><a href="#ceph" class="headerlink" title="ceph"></a>ceph</h4><p>使用方便, 非hadoop 生态的东西, 用ceph比较多.</p>
+<h4 id="k8s"><a href="#k8s" class="headerlink" title="k8s"></a>k8s</h4><ul>
+<li><p>quota</p>
+</li>
+<li><p>APP<br>引入Tapp</p>
+</li>
+<li><p>网络模式</p>
+</li>
+</ul>
+<p>网络模式多种支持, 包括NAT, Host, Floating IP等.</p>
+<ul>
+<li><p>磁盘管理</p>
+</li>
+<li><p>GPU应用</p>
+</li>
+<li><p>registry: 做了相关的优化(P2P的分发等)</p>
+</li>
+</ul>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p><a href="http://download.csdn.net/index.php/mobile/meeting/speech_preview/513" target="_blank" rel="noopener">原文slice</a></p>
+<h1 id="徐东-MaxCompute"><a href="#徐东-MaxCompute" class="headerlink" title="徐东-MaxCompute"></a>徐东-MaxCompute</h1><h3 id="max-compute-结构介绍"><a href="#max-compute-结构介绍" class="headerlink" title="max_compute 结构介绍"></a>max_compute 结构介绍</h3><p>总体结构, metadata存储统计等信息. 底层使用分布式文件系统, kv等作为存储. 任务执行使用fuxi等调度系统. 上层提供了计算接口, 包括SQL, 图等.</p>
+<p><img src="https://yiwenshao.github.io/blogGraph/2017/12/max_compute.png" alt=""></p>
+<h3 id="SQL的软件层次"><a href="#SQL的软件层次" class="headerlink" title="SQL的软件层次"></a>SQL的软件层次</h3><p>sql的三个层次, compiler(语法解析), optimizer(基于代价优化)以及runtime(用于执行具体的执行plan) (参考 llvm, hive)</p>
+<h3 id="数据分布"><a href="#数据分布" class="headerlink" title="数据分布"></a>数据分布</h3><ul>
+<li>做数据分布, 一方面是因为数据量的问题, 一方面是为了并行处理</li>
+<li>简单一致性模型, 认为多个分片的数据完全独立, 不考虑使用多个分片之间的关系.</li>
+<li>数据分布的方式有5种: hash, 排序按range, any(任意分), broadcast, singleton(类型spark中的collect, 集中到单机处理)</li>
+<li>多种数据分片方式之间可以通过一定的关系进行转化</li>
+</ul>
+<p><img src="https://yiwenshao.github.io/blogGraph/2017/12/partation_method.png" alt=""></p>
+<ul>
+<li>可以利用数据分布, 来对sql做查询优化, 举例来说:</li>
+</ul>
+<p><img src="https://yiwenshao.github.io/blogGraph/2017/12/query_opt.png" alt=""></p>
+<p>这里, 下层先做table scan, 然后提供结构做join, 然后上层做aggregate. 如果使用的是sort merge join算法, 那么下层的数据就是排序好的, 在做aggregate的时候, 如果能够知道数据已经排序好, 就不用继续调用排序操作了. 这就是一个已知数据分布的优化方法. 这个优化要求各层操作之间能够互相传递消息.</p>
+<ul>
+<li>所以进行分布式计算过程中, 每个操作子可以选择算法, 可以选择数据分布的方式, 这些选择, 可以结合cost的预测, 做cost-based的优化</li>
+</ul>
+<p>###分布特性搜集</p>
+<p>做查询优化, 需要有统计信息, 需要数据分布的信息, 这些信息有两个来源:</p>
+<ul>
+<li>用户指定(也就是建表的时候, 通过sql语句指定分布方式)</li>
+<li>信息传递, 比如用了sort merge join, 后续可以记住这个sort的特点, 用起来</li>
+</ul>
+<h3 id="参考文献-1"><a href="#参考文献-1" class="headerlink" title="参考文献"></a>参考文献</h3><p><a href="http://download.csdn.net/index.php/mobile/meeting/speech_preview/512" target="_blank" rel="noopener">slice 链接</a></p>
+<h1 id="曹龙-Hbase"><a href="#曹龙-Hbase" class="headerlink" title="曹龙-Hbase"></a>曹龙-Hbase</h1><h3 id="阿里云三组件使用"><a href="#阿里云三组件使用" class="headerlink" title="阿里云三组件使用"></a>阿里云三组件使用</h3><table>
+<thead>
+<tr>
+<th>组件</th>
+<th>内部规模</th>
+<th>公有云产品</th>
+<th>主要功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ODPS</td>
+<td>7w</td>
+<td>MaxCompute</td>
+<td>离线计算&amp;机器学习</td>
+</tr>
+<tr>
+<td>HBase</td>
+<td>1.2+W</td>
+<td>云Hbase</td>
+<td>在线存储</td>
+</tr>
+<tr>
+<td>Flink</td>
+<td>数千</td>
+<td>StreamCompute</td>
+<td>实时计算</td>
+</tr>
+</tbody>
+</table>
+<p>其中Hbase有几百个集群, 从4太到2000台都有, 数据量从几百G到10P.</p>
+<h3 id="Hbase使用场景"><a href="#Hbase使用场景" class="headerlink" title="Hbase使用场景"></a>Hbase使用场景</h3><p>和各个系统搭配使用, 不同的场景有各自的需求.</p>
+<p><img src="https://yiwenshao.github.io/blogGraph/2017/12/hbase_usage.png" alt=""></p>
+<h3 id="Hbase部署模式"><a href="#Hbase部署模式" class="headerlink" title="Hbase部署模式"></a>Hbase部署模式</h3><p>包括了线下物理机部署, 以及基于云的部署. 需要考虑售出价格机器使用率等因素.</p>
+<h3 id="最佳组合"><a href="#最佳组合" class="headerlink" title="最佳组合"></a>最佳组合</h3><p>下面的图展示了不同组件如何搭配, 以及数据流动.</p>
+<p><img src="https://yiwenshao.github.io/blogGraph/2017/12/hbase_together.png" alt=""></p>
+<p>常见的模型有</p>
+<ul>
+<li>kafka =&gt; 流计算做实时ETL或者离线计算做ETL=&gt;存储结果到HBASE</li>
+<li>spark连接Hbase&amp;Phoenix, 做HTAP, 进行一些spark方面的优化如谓词下推</li>
+<li>Hbase 给MR提供数据. 或者通过消息中间件, 进一步导入ODPS&amp;ES, 进行计算, 报表生成.</li>
+</ul>
+<h3 id="真实案例"><a href="#真实案例" class="headerlink" title="真实案例"></a>真实案例</h3><ul>
+<li><p>车联网公司, 上传数据, 通过流计算做数据清洗, 然后导入Hbase, 提供给spark做分析. 数据的特点: RowKey设计, 每辆车10s上传1K数据, 1年数据量3P, 100W台车</p>
+</li>
+<li><p>安骑士: APP到HBase, 然后计算报表. 数据特点: 200T</p>
+</li>
+<li><p>soul社交: spark streaming 实时写入Hbase, Hbase用主备. 输入推荐结果到客户. 数据特点: 30T, QPS高峰 800w+</p>
+</li>
+<li><p>金融公司: 导入Hbase做数据查询. 数据特点: 单表10000亿+. 数据量100T. 有多个字段的二级索引.</p>
+</li>
+</ul>
+<h3 id="内核优化"><a href="#内核优化" class="headerlink" title="内核优化"></a>内核优化</h3><ul>
+<li><p>减少java的gc. 实现了ccsmap. 自己管理写缓存生命周期</p>
+</li>
+<li><p>jvm申请一块不用归还的内存自己管理</p>
+</li>
+<li><p>JVM的GC的优化</p>
+</li>
+<li><p>HDFS的串行pipeline 改为并发Quorum机制, 降低写抖动.</p>
+</li>
+</ul>
+<p>这边优化前后, YGCT 从120ms 降低到5ms.</p>
+<ul>
+<li><p>使用了ZSTD 压缩算法. 使用indexable delta encoding,</p>
+</li>
+<li><p>添加了认证机制(user/password), 支持混合网访问</p>
+</li>
+<li><p>使用bloom filter, 提高读性能.  减少写入量,提高写性能.</p>
+</li>
+</ul>
+<h3 id="平台能力"><a href="#平台能力" class="headerlink" title="平台能力"></a>平台能力</h3><p><img src="https://yiwenshao.github.io/blogGraph/2017/12/pingtai_nengli.png" alt=""></p>
+<p><img src="https://yiwenshao.github.io/blogGraph/2017/12/pingtai_nengli_2.png" alt=""></p>
+<h3 id="未来"><a href="#未来" class="headerlink" title="未来"></a>未来</h3><ul>
+<li>现在是行存,OLAP不好, 增强分析的支持(如kudo,列存储, 索引)</li>
+<li>hbase+spark</li>
+<li>htap</li>
+<li>计算和存储分离</li>
+</ul>
+<h3 id="参考文献-2"><a href="#参考文献-2" class="headerlink" title="参考文献"></a>参考文献</h3><p><a href="http://download.csdn.net/index.php/mobile/meeting/speech_preview/492" target="_blank" rel="noopener">原始slice链接</a></p>
+<p><a href="https://yq.aliyun.com/articles/169085" target="_blank" rel="noopener">推荐学习资料</a></p>
+<h1 id="金海-内存计算"><a href="#金海-内存计算" class="headerlink" title="金海-内存计算"></a>金海-内存计算</h1><h3 id="背景以及为什么会出现内存计算"><a href="#背景以及为什么会出现内存计算" class="headerlink" title="背景以及为什么会出现内存计算"></a>背景以及为什么会出现内存计算</h3><ul>
+<li>淘宝的例子, 每秒12w到25w笔交易, 数据量大以及实时性的要求, 需要低延迟的系统.</li>
+<li>使用内存计算, 相比基于disk的系统, 延迟从秒级到纳秒</li>
+<li>内存计算最早80年代就有, 现在兴起原因: 64位系统, 以及1T的内存的机器可以搭建了. 并且内存价格下降(今年变成4倍), 促进内存计算的发展.</li>
+<li>内存计算的好处: 比如SAP HANA, 以及内存文件系统为例子说明</li>
+</ul>
+<h3 id="内存计算的挑战"><a href="#内存计算的挑战" class="headerlink" title="内存计算的挑战"></a>内存计算的挑战</h3><p>主要有四点:</p>
+<ul>
+<li>DRAM介质易失性</li>
+<li>DRAM的存储密度低, 要一个T就比较大了</li>
+<li>DRAM的功耗高(数据:容量增大的时候,占系统功耗的46%, 其中用于刷新的静态功耗又占DRAM功耗的50%)</li>
+<li>内存子系统成本高(??)//查找IBM power 7子系统能耗比例</li>
+</ul>
+<h3 id="NVM相关"><a href="#NVM相关" class="headerlink" title="NVM相关"></a>NVM相关</h3><ul>
+<li>international technology roadmap for semiconductor</li>
+</ul>
+<p>里面给出了集中存储介质的比较.</p>
+<p><img src="https://yiwenshao.github.io/blogGraph/2017/12/storage.png" alt=""></p>
+<p>比如Memristor, PCM, STT-RAM,DRAM,FLASH, 以及HD. 现有的实际产品是Intel的3D xPoint.</p>
+<ul>
+<li>SCM具有如下的特性: 字节寻址, 持久存储, 写比读高10倍延迟. 读延迟和DRAM接近.  比flash快1000倍, 存储密度以及耐久性都比NAND的flash高1000倍.并且0静态功耗. 使用这种器件, 有可能可以解决内存计算的 易失性, 存储密度低, 功耗高的问题. 很容易构建一台上T内存的机器.</li>
+</ul>
+<ul>
+<li>SCM的存在, 从计算机的存储结构上来看, 有可能可以替代DISK, 从而改变整个存储层次.</li>
+</ul>
+<p><img src="https://yiwenshao.github.io/blogGraph/2017/12/storage-hirechy.png" alt=""></p>
+<p>另外一种可能的情况就是, 把PCM放在和DRAM一样的层次上, 出现计算和数据相结合的情况(也就是存储设备有计算能力)</p>
+<p><img src="https://yiwenshao.github.io/blogGraph/2017/12/storage_hierachy_2.png" alt=""></p>
+<p>一个使用NVM的内存计算的例子是<strong>HP:The Machine</strong>. 40个节点共享160T的内存, 是一个内存为中心的计算系统, 在各方面性能测试都很牛x.</p>
+<h3 id="NVM带来的挑战"><a href="#NVM带来的挑战" class="headerlink" title="NVM带来的挑战"></a>NVM带来的挑战</h3><h4 id="对编程模型的影响"><a href="#对编程模型的影响" class="headerlink" title="对编程模型的影响"></a>对编程模型的影响</h4><p><a href="https://www.snia.org/forums/sssi/nvmp" target="_blank" rel="noopener">https://www.snia.org/forums/sssi/nvmp</a></p>
+<p>有一个SNLA NVM Programming TWG这样的组织. 出了一个NVM Programming Model 这样的手册. HP 的工程师也做了相关的报告, 在<a href="https://www.usenix.org/conference/fast17/technical-sessions/presentation/keeton" target="_blank" rel="noopener">这里</a></p>
+<p>从例子来看, 就是传统的应用IO路径发生了变化, 比如绕过了文件系统层, 或者针对NVM做的文件系统优化.</p>
+<h4 id="混合架构带来的几个影响和挑战"><a href="#混合架构带来的几个影响和挑战" class="headerlink" title="混合架构带来的几个影响和挑战"></a>混合架构带来的几个影响和挑战</h4><p>对体系结构, 操作系统, 编程模型, 数据管理都有影响.</p>
+<ul>
+<li><p>体系结构: 1. 大内存与多和的内存带宽问题(带宽瓶颈, 做内存并行?). 2. 异构存储的管理问题, 比如NVM和DRAM是层次化组织, 还是采用并列的方式组织.</p>
+</li>
+<li><p>操作系统: 1. 大内存, 页表大, 需要大页. 但是页太大, 有并发锁粒度大的问题. 2. 混合内存的情况下, 系统如何做任务的调度</p>
+</li>
+<li><p>数据管理: NVM中的数据放置问题,用什么样的结构, 比如KV, 文件系统</p>
+</li>
+<li><p>编程模型: 不再需要考虑磁盘IO以及数据持久化的问题</p>
+</li>
+</ul>
+<p>另外, 数据非易失, 存在安全性的问题, 有相关的攻击方式.</p>
+<h4 id="自己的一些工作"><a href="#自己的一些工作" class="headerlink" title="自己的一些工作."></a>自己的一些工作.</h4><p><a href="https://github.com/CGCL-codes/HME" target="_blank" rel="noopener">混合内存模拟器</a></p>
+<ul>
+<li>HME: A Lightweight Emulator for Hybrid Memory</li>
+<li>Memory equalizer for lateral management of heterogeneous memory</li>
+<li>hardware/software cooperative caching for hybrid dram/nvm memory architectures</li>
+<li>MALRU: Miss-penalty aware LRU-based cache replacement for hybrid memory systems</li>
+<li>Lifetime-based memory management for distributed data processing systems</li>
+<li>mammoth gearing hadoop towards memory-intensive mapreduce applications(这里给出一些常见系统的分类统计)</li>
+</ul>
+<p>分别是基于DRAM, NVM, 以及DISK的系统.</p>
+<p><img src="https://yiwenshao.github.io/blogGraph/2017/12/system_2014.png" alt=""></p>
+<ul>
+<li>认为发展趋势是存算一体, 也就是NVM本身有计算功能.</li>
+</ul>
+<p><a href="http://download.csdn.net/index.php/mobile/meeting/speech_preview/491" target="_blank" rel="noopener">原始slice链接</a></p>
+<h1 id="舒继武-文件系统"><a href="#舒继武-文件系统" class="headerlink" title="舒继武-文件系统"></a>舒继武-文件系统</h1><h3 id="背景等"><a href="#背景等" class="headerlink" title="背景等"></a>背景等</h3><ul>
+<li>磁盘的局限, 包括能耗和体积. 出现了flahs, 以及SCM.</li>
+<li>对DRAM, PCM, NAND Flash, HDD的性能比较</li>
+<li>带来的挑战: 1. 存储设备访问变快, 软件的相对开销变大. 2. 现有的软件基于老的硬件做设计, 不能充分发挥当前新硬件的特性:</li>
+<li><p>所以, 对于大数据处理, 以及新硬件这块, 主要有两点变革: 1. 硬件方面存储结构的变革 2. 系统软件的变革.</p>
+</li>
+<li><p>对于存储结构的变革, 主要是集中flash, pcie, sata接口等. 以及NVM的相关技术指标的介绍. 这些改变了存储层次结构.</p>
+</li>
+<li><p>对于软件的变革, 主要:1. 硬件变快, 软件相对开销占比变大. 2. 硬件提供了新的接口给软件使用.</p>
+</li>
+</ul>
+<h3 id="相关工作"><a href="#相关工作" class="headerlink" title="相关工作"></a>相关工作</h3><ul>
+<li>基于flahs的kv store(WiscKey,NVMKV,FlashKv)</li>
+<li>基于flash的文件系统(DFS,F2FS)</li>
+<li>基于flahs 的事务管理</li>
+<li>分布式闪存</li>
+</ul>
+<h3 id="NVM相关研究"><a href="#NVM相关研究" class="headerlink" title="NVM相关研究"></a>NVM相关研究</h3><ul>
+<li>大数据,实时要求. 以及大内存, NVM的出现, 开始做内存计算</li>
+<li>相关的方向有: NVM的编程模型, NVM的内存空间管理, NVM的文件系统.</li>
+</ul>
+<h3 id="分布式存储的研究"><a href="#分布式存储的研究" class="headerlink" title="分布式存储的研究"></a>分布式存储的研究</h3><ul>
+<li>基于RMDA而不是以太网做互联. 速度更快, 软件的相对开销占比例更大. 代表的有Octopus 分布式文件系统</li>
+</ul>
+<h3 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h3><p><a href="http://download.csdn.net/index.php/mobile/meeting/speech_preview/494" target="_blank" rel="noopener">slice链接</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/会议/" rel="tag"># 会议</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/04/hash join算法总结/" rel="next" title="hash join算法总结">
+                <i class="fa fa-chevron-left"></i> hash join算法总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/20/git-命令相关/" rel="prev" title="git 命令相关">
+                git 命令相关 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">伊蓝</p>
+              <p class="site-description motion-element" itemprop="description">记录点滴</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">36</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">59</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#罗韩梅-资源调度"><span class="nav-number">1.</span> <span class="nav-text">罗韩梅-资源调度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#项目背景"><span class="nav-number">1.0.1.</span> <span class="nav-text">项目背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#研发介绍"><span class="nav-number">1.0.2.</span> <span class="nav-text">研发介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#kernel方面"><span class="nav-number">1.0.2.1.</span> <span class="nav-text">kernel方面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#docker方面"><span class="nav-number">1.0.2.2.</span> <span class="nav-text">docker方面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ceph"><span class="nav-number">1.0.2.3.</span> <span class="nav-text">ceph</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#k8s"><span class="nav-number">1.0.2.4.</span> <span class="nav-text">k8s</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文献"><span class="nav-number">1.0.3.</span> <span class="nav-text">参考文献</span></a></li></ol></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#徐东-MaxCompute"><span class="nav-number">2.</span> <span class="nav-text">徐东-MaxCompute</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#max-compute-结构介绍"><span class="nav-number">2.0.1.</span> <span class="nav-text">max_compute 结构介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL的软件层次"><span class="nav-number">2.0.2.</span> <span class="nav-text">SQL的软件层次</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据分布"><span class="nav-number">2.0.3.</span> <span class="nav-text">数据分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文献-1"><span class="nav-number">2.0.4.</span> <span class="nav-text">参考文献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#曹龙-Hbase"><span class="nav-number">3.</span> <span class="nav-text">曹龙-Hbase</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阿里云三组件使用"><span class="nav-number">3.0.1.</span> <span class="nav-text">阿里云三组件使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hbase使用场景"><span class="nav-number">3.0.2.</span> <span class="nav-text">Hbase使用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hbase部署模式"><span class="nav-number">3.0.3.</span> <span class="nav-text">Hbase部署模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#最佳组合"><span class="nav-number">3.0.4.</span> <span class="nav-text">最佳组合</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#真实案例"><span class="nav-number">3.0.5.</span> <span class="nav-text">真实案例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内核优化"><span class="nav-number">3.0.6.</span> <span class="nav-text">内核优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#平台能力"><span class="nav-number">3.0.7.</span> <span class="nav-text">平台能力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#未来"><span class="nav-number">3.0.8.</span> <span class="nav-text">未来</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文献-2"><span class="nav-number">3.0.9.</span> <span class="nav-text">参考文献</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#金海-内存计算"><span class="nav-number">4.</span> <span class="nav-text">金海-内存计算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景以及为什么会出现内存计算"><span class="nav-number">4.0.1.</span> <span class="nav-text">背景以及为什么会出现内存计算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存计算的挑战"><span class="nav-number">4.0.2.</span> <span class="nav-text">内存计算的挑战</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NVM相关"><span class="nav-number">4.0.3.</span> <span class="nav-text">NVM相关</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NVM带来的挑战"><span class="nav-number">4.0.4.</span> <span class="nav-text">NVM带来的挑战</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#对编程模型的影响"><span class="nav-number">4.0.4.1.</span> <span class="nav-text">对编程模型的影响</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#混合架构带来的几个影响和挑战"><span class="nav-number">4.0.4.2.</span> <span class="nav-text">混合架构带来的几个影响和挑战</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自己的一些工作"><span class="nav-number">4.0.4.3.</span> <span class="nav-text">自己的一些工作.</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#舒继武-文件系统"><span class="nav-number">5.</span> <span class="nav-text">舒继武-文件系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景等"><span class="nav-number">5.0.1.</span> <span class="nav-text">背景等</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关工作"><span class="nav-number">5.0.2.</span> <span class="nav-text">相关工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NVM相关研究"><span class="nav-number">5.0.3.</span> <span class="nav-text">NVM相关研究</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式存储的研究"><span class="nav-number">5.0.4.</span> <span class="nav-text">分布式存储的研究</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关资料"><span class="nav-number">5.0.5.</span> <span class="nav-text">相关资料</span></a></li></ol></li></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">伊蓝</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=6.7.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

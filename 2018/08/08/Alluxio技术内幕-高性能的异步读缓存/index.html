@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="概览Alluxio服务通过连接底层持久化存储并按需将数据缓存至内存中，为不同的应用作业提供了一个可以高速并发访问的数据层。在Alluxio中，每一个文件根据其大小在逻辑上被划分成不同的“块”（默认512MB）。块在Alluxio中是缓存的最小单位。当Alluxio客户端用从Alluxio服务中读取文件时，如果被请求的数据块并未缓存在Alluxio中，则会触发缓存操作。将数据缓存在Alluxio空间">
+<meta name="keywords" content="Alluxio,缓存,异步">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Alluxio技术内幕:高性能的异步读缓存">
+<meta property="og:url" content="http://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/index.html">
+<meta property="og:site_name" content="yilan">
+<meta property="og:description" content="概览Alluxio服务通过连接底层持久化存储并按需将数据缓存至内存中，为不同的应用作业提供了一个可以高速并发访问的数据层。在Alluxio中，每一个文件根据其大小在逻辑上被划分成不同的“块”（默认512MB）。块在Alluxio中是缓存的最小单位。当Alluxio客户端用从Alluxio服务中读取文件时，如果被请求的数据块并未缓存在Alluxio中，则会触发缓存操作。将数据缓存在Alluxio空间">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/Alluxio技术内幕-高性能的异步读缓存/数据读取过程中的同步部分.png">
+<meta property="og:image" content="http://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/Alluxio技术内幕-高性能的异步读缓存/读取数据块后的异步缓存.png">
+<meta property="og:updated_time" content="2019-01-12T01:32:20.200Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Alluxio技术内幕:高性能的异步读缓存">
+<meta name="twitter:description" content="概览Alluxio服务通过连接底层持久化存储并按需将数据缓存至内存中，为不同的应用作业提供了一个可以高速并发访问的数据层。在Alluxio中，每一个文件根据其大小在逻辑上被划分成不同的“块”（默认512MB）。块在Alluxio中是缓存的最小单位。当Alluxio客户端用从Alluxio服务中读取文件时，如果被请求的数据块并未缓存在Alluxio中，则会触发缓存操作。将数据缓存在Alluxio空间">
+<meta name="twitter:image" content="http://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/Alluxio技术内幕-高性能的异步读缓存/数据读取过程中的同步部分.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Alluxio技术内幕:高性能的异步读缓存 | yilan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">yilan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="伊蓝">
+      <meta itemprop="description" content="记录点滴">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yilan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Alluxio技术内幕:高性能的异步读缓存
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2018-08-08 00:20:01" itemprop="dateCreated datePublished" datetime="2018-08-08T00:20:01+08:00">2018-08-08</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-12 09:32:20" itemprop="dateModified" datetime="2019-01-12T09:32:20+08:00">2019-01-12</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/分布式存储/" itemprop="url" rel="index"><span itemprop="name">分布式存储</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概览"><a href="#概览" class="headerlink" title="概览"></a>概览</h1><p>Alluxio服务通过连接底层持久化存储并按需将数据缓存至内存中，为不同的应用作业提供了一个可以高速并发访问的数据层。在Alluxio中，每一个文件根据其大小在逻辑上被划分成不同的“块”（默认512MB）。块在Alluxio中是缓存的最小单位。当Alluxio客户端用从Alluxio服务中读取文件时，如果被请求的数据块并未缓存在Alluxio中，则会触发缓存操作。将数据缓存在Alluxio空间后可以极大地提高后续分析作业的性能。<br><a id="more"></a></p>
+<p>在Alluxio v1.7之前，当客户端向Alluixo请求读的数据没有命中缓存时，Alluxio客户端会默认地在读数据的时候同步地执行缓存操作。但当应用程序第一次读取一个文件并且仅需要读取该文件的一小部分的时候，这种同步缓存的操作可能对应用程序的性能造成损失。具体地说，在缓存没有命中的情况下，Alluxio客户端会（通过worker）去底层存储系统读取一个完整的数据块，将其缓存至Alluxio，同时把所需数据返回给应用程序。例如，对于很多SQL类型的作业，客户端常常只需要读取Parquet文件的表尾（不超过数MB大小），但第一次请求Alluxio时，Alluxio会尝试读取并缓存一个完整的数据块，以便于响应未来的请求。</p>
+<p>Alluxio v1.7开始实现了优化的异步数据缓存操作。客户端不再同时负责数据的读取和缓存，而是将缓存操作交给worker节点与客户端的读操作异步进行。这一改进极大的简化了应用程序客户端在数据读取时的角色，并且由于客户端不等待缓存操作完成，可以显著提高某些类型作业的性能。本文解释了Alluxio v1.7及更高版本中的数据缓存操作，并对如何最大化地利用该功能提供了建议。本文涵盖的主题包括：</p>
+<ul>
+<li>异步缓存策略</li>
+<li>调整和配置异步缓存</li>
+<li>异步缓存的优点</li>
+</ul>
+<h1 id="异步缓存策略"><a href="#异步缓存策略" class="headerlink" title="异步缓存策略"></a>异步缓存策略</h1><p>异步缓存将缓存操作的开销由客户端转移到worker。客户端读数据的同时，缓存数据块的任务被交给worker在后台异步来处理（除非用户指定读取类型为”NO_CACHE”）。不论是读取完整或部分数据块，缓存操作对客户端性能均没有额外的影响，用户也不再需要像在Alluxio 1.7以前那样设置参数“alluxio.user.file.cache.partially.read.block”来启动或者关闭对只读了一部分的数据块的缓存。</p>
+<p>Worker内部也利用帮客户端读取底层存储的过程中获取的数据做出了优化：如果客户端使用读取类型”CACHE”，从头到尾顺序从底层存储读取一个完整数据块，那么worker会在帮助客户端读底层存储系统的过程中积累了完整的数据。因此在客户端读顺序取完一个数据块以后，worker就可以直接缓存该数据了。</p>
+<p>图1显示了读取数据块过程中的这一同步优化的部分。客户端只读取所需数据（步骤1，2，4，5），而worker在读取的时候顺便缓存(步骤3)。 当客户端读取完整的块，则将整个数据块会被缓存（步骤6）。</p>
+<p><img src="Alluxio技术内幕-高性能的异步读缓存/数据读取过程中的同步部分.png" alt="读取数据过程中的同步部分" title="图1 读取数据过程中的同步部分"></p>
+<p>但如果worker发现，客户端只是读取数据块的一部分，或者正在以非顺序的方式读取数据块内部数据，那么worker便会放弃在读的时候顺便缓存。而客户端则会在读取完成后向worker节点发送异步缓存命令并继续。之后worker节点再从底层存储获取完整的块。</p>
+<p>如图2所示，在客户端和worker节点间的异步缓存请求使用轻量级RPC通信（步骤1）。在worker确认请求后（步骤2），客户端可以立即继续运行，而步骤3和4可以在worker后台异步进行。</p>
+<p><img src="Alluxio技术内幕-高性能的异步读缓存/读取数据块后的异步缓存.png" alt="读取数据块后的异步缓存" title="图2 读取数据块后的异步缓存"></p>
+<h1 id="调整和配置异步缓存"><a href="#调整和配置异步缓存" class="headerlink" title="调整和配置异步缓存"></a>调整和配置异步缓存</h1><p>Alluxio worker节点在后台并行执行异步缓存，同时也服务于来自客户端的同步读取请求。每个worker节点有一个线程池，其大小由参数“alluxio.worker.network.netty.async.cache.manager.threads.max”指定。 参数默认值为8，这意味着worker最多可以使用8个核从其他worker或底层存储系统下载块，并在本地缓存以供将来使用。可以调高此值以加快后台异步缓存速度，但CPU使用率会增加。 降低该值则会减慢异步缓存速度，同时也释放了CPU资源。</p>
+<h1 id="异步缓存的优点"><a href="#异步缓存的优点" class="headerlink" title="异步缓存的优点"></a>异步缓存的优点</h1><p>这里我们提供一个简单的例子来展示异步缓存的好处：用户需要先从作为底层存储系统的S3中读取某一文件的一小部分，但之后还会有更多的读取请求，因此还是打算缓存整个文件。(1) 使用异步缓存之后，从S3中读取文件的前5KB只需要大约几秒钟，客户端从而可以在下载完5KB后立即返回。(2) 而对于Alluxio 1.7之前版本中，由于要缓存整个块，第一次读取这5KB数据将花费大约几分钟（速度将取决于网络连接条件）。在这两种情况下，数据块在初始请求后的几分钟内将完全缓存到Alluxio。但使用异步缓存后，客户端在初始读取所需的数据后可以继续执行，同时可以在worker后台缓存完整数据块。</p>
+<p>异步缓存极大地提高了工作负载冷读取的性能，它们不需要完整顺序地读取数据块，比如在Presto或SparkSQL等计算框架上运行SQL工作负载。使用异步缓存，第一次查询将和直接从连接存储读取数据花费相同的时间量，并且随着数据异步缓存到Alluxio中，集群的整体性能将逐渐提高。</p>
+<h1 id="未来工作"><a href="#未来工作" class="headerlink" title="未来工作"></a>未来工作</h1><p>管理Alluxio存储是Alluxio系统的一个重要部分。 在将来的版本中，异步缓存机制将得到进一步改进，包括：</p>
+<ul>
+<li>删除被动缓存的概念（ALLUXIO-3136）</li>
+<li>更细粒度地控制资源使用情况，如网络带宽，异步缓存（ALLUXIO-3137）</li>
+<li>改进worker间的数据传输机制（ALLUXIO-3138）</li>
+<li>优化异步缓存数据读取（ALLUXIO-3141）</li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Alluxio/" rel="tag"># Alluxio</a>
+          
+            <a href="/tags/缓存/" rel="tag"># 缓存</a>
+          
+            <a href="/tags/异步/" rel="tag"># 异步</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/27/预取技术-prefetching/" rel="next" title="预取技术-prefetching">
+                <i class="fa fa-chevron-left"></i> 预取技术-prefetching
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/08/存储计算分离总结/" rel="prev" title="存储计算分离">
+                存储计算分离 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">伊蓝</p>
+              <p class="site-description motion-element" itemprop="description">记录点滴</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">36</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">59</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概览"><span class="nav-number">1.</span> <span class="nav-text">概览</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#异步缓存策略"><span class="nav-number">2.</span> <span class="nav-text">异步缓存策略</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#调整和配置异步缓存"><span class="nav-number">3.</span> <span class="nav-text">调整和配置异步缓存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#异步缓存的优点"><span class="nav-number">4.</span> <span class="nav-text">异步缓存的优点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#未来工作"><span class="nav-number">5.</span> <span class="nav-text">未来工作</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">伊蓝</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=6.7.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

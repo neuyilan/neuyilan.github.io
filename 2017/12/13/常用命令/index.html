@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="这篇文章是记录一些常用命令的以便查找。">
+<meta name="keywords" content="linux,vncserver">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常用命令">
+<meta property="og:url" content="http://neuyilan.github.io/2017/12/13/常用命令/index.html">
+<meta property="og:site_name" content="yilan">
+<meta property="og:description" content="这篇文章是记录一些常用命令的以便查找。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://neuyilan.github.io/2017/12/13/常用命令/常用命令/通过PID查看进程详细信息.jpg">
+<meta property="og:updated_time" content="2019-01-12T01:32:20.145Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="常用命令">
+<meta name="twitter:description" content="这篇文章是记录一些常用命令的以便查找。">
+<meta name="twitter:image" content="http://neuyilan.github.io/2017/12/13/常用命令/常用命令/通过PID查看进程详细信息.jpg">
+
+
+
+
+
+
+  <link rel="canonical" href="http://neuyilan.github.io/2017/12/13/常用命令/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>常用命令 | yilan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">yilan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://neuyilan.github.io/2017/12/13/常用命令/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="伊蓝">
+      <meta itemprop="description" content="记录点滴">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yilan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">常用命令
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-12-13 10:34:00" itemprop="dateCreated datePublished" datetime="2017-12-13T10:34:00+08:00">2017-12-13</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-12 09:32:20" itemprop="dateModified" datetime="2019-01-12T09:32:20+08:00">2019-01-12</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/常用命令/" itemprop="url" rel="index"><span itemprop="name">常用命令</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这篇文章是记录一些常用命令的以便查找。<br><a id="more"></a></p>
+<h1 id="vncserver"><a href="#vncserver" class="headerlink" title="vncserver"></a>vncserver</h1><ul>
+<li><p>centos 7 修改屏幕分辨率<br>  vncserver -geometry 1440x900</p>
+</li>
+<li><p>ubutun 修改屏幕分辨率<br>  vncserver -geometry 1440x900</p>
+</li>
+</ul>
+<h1 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h1><h2 id="查看系统内存大小"><a href="#查看系统内存大小" class="headerlink" title="查看系统内存大小"></a>查看系统内存大小</h2><p>  free -m</p>
+<h2 id="linux下将用户添加到sudoers中"><a href="#linux下将用户添加到sudoers中" class="headerlink" title="linux下将用户添加到sudoers中"></a>linux下将用户添加到sudoers中</h2><p><a href="http://blog.sina.com.cn/s/blog_6be3556a0101f4kf.html" target="_blank" rel="noopener">linux下将用户添加到sudoers中
+</a><br>  root 账户键入visudo即可进入sudo配置，这个命令要比vim /etc/sudoers要好很多，因为使用visudo进行sudo配置，将会得到很多提示.键入visudo后, 在编辑器下键入 /root 寻找root，找到第三个root的那一行<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root    ALL=(ALL)       AL</span><br></pre></td></tr></table></figure></p>
+<p>  按yyp键复制并在粘贴在下一行，在这一行的 root处输入cw将root替换为你所需要添加用户的账户名，比如blinux，结果就是<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root    ALL=(ALL)       ALL</span><br><span class="line">blinux  ALL=(ALL)       ALL</span><br></pre></td></tr></table></figure></p>
+<p>  如果你希望之后执行sudo命令时不需要输入密码，那么可以形如<br>  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root    ALL=(ALL)       ALL</span><br><span class="line">blinux  ALL=(ALL)       NOPASSWD:ALL</span><br></pre></td></tr></table></figure></p>
+<p>输入:wq保存即可。</p>
+<h2 id="查看端口被占用情况"><a href="#查看端口被占用情况" class="headerlink" title="查看端口被占用情况"></a>查看端口被占用情况</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -tunpl | grep port</span><br></pre></td></tr></table></figure>
+<h2 id="根据进程号查看进程的详细信息"><a href="#根据进程号查看进程的详细信息" class="headerlink" title="根据进程号查看进程的详细信息"></a>根据进程号查看进程的详细信息</h2><p>Linux在启动一个进程时，系统会在/proc下创建一个以PID命名的文件夹，在该文件夹下会有我们的进程的信息，其中包括一个名为exe的文件即记录了绝对路径，通过ll或ls –l命令即可查看。</p>
+<p><img src="常用命令/通过PID查看进程详细信息.jpg" alt="读取数据过程中的同步部分" title="图1 通过PID查看进程详细信息"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ll /proc/PID</span><br></pre></td></tr></table></figure>
+<p>cwd符号链接的是进程运行目录；</p>
+<p>exe符号连接就是执行程序的绝对路径；</p>
+<p>cmdline就是程序运行时输入的命令行命令；</p>
+<p>environ记录了进程运行时的环境变量；</p>
+<p>fd目录下是进程打开或使用的文件的符号连接。</p>
+<h2 id="Linux下vim快捷键"><a href="#Linux下vim快捷键" class="headerlink" title="Linux下vim快捷键"></a>Linux下vim快捷键</h2><h3 id="多行注释："><a href="#多行注释：" class="headerlink" title="多行注释："></a>多行注释：</h3><ol>
+<li>首先按esc进入命令行模式下，按下Ctrl + v，进入列（也叫区块）模式;</li>
+<li>在行首使用上下键选择需要注释的多行;</li>
+<li>按下键盘（大写）“I”键，进入插入模式；</li>
+<li>然后输入注释符（“//”、“#”等）;</li>
+<li>最后按下“Esc”键。<br>注意：在按下esc键后，会稍等一会才会出现注释，不要着急~~时间很短的</li>
+</ol>
+<h3 id="删除多行注释："><a href="#删除多行注释：" class="headerlink" title="删除多行注释："></a>删除多行注释：</h3><ol>
+<li>首先按esc进入命令行模式下，按下Ctrl + v, 进入列模式;</li>
+<li>选定要取消注释的多行;</li>
+<li>按下“x”或者“d”.<br>注意：如果是“//”注释，那需要执行两次该操作，如果是“#”注释，一次即可</li>
+</ol>
+<h3 id="vim多行文本删除"><a href="#vim多行文本删除" class="headerlink" title="vim多行文本删除"></a>vim多行文本删除</h3><ol>
+<li>首先在命令模式下，输入“：set nu”显示行号；</li>
+<li>通过行号确定你要删除的行；</li>
+<li>命令输入“：32,65d”,回车键，32-65行就被删除了，很快捷吧<br>注意：如果无意中删除错了，可以使用‘u’键恢复（命令模式下）</li>
+</ol>
+<h3 id="vim行内跳转-（mac-下）"><a href="#vim行内跳转-（mac-下）" class="headerlink" title="vim行内跳转 （mac 下）"></a>vim行内跳转 （mac 下）</h3><ol>
+<li>w：跳转到下一个单词的开始</li>
+<li>e：跳到单词的结束</li>
+<li>b：向后跳</li>
+<li>CTRL+E：向下一行</li>
+<li>CTRL+Y：向上一行</li>
+<li>^：行首</li>
+<li>$：行尾</li>
+</ol>
+<h3 id="shell行内跳转"><a href="#shell行内跳转" class="headerlink" title="shell行内跳转"></a>shell行内跳转</h3><ol>
+<li>CTRL+a：行首</li>
+<li>CTRL+e：行尾</li>
+<li>CTRL+b：往回（左）移动一个字符</li>
+<li>CTRL+f：往后（右）移动一个字符</li>
+<li>ALT+b：往回（左）移动一个单词</li>
+<li>ALT+F：往后（右）移动一个单词</li>
+</ol>
+<h3 id="vim中json格式化"><a href="#vim中json格式化" class="headerlink" title="vim中json格式化"></a>vim中json格式化</h3><p>:%!python -m json.tool</p>
+<h1 id="mac-下快捷键"><a href="#mac-下快捷键" class="headerlink" title="mac 下快捷键"></a>mac 下快捷键</h1>
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/vncserver/" rel="tag"># vncserver</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/08/Top 5 Reasons for Choosing S3 over HDFS/" rel="next" title="Top 5 Reasons for Choosing S3 over HDFS">
+                <i class="fa fa-chevron-left"></i> Top 5 Reasons for Choosing S3 over HDFS
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/14/the history of rocksdb/" rel="prev" title="The History of RocksDB">
+                The History of RocksDB <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">伊蓝</p>
+              <p class="site-description motion-element" itemprop="description">记录点滴</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">36</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">categories</span>
+                  
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">59</span>
+                    <span class="site-state-item-name">tags</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#vncserver"><span class="nav-number">1.</span> <span class="nav-text">vncserver</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#linux"><span class="nav-number">2.</span> <span class="nav-text">linux</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#查看系统内存大小"><span class="nav-number">2.1.</span> <span class="nav-text">查看系统内存大小</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#linux下将用户添加到sudoers中"><span class="nav-number">2.2.</span> <span class="nav-text">linux下将用户添加到sudoers中</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看端口被占用情况"><span class="nav-number">2.3.</span> <span class="nav-text">查看端口被占用情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#根据进程号查看进程的详细信息"><span class="nav-number">2.4.</span> <span class="nav-text">根据进程号查看进程的详细信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Linux下vim快捷键"><span class="nav-number">2.5.</span> <span class="nav-text">Linux下vim快捷键</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#多行注释："><span class="nav-number">2.5.1.</span> <span class="nav-text">多行注释：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除多行注释："><span class="nav-number">2.5.2.</span> <span class="nav-text">删除多行注释：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vim多行文本删除"><span class="nav-number">2.5.3.</span> <span class="nav-text">vim多行文本删除</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vim行内跳转-（mac-下）"><span class="nav-number">2.5.4.</span> <span class="nav-text">vim行内跳转 （mac 下）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#shell行内跳转"><span class="nav-number">2.5.5.</span> <span class="nav-text">shell行内跳转</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#vim中json格式化"><span class="nav-number">2.5.6.</span> <span class="nav-text">vim中json格式化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mac-下快捷键"><span class="nav-number">3.</span> <span class="nav-text">mac 下快捷键</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">伊蓝</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=6.7.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
