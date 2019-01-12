@@ -104,13 +104,13 @@
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="本文主要讲述一下内存吞吐量的测试。在开发，特别是压力测试的时候，需要知道测试的瓶颈在哪里(是在内存、网络还是磁盘呢？)，所以就需要对内存、网络以及磁盘的真实的吞吐量有一定的了解。本文主要讲述内存顺序随机等读写测试。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://neuyilan.github.io/2017/03/07/bandwidth教程/bandwidth教程/run-out.bmp">
-<meta property="og:image" content="https://neuyilan.github.io/2017/03/07/bandwidth教程/bandwidth教程/three-level-cache.png">
-<meta property="og:updated_time" content="2019-01-12T01:32:20.129Z">
+<meta property="og:image" content="https://neuyilan.github.io/2017/03/07/bandwidth教程/run-out.bmp">
+<meta property="og:image" content="https://neuyilan.github.io/2017/03/07/bandwidth教程/three-level-cache.png">
+<meta property="og:updated_time" content="2019-01-12T03:11:16.574Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="bandwidth教程">
 <meta name="twitter:description" content="本文主要讲述一下内存吞吐量的测试。在开发，特别是压力测试的时候，需要知道测试的瓶颈在哪里(是在内存、网络还是磁盘呢？)，所以就需要对内存、网络以及磁盘的真实的吞吐量有一定的了解。本文主要讲述内存顺序随机等读写测试。">
-<meta name="twitter:image" content="https://neuyilan.github.io/2017/03/07/bandwidth教程/bandwidth教程/run-out.bmp">
+<meta name="twitter:image" content="https://neuyilan.github.io/2017/03/07/bandwidth教程/run-out.bmp">
 
 
 
@@ -403,7 +403,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-01-12 09:32:20" itemprop="dateModified" datetime="2019-01-12T09:32:20+08:00">2019-01-12</time>
+                <time title="Modified: 2019-01-12 11:11:16" itemprop="dateModified" datetime="2019-01-12T11:11:16+08:00">2019-01-12</time>
               
             
           </span>
@@ -460,7 +460,7 @@
 <p>3、编译：输入make会提示你在不同机器上不同的编译指令。在centos x86_64 上面的命令是: make bandwidth64</p>
 <p>备注：第3步有可能出现stropts.h: No such file or directory的错误。解决方法就是<a href="http://blogger.org.cn/blog/more.asp?name=hongrui&amp;id=52186" target="_blank" rel="noopener">此文章</a>[3]说的[<br>编译程序时，出现了这个错误，因为linux不支持STREAMS，缺少这个文件。stropts.h是POSIX XSR的一部分，但是linux不支持。解决办法很简单，在/usr/include目录下创建一个空的stropts.h文件.]</p>
 <p>4、运行：当编译成功后，直接运行./bandwidth64 即可。会产生一个图片文件。你还可以重定向把日志输出到一个日志文件中，以便查看日志。<br>./bandwidth64 &gt; out.log</p>
-<p>5、运行结果查看<br><img src="bandwidth教程/run-out.bmp" alt="run-out"><br>上图可以看出来在三个地方曲线有明显的转折。分别是32k、256K、12MB。这分别是三级缓存的大小。就跟下图所示一样<br><img src="bandwidth教程/three-level-cache.png" alt="three-level-cache"></p>
+<p>5、运行结果查看<br><img src="run-out.bmp" alt="run-out"><br>上图可以看出来在三个地方曲线有明显的转折。分别是32k、256K、12MB。这分别是三级缓存的大小。就跟下图所示一样<br><img src="three-level-cache.png" alt="three-level-cache"></p>
 <p>也就是说：当读写的size大小落在相应的cache里面的时候，吞吐量是最大的。当读写的大小的size超过这个cache，而落入到下一个cache的时候，吞吐量就会降低。内存是最低的。</p>
 <p>名字解释：<br><a href="http://stackoverflow.com/questions/37070/what-is-the-meaning-of-non-temporal-memory-accesses-in-x86" target="_blank" rel="noopener">non-temporal</a>[4]. 说白了non-temporal就是读写数据不经过cache，而是直接去内存中。所以，反应的能力就是内存的能力，而不是cache的能力。</p>
 <p>[备注]non-temporal解释：<br>Non-Temporal SSE instructions (MOVNTI, MOVNTQ, etc.), don’t follow the normal cache-coherency rules. Therefore non-temporal stores must be followed by an SFENCE instruction in order for their results to be seen by other processors in a timely fashion.</p>

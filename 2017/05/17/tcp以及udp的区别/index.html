@@ -104,14 +104,14 @@
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="基本概念： 面向报文  面向报文的传输方式是应用层交给UDP多长的报文，UDP就照样发送，即一次发送一个报文。因此，应用程序必须选择合适大小的报文。若报文太长，则IP层需要分片，降低效率。若太短，会是IP太小。UDP对应用层交下来的报文，既不合并，也不拆分，而是保留这些报文的边界。这也就是说，应用层交给UDP多长的报文，UDP就照样发送，即一次发送一个报文。  面向字节流  面向字节流的话，虽然应">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://neuyilan.github.io/2017/05/17/tcp以及udp的区别/tcp以及udp的区别/tcp和udp一些协议的一些应用.jpg">
-<meta property="og:image" content="https://neuyilan.github.io/2017/05/17/tcp以及udp的区别/tcp以及udp的区别/TCP和UDP协议的比较.jpg">
-<meta property="og:image" content="https://neuyilan.github.io/2017/05/17/tcp以及udp的区别/tcp以及udp的区别/TCP-UDP编程模型.jpg">
-<meta property="og:updated_time" content="2019-01-12T01:32:20.138Z">
+<meta property="og:image" content="https://neuyilan.github.io/2017/05/17/tcp以及udp的区别/tcp和udp一些协议的一些应用.jpg">
+<meta property="og:image" content="https://neuyilan.github.io/2017/05/17/tcp以及udp的区别/TCP和UDP协议的比较.jpg">
+<meta property="og:image" content="https://neuyilan.github.io/2017/05/17/tcp以及udp的区别/TCP-UDP编程模型.jpg">
+<meta property="og:updated_time" content="2019-01-12T03:13:36.434Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="tcp以及udp的区别[转载]">
 <meta name="twitter:description" content="基本概念： 面向报文  面向报文的传输方式是应用层交给UDP多长的报文，UDP就照样发送，即一次发送一个报文。因此，应用程序必须选择合适大小的报文。若报文太长，则IP层需要分片，降低效率。若太短，会是IP太小。UDP对应用层交下来的报文，既不合并，也不拆分，而是保留这些报文的边界。这也就是说，应用层交给UDP多长的报文，UDP就照样发送，即一次发送一个报文。  面向字节流  面向字节流的话，虽然应">
-<meta name="twitter:image" content="https://neuyilan.github.io/2017/05/17/tcp以及udp的区别/tcp以及udp的区别/tcp和udp一些协议的一些应用.jpg">
+<meta name="twitter:image" content="https://neuyilan.github.io/2017/05/17/tcp以及udp的区别/tcp和udp一些协议的一些应用.jpg">
 
 
 
@@ -404,7 +404,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-01-12 09:32:20" itemprop="dateModified" datetime="2019-01-12T09:32:20+08:00">2019-01-12</time>
+                <time title="Modified: 2019-01-12 11:13:36" itemprop="dateModified" datetime="2019-01-12T11:13:36+08:00">2019-01-12</time>
               
             
           </span>
@@ -464,14 +464,14 @@
 </ol>
 <p>面向字节流的话，虽然应用程序和TCP的交互是一次一个数据块（大小不等），但TCP把应用程序看成是一连串的无结构的字节流。TCP有一个缓冲，当应用程序传送的数据块太长，TCP就可以把它划分短一些再传送。如果应用程序一次只发送一个字节，TCP也可以等待积累有足够多的字节后再构成报文段发送出去。</p>
 <a id="more"></a>
-<p>下图是TCP和UDP协议的一些应用。<br><img src="tcp以及udp的区别/tcp和udp一些协议的一些应用.jpg" alt="TCP和UDP协议的一些应用" title="图1 TCP和UDP协议的一些应用"></p>
-<p>下图是TCP和UDP协议的比较。<br><img src="tcp以及udp的区别/TCP和UDP协议的比较.jpg" alt="TCP和UDP协议的比较" title="图2 TCP和UDP协议的比较"></p>
+<p>下图是TCP和UDP协议的一些应用。<br><img src="tcp和udp一些协议的一些应用.jpg" alt="TCP和UDP协议的一些应用" title="图1 TCP和UDP协议的一些应用"></p>
+<p>下图是TCP和UDP协议的比较。<br><img src="TCP和UDP协议的比较.jpg" alt="TCP和UDP协议的比较" title="图2 TCP和UDP协议的比较"></p>
 <h1 id="这里再详细说一下面向连接和面向无连接的区别："><a href="#这里再详细说一下面向连接和面向无连接的区别：" class="headerlink" title="这里再详细说一下面向连接和面向无连接的区别："></a>这里再详细说一下面向连接和面向无连接的区别：</h1><ul>
 <li>面向连接举例：两个人之间通过电话进行通信;</li>
 <li>面向无连接举例：邮政服务，用户把信函放在邮件中期待邮政处理流程来传递邮政包裹。显然，不可达代表不可靠。</li>
 </ul>
 <h1 id="TCP-UDP编程模型"><a href="#TCP-UDP编程模型" class="headerlink" title="TCP/UDP编程模型"></a>TCP/UDP编程模型</h1><p>从程序实现的角度来看，可以用下图来进行描述。</p>
-<p>下图是TCP和UDP协议的比较。<br><img src="tcp以及udp的区别/TCP-UDP编程模型.jpg" alt="TCP-UDP编程模型" title="图3 TCP-UDP编程模型"></p>
+<p>下图是TCP和UDP协议的比较。<br><img src="TCP-UDP编程模型.jpg" alt="TCP-UDP编程模型" title="图3 TCP-UDP编程模型"></p>
 <p>从上图也能清晰的看出，TCP通信需要服务器端侦听listen、接收客户端连接请求accept，等待客户端connect建立连接后才能进行数据包的收发（recv/send）工作。而UDP则服务器和客户端的概念不明显，服务器端即接收端需要绑定端口，等待客户端的数据的到来。后续便可以进行数据的收发（recvfrom/sendto）工作。<br>在前面讲解UDP时，提到了UDP保留了报文的边界，下面我们来谈谈TCP和UDP中报文的边界问题。在默认的阻塞模式下，TCP无边界，UDP有边界。<br>对于TCP协议，客户端连续发送数据，只要服务端的这个函数的缓冲区足够大，会一次性接收过来，即客户端是分好几次发过来，是有边界的，而服务端却一次性接收过来，所以证明是无边界的；<br>而对于UDP协议，客户端连续发送数据，即使服务端的这个函数的缓冲区足够大，也只会一次一次的接收，发送多少次接收多少次，即客户端分几次发送过来，服务端就必须按几次接收，从而证明，这种UDP的通讯模式是有边界的。</p>
 <h1 id="TCP-UDP的优缺点："><a href="#TCP-UDP的优缺点：" class="headerlink" title="TCP/UDP的优缺点："></a>TCP/UDP的优缺点：</h1><h2 id="TCP的优点："><a href="#TCP的优点：" class="headerlink" title="TCP的优点："></a>TCP的优点：</h2><p>可靠，稳定<br>TCP的可靠体现在TCP在传递数据之前，会有三次握手来建立连接，而且在数据传递时，有确认、窗口、重传、拥塞控制机制，在数据传完后，还会断开连接用来节约系统资源。</p>
 <h2 id="TCP的缺点："><a href="#TCP的缺点：" class="headerlink" title="TCP的缺点："></a>TCP的缺点：</h2><p>慢，效率低，占用系统资源高，易被攻击<br>TCP在传递数据之前，要先建连接，这会消耗时间，而且在数据传递时，确认机制、重传机制、拥塞控制机制等都会消耗大量的时间，而且要在每台设备上维护所有的传输连接，事实上，每个连接都会占用系统的CPU、内存等硬件资源。<br>而且，因为TCP有确认机制、三次握手机制，这些也导致TCP容易被人利用，实现DOS、DDOS、CC等攻击。</p>
