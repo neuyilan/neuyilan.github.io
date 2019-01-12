@@ -104,12 +104,12 @@
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="做系统的人，都少不了运维，也少不了对系统的监控，特别的想监控系统的CPU使用情况，磁盘使用情况以及内存使用使用情况，这三座大山(CPU,memory,disk)是必须的，所以，能够对这三个东西进行非常好的监控是一件非常好的事情，本文主要讲解监控这三个东西的软件cacti以及snmpd的配置。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://neuyilan.github.io/2016/12/18/linux-monitor/linux-monitor/error.png">
-<meta property="og:updated_time" content="2019-01-12T01:32:20.137Z">
+<meta property="og:image" content="https://neuyilan.github.io/2016/12/18/linux-monitor/error.png">
+<meta property="og:updated_time" content="2019-01-12T03:18:02.843Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="服务器监控cacti与snmpd配置">
 <meta name="twitter:description" content="做系统的人，都少不了运维，也少不了对系统的监控，特别的想监控系统的CPU使用情况，磁盘使用情况以及内存使用使用情况，这三座大山(CPU,memory,disk)是必须的，所以，能够对这三个东西进行非常好的监控是一件非常好的事情，本文主要讲解监控这三个东西的软件cacti以及snmpd的配置。">
-<meta name="twitter:image" content="https://neuyilan.github.io/2016/12/18/linux-monitor/linux-monitor/error.png">
+<meta name="twitter:image" content="https://neuyilan.github.io/2016/12/18/linux-monitor/error.png">
 
 
 
@@ -402,7 +402,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-01-12 09:32:20" itemprop="dateModified" datetime="2019-01-12T09:32:20+08:00">2019-01-12</time>
+                <time title="Modified: 2019-01-12 11:18:02" itemprop="dateModified" datetime="2019-01-12T11:18:02+08:00">2019-01-12</time>
               
             
           </span>
@@ -465,7 +465,7 @@
 <ul>
 <li>snmpwalk -v2c -c myCommunity ip hrStorageTable</li>
 </ul>
-<p>如果出现一下错误：<br>dskTable: Unknown Object Identifier<br>则请注释掉 /etc/snmp/snmp.conf 下面的mibs :。 变成如下：<img src="linux-monitor/error.png" alt="error"></p>
+<p>如果出现一下错误：<br>dskTable: Unknown Object Identifier<br>则请注释掉 /etc/snmp/snmp.conf 下面的mibs :。 变成如下：<img src="error.png" alt="error"></p>
 <h1 id="在采集数据的机器上安装-cacti"><a href="#在采集数据的机器上安装-cacti" class="headerlink" title="在采集数据的机器上安装 cacti"></a>在采集数据的机器上安装 cacti</h1><p>请参考[2]即可</p>
 <h1 id="安装disk-io-监控软件"><a href="#安装disk-io-监控软件" class="headerlink" title="安装disk io 监控软件"></a>安装disk io 监控软件</h1><p>请参考[2]</p>
 <h1 id="错误解决"><a href="#错误解决" class="headerlink" title="错误解决"></a>错误解决</h1><ul>

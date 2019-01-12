@@ -104,12 +104,12 @@
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="本系列根据Relational Database Index Design and the Optimizers而写的读书笔记，这是第一篇，主要针对的是第一章。第一章主要介绍了传统的索引的设计的误区。随着磁盘的增大，磁盘访问时间的降低以及内存增大，以前用在索引设计上的“圣经”被证明是不对的，或是有缺陷的。本书从这一点出发，逐步讲述了索引设计以及优化的问题。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://neuyilan.github.io/2016/12/30/index-1/index-1/number-should-know.png">
-<meta property="og:updated_time" content="2019-01-12T01:32:20.132Z">
+<meta property="og:image" content="https://neuyilan.github.io/2016/12/30/index-1/number-should-know.png">
+<meta property="og:updated_time" content="2019-01-12T03:17:49.577Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="索引优化与设计(1)-引言">
 <meta name="twitter:description" content="本系列根据Relational Database Index Design and the Optimizers而写的读书笔记，这是第一篇，主要针对的是第一章。第一章主要介绍了传统的索引的设计的误区。随着磁盘的增大，磁盘访问时间的降低以及内存增大，以前用在索引设计上的“圣经”被证明是不对的，或是有缺陷的。本书从这一点出发，逐步讲述了索引设计以及优化的问题。">
-<meta name="twitter:image" content="https://neuyilan.github.io/2016/12/30/index-1/index-1/number-should-know.png">
+<meta name="twitter:image" content="https://neuyilan.github.io/2016/12/30/index-1/number-should-know.png">
 
 
 
@@ -402,7 +402,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-01-12 09:32:20" itemprop="dateModified" datetime="2019-01-12T09:32:20+08:00">2019-01-12</time>
+                <time title="Modified: 2019-01-12 11:17:49" itemprop="dateModified" datetime="2019-01-12T11:17:49+08:00">2019-01-12</time>
               
             
           </span>
@@ -463,7 +463,7 @@
 <p>disk cache的作用也是将一些从磁盘读取的数据先存到disk cache中，避免了再次去disk读取耗费很长的时间。作用和原理跟buffer pool一样的。</p>
 <p>那么问题来了，buffer pool和disk cache既然作用都是相同的，那么他们的区别在哪儿呢？这个问题找了很多的资料，还是没看懂，所以，这个后面有时间在详细研究。</p>
 <p>笔者先尝试着解答上面的问题，参考了以下资料[7,8],个人认为这里面的buffer pool是数据库的概念。而disk cache是文件系统的概念。但是作用都是一样的，所以是没有差别的。但是假设都是操作系统的概念的话，那么就有差别了。差别就是文献7,8里面讲的。</p>
-<h1 id="几个索引的误区"><a href="#几个索引的误区" class="headerlink" title="几个索引的误区"></a>几个索引的误区</h1><p>第一章主要分析了几个以前索引设计的误区，例如，index层数(主要针对B-Tree来说的)最好不要超过5层，但是作者通过分析，如果把非叶子节点存放到磁盘中，那么只要访问非叶子节点，都会造成磁盘IO(10ms，这个请参考Jeff Dean的一些数据，本文给贴出来了，图1),所以索引的层数并不是很重要。还有一个就是每个表中最好不要多余6个索引列。以及不要在列值经常变化的列上面建立索引等。这些都被后面的例子证明是错误的。<br><img src="index-1/number-should-know.png" alt="number-should-know"></p>
+<h1 id="几个索引的误区"><a href="#几个索引的误区" class="headerlink" title="几个索引的误区"></a>几个索引的误区</h1><p>第一章主要分析了几个以前索引设计的误区，例如，index层数(主要针对B-Tree来说的)最好不要超过5层，但是作者通过分析，如果把非叶子节点存放到磁盘中，那么只要访问非叶子节点，都会造成磁盘IO(10ms，这个请参考Jeff Dean的一些数据，本文给贴出来了，图1),所以索引的层数并不是很重要。还有一个就是每个表中最好不要多余6个索引列。以及不要在列值经常变化的列上面建立索引等。这些都被后面的例子证明是错误的。<br><img src="number-should-know.png" alt="number-should-know"></p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>第一章主要给出了一些引言，本文主要着重分析了几个术语便于以后的理解。至于索引的优化细节，本文会继续跟随着作者章节的脚步慢慢深入分析。</p>
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul>
 <li>[1]<a href="https://dev.mysql.com/doc/refman/5.5/en/innodb-buffer-pool.html" target="_blank" rel="noopener">https://dev.mysql.com/doc/refman/5.5/en/innodb-buffer-pool.html</a></li>

@@ -104,13 +104,13 @@
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="本章节主要覆盖如下内容：  影响表以及索引扫描性能的主要因素列表 随机/顺序读时间以及CPU成本 根据三个最重要的需求为查询语句的索引指定星级 三星索引的设计-最理想的索引设计 宽索引 为查询语句设计最好索引的算法 根据现存索引情况设计最使用的索引，将CPU时间、磁盘读时间和耗费时间(elapsed time)考虑在内 从维护开销来看，对现有索引进行所建议的改变可能产生的结果 响应时间、驱动负载和">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://neuyilan.github.io/2017/02/12/index-4/index-4/disk-cpu-time.png">
-<meta property="og:image" content="https://neuyilan.github.io/2017/02/12/index-4/index-4/SQL4.1.png">
-<meta property="og:updated_time" content="2019-01-12T01:32:20.134Z">
+<meta property="og:image" content="https://neuyilan.github.io/2017/02/12/index-4/disk-cpu-time.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/02/12/index-4/SQL4.1.png">
+<meta property="og:updated_time" content="2019-01-12T03:17:45.889Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="索引优化与设计(4)-为SELECT语句创建理想的索引">
 <meta name="twitter:description" content="本章节主要覆盖如下内容：  影响表以及索引扫描性能的主要因素列表 随机/顺序读时间以及CPU成本 根据三个最重要的需求为查询语句的索引指定星级 三星索引的设计-最理想的索引设计 宽索引 为查询语句设计最好索引的算法 根据现存索引情况设计最使用的索引，将CPU时间、磁盘读时间和耗费时间(elapsed time)考虑在内 从维护开销来看，对现有索引进行所建议的改变可能产生的结果 响应时间、驱动负载和">
-<meta name="twitter:image" content="https://neuyilan.github.io/2017/02/12/index-4/index-4/disk-cpu-time.png">
+<meta name="twitter:image" content="https://neuyilan.github.io/2017/02/12/index-4/disk-cpu-time.png">
 
 
 
@@ -403,7 +403,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-01-12 09:32:20" itemprop="dateModified" datetime="2019-01-12T09:32:20+08:00">2019-01-12</time>
+                <time title="Modified: 2019-01-12 11:17:45" itemprop="dateModified" datetime="2019-01-12T11:17:45+08:00">2019-01-12</time>
               
             
           </span>
@@ -470,9 +470,9 @@
 </ul>
 <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>在SQL查询中，当程序中的SQL使用了一个或者多个索引的时候，许多的DBA就会对此表示满意，但是，使用一个不合适的索引有可能会导致比全表扫描更差的性能。</p>
 <p>接下来，本章就会重点分析这其中的缘由，首先，给出我们接下来分析所依赖的前提。</p>
-<h1 id="磁盘以及CPU时间的基础假设"><a href="#磁盘以及CPU时间的基础假设" class="headerlink" title="磁盘以及CPU时间的基础假设"></a>磁盘以及CPU时间的基础假设</h1><p>下图是给出的磁盘和CPU的基础假设。<br><img src="index-4/disk-cpu-time.png" alt="disk and cpu time" title="磁盘及CPU时间的基础假设"></p>
+<h1 id="磁盘以及CPU时间的基础假设"><a href="#磁盘以及CPU时间的基础假设" class="headerlink" title="磁盘以及CPU时间的基础假设"></a>磁盘以及CPU时间的基础假设</h1><p>下图是给出的磁盘和CPU的基础假设。<br><img src="disk-cpu-time.png" alt="disk and cpu time" title="磁盘及CPU时间的基础假设"></p>
 <p>评注：由于作者写作的时间是2005年，所以这些数据有的已经发生变化，磁盘顺序读可以达到100M/S。具体请参考<a href="http://wushank.blog.51cto.com/3489095/1708168" target="_blank" rel="noopener">磁盘性能指标–IOPS、吞吐量及测试</a>[1]。关于CPU time的定义，请参考<a href="https://www.techopedia.com/definition/2858/cpu-time" target="_blank" rel="noopener">此文章</a>[2]</p>
-<h1 id="不合适索引-inadequate-index"><a href="#不合适索引-inadequate-index" class="headerlink" title="不合适索引(inadequate index)"></a>不合适索引(inadequate index)</h1><p>此处给出了一个例子，就是说明，使用索引并不一定比全表扫描好。<br>假设有如下的一个查询语句，仅有两个合理的访问路径：<br>1、使用索引(LNAME)<br>2、全表扫描<br><img src="index-4/SQL4.1.png" alt="SQL 4.1" title="是进行全表扫描还是使用一个不合适的索引？"></p>
+<h1 id="不合适索引-inadequate-index"><a href="#不合适索引-inadequate-index" class="headerlink" title="不合适索引(inadequate index)"></a>不合适索引(inadequate index)</h1><p>此处给出了一个例子，就是说明，使用索引并不一定比全表扫描好。<br>假设有如下的一个查询语句，仅有两个合理的访问路径：<br>1、使用索引(LNAME)<br>2、全表扫描<br><img src="SQL4.1.png" alt="SQL 4.1" title="是进行全表扫描还是使用一个不合适的索引？"></p>
 <p>索引列是LNAME 和 FNAME,并且过滤因子是1%。在这个查询语句中，显然只能够使用索引列LNAME。</p>
 <p>对于第一种情况来说，DBMS会选择谓词条件LNAME=:LNAME扫描索引片。对于索引片中的每一个索引行，DBMS都必须回到表中校验CITY字段的值。由于表中的行是根据CNO字段而不是LNAME字段来聚簇的，所以这个校验操作需要做一次磁盘随机读[评注:即先读取了索引数据，然后再去表中进行随机读]。</p>
 <p>假设索引(LNAME,FNAME)的总大小是1000,000&times;100byte = 100M。包括数据以及分散的空闲时间，另外，在假设顺序读是40MB/s[评注：现在可以达到100MB/s].那么读取宽度为1%的索引片，即1MB，需要花费10ms+1MB/40MB/s=35ms。这显然没有问题，但是10,000次[评注：因为索引总条数为1000,000条，过滤因子为1%，所以结果条数为10,000.相应的，去表中随机读的次数就为10,000次]随机读将花费10,000*10ms=100s。所以，总的花费时间为100s+35ms。这种方式太慢了。</p>

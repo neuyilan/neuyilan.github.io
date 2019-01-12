@@ -104,13 +104,13 @@
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="本章主要讲解了一个查询语句过来之后，DBMS内部是如何处理这一过程的。但是本章并没有细致的讲解，主要是给出了一些术语和基本的概念。本章覆盖的术语主要如下：  SQL处理的一些概念 谓词(Predicates) 优化器以及访问路径(Optimizers and access paths) 索引片(Index slices)，匹配索引扫描(matching index scans)，匹配列(match">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://neuyilan.github.io/2017/02/11/index-3/index-3/screening-column-eg-1.png">
-<meta property="og:image" content="https://neuyilan.github.io/2017/02/11/index-3/index-3/screening-column-eg-2.png">
-<meta property="og:updated_time" content="2019-01-12T01:32:20.133Z">
+<meta property="og:image" content="https://neuyilan.github.io/2017/02/11/index-3/screening-column-eg-1.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/02/11/index-3/screening-column-eg-2.png">
+<meta property="og:updated_time" content="2019-01-12T03:17:44.469Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="索引优化与设计(3)-SQL处理过程">
 <meta name="twitter:description" content="本章主要讲解了一个查询语句过来之后，DBMS内部是如何处理这一过程的。但是本章并没有细致的讲解，主要是给出了一些术语和基本的概念。本章覆盖的术语主要如下：  SQL处理的一些概念 谓词(Predicates) 优化器以及访问路径(Optimizers and access paths) 索引片(Index slices)，匹配索引扫描(matching index scans)，匹配列(match">
-<meta name="twitter:image" content="https://neuyilan.github.io/2017/02/11/index-3/index-3/screening-column-eg-1.png">
+<meta name="twitter:image" content="https://neuyilan.github.io/2017/02/11/index-3/screening-column-eg-1.png">
 
 
 
@@ -403,7 +403,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-01-12 09:32:20" itemprop="dateModified" datetime="2019-01-12T09:32:20+08:00">2019-01-12</time>
+                <time title="Modified: 2019-01-12 11:17:44" itemprop="dateModified" datetime="2019-01-12T11:17:44+08:00">2019-01-12</time>
               
             
           </span>
@@ -481,7 +481,7 @@
 <h1 id="过滤因子-filter-factors"><a href="#过滤因子-filter-factors" class="headerlink" title="过滤因子(filter factors)"></a>过滤因子(filter factors)</h1><p>说白了就是描述谓词的选择性，即表中满足谓词条件的记录行数所占的比例，它主要依赖于列值的分布情况。</p>
 <h1 id="物化结果集"><a href="#物化结果集" class="headerlink" title="物化结果集"></a>物化结果集</h1><p>物化结果集意味着执行必要的数据库访问来构建结果集。在最好的情况下，只需要简单的从数据库缓冲池向应用程序返回一条记录。在最坏的情况下，数据库管理系统需要发起大量的磁盘读取。</p>
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1]Zou Y, Liu J, Wang S, et al. CCIndex: a complemental clustering index on distributed ordered tables for multi-dimensional range queries[C]// Ifip International Conference on Network and Parallel Computing. Springer-Verlag, 2010:247-261.</p>
-<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><p>附录1<br><img src="index-3/screening-column-eg-1.png" alt="screening columns example" title="谓词匹配和过滤字段"><br><img src="index-3/screening-column-eg-2.png" alt="screening columns example" title="谓词匹配和过滤字段"></p>
+<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><p>附录1<br><img src="screening-column-eg-1.png" alt="screening columns example" title="谓词匹配和过滤字段"><br><img src="screening-column-eg-2.png" alt="screening columns example" title="谓词匹配和过滤字段"></p>
 
       
     </div>
