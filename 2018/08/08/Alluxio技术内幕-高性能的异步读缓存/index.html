@@ -100,24 +100,24 @@
 <meta name="keywords" content="Alluxio,缓存,异步">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Alluxio技术内幕:高性能的异步读缓存">
-<meta property="og:url" content="http://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/index.html">
+<meta property="og:url" content="https://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/index.html">
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="概览Alluxio服务通过连接底层持久化存储并按需将数据缓存至内存中，为不同的应用作业提供了一个可以高速并发访问的数据层。在Alluxio中，每一个文件根据其大小在逻辑上被划分成不同的“块”（默认512MB）。块在Alluxio中是缓存的最小单位。当Alluxio客户端用从Alluxio服务中读取文件时，如果被请求的数据块并未缓存在Alluxio中，则会触发缓存操作。将数据缓存在Alluxio空间">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/Alluxio技术内幕-高性能的异步读缓存/数据读取过程中的同步部分.png">
-<meta property="og:image" content="http://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/Alluxio技术内幕-高性能的异步读缓存/读取数据块后的异步缓存.png">
+<meta property="og:image" content="https://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/Alluxio技术内幕-高性能的异步读缓存/数据读取过程中的同步部分.png">
+<meta property="og:image" content="https://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/Alluxio技术内幕-高性能的异步读缓存/读取数据块后的异步缓存.png">
 <meta property="og:updated_time" content="2019-01-12T01:32:20.200Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Alluxio技术内幕:高性能的异步读缓存">
 <meta name="twitter:description" content="概览Alluxio服务通过连接底层持久化存储并按需将数据缓存至内存中，为不同的应用作业提供了一个可以高速并发访问的数据层。在Alluxio中，每一个文件根据其大小在逻辑上被划分成不同的“块”（默认512MB）。块在Alluxio中是缓存的最小单位。当Alluxio客户端用从Alluxio服务中读取文件时，如果被请求的数据块并未缓存在Alluxio中，则会触发缓存操作。将数据缓存在Alluxio空间">
-<meta name="twitter:image" content="http://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/Alluxio技术内幕-高性能的异步读缓存/数据读取过程中的同步部分.png">
+<meta name="twitter:image" content="https://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/Alluxio技术内幕-高性能的异步读缓存/数据读取过程中的同步部分.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/">
+  <link rel="canonical" href="https://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/">
 
 
 
@@ -292,7 +292,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="伊蓝">

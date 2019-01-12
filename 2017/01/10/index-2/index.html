@@ -100,31 +100,31 @@
 <meta name="keywords" content="数据库,索引">
 <meta property="og:type" content="article">
 <meta property="og:title" content="索引优化与设计(2)-表以及索引的内部组织">
-<meta property="og:url" content="http://neuyilan.github.io/2017/01/10/index-2/index.html">
+<meta property="og:url" content="https://neuyilan.github.io/2017/01/10/index-2/index.html">
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="本篇主要分析以下几个问题  索引表和原表的物理组织是什么样子的； 索引和表的页(page)、索引和表的行(rows)、缓冲池(buffer pool)以及disk cache使用的数据结构； 磁盘顺序IO和随机IO的特性； 一些辅助式顺序或随机读：包括跳跃式顺序读(skip-sequential), 列表预读(list prefetch)以及数据块预读(data block prefetching">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://neuyilan.github.io/2017/01/10/index-2/index-2/index-row.png">
-<meta property="og:image" content="http://neuyilan.github.io/2017/01/10/index-2/index-2/disk_io_cost.png">
-<meta property="og:image" content="http://neuyilan.github.io/2017/01/10/index-2/index-2/disk_io_cost_per.png">
-<meta property="og:image" content="http://neuyilan.github.io/2017/01/10/index-2/index-2/disk_cache_io_cost.png">
-<meta property="og:image" content="http://neuyilan.github.io/2017/01/10/index-2/index-2/Sequential%20reads%20from%20disk%20driver.png">
-<meta property="og:image" content="http://neuyilan.github.io/2017/01/10/index-2/index-2/2-6.png">
-<meta property="og:image" content="http://neuyilan.github.io/2017/01/10/index-2/index-2/2-7.png">
-<meta property="og:image" content="http://neuyilan.github.io/2017/01/10/index-2/index-2/2-8.png">
-<meta property="og:image" content="http://neuyilan.github.io/2017/01/10/index-2/index-2/2-9.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/index-2/index-row.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/index-2/disk_io_cost.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/index-2/disk_io_cost_per.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/index-2/disk_cache_io_cost.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/index-2/Sequential%20reads%20from%20disk%20driver.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/index-2/2-6.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/index-2/2-7.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/index-2/2-8.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/index-2/2-9.png">
 <meta property="og:updated_time" content="2019-01-12T01:32:20.133Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="索引优化与设计(2)-表以及索引的内部组织">
 <meta name="twitter:description" content="本篇主要分析以下几个问题  索引表和原表的物理组织是什么样子的； 索引和表的页(page)、索引和表的行(rows)、缓冲池(buffer pool)以及disk cache使用的数据结构； 磁盘顺序IO和随机IO的特性； 一些辅助式顺序或随机读：包括跳跃式顺序读(skip-sequential), 列表预读(list prefetch)以及数据块预读(data block prefetching">
-<meta name="twitter:image" content="http://neuyilan.github.io/2017/01/10/index-2/index-2/index-row.png">
+<meta name="twitter:image" content="https://neuyilan.github.io/2017/01/10/index-2/index-2/index-row.png">
 
 
 
 
 
 
-  <link rel="canonical" href="http://neuyilan.github.io/2017/01/10/index-2/">
+  <link rel="canonical" href="https://neuyilan.github.io/2017/01/10/index-2/">
 
 
 
@@ -299,7 +299,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://neuyilan.github.io/2017/01/10/index-2/">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2017/01/10/index-2/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="伊蓝">
