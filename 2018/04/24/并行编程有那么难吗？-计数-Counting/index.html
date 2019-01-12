@@ -104,14 +104,13 @@
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="计数可以说是比较常见也是并发的书本中最开始讲述的例子，本章将会讲述简单的计数需要面临的问题。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://neuyilan.github.io/2018/04/24/并行编程有那么难吗？-计数-Counting/TCP三次握手/OSI七层协议.jpg">
-<meta property="og:image" content="https://neuyilan.github.io/2018/04/24/并行编程有那么难吗？-计数-Counting/并行编程有那么难吗-计数-Counting/延迟随着并发数量变化图.png">
-<meta property="og:image" content="https://neuyilan.github.io/2018/04/24/并行编程有那么难吗？-计数-Counting/并行编程有那么难吗-计数-Counting/全局变量原子操作的数据流.png">
-<meta property="og:updated_time" content="2019-01-12T01:32:20.147Z">
+<meta property="og:image" content="https://neuyilan.github.io/2018/04/24/并行编程有那么难吗？-计数-Counting/延迟随着并发数量变化图.png">
+<meta property="og:image" content="https://neuyilan.github.io/2018/04/24/并行编程有那么难吗？-计数-Counting/全局变量原子操作的数据流.png">
+<meta property="og:updated_time" content="2019-01-12T03:47:10.160Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="并行编程有那么难吗？-计数(Counting)">
 <meta name="twitter:description" content="计数可以说是比较常见也是并发的书本中最开始讲述的例子，本章将会讲述简单的计数需要面临的问题。">
-<meta name="twitter:image" content="https://neuyilan.github.io/2018/04/24/并行编程有那么难吗？-计数-Counting/TCP三次握手/OSI七层协议.jpg">
+<meta name="twitter:image" content="https://neuyilan.github.io/2018/04/24/并行编程有那么难吗？-计数-Counting/延迟随着并发数量变化图.png">
 
 
 
@@ -404,7 +403,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-01-12 09:32:20" itemprop="dateModified" datetime="2019-01-12T09:32:20+08:00">2019-01-12</time>
+                <time title="Modified: 2019-01-12 11:47:10" itemprop="dateModified" datetime="2019-01-12T11:47:10+08:00">2019-01-12</time>
               
             
           </span>
@@ -470,8 +469,8 @@
 <p>以上是一个多线程并发程序，对一个变量进行++操作，可以看出，通过运行结果可以看出，其最后的输出结果不等于nThreads*nTimes。这就可以看出在非原子操作的情况下。这种并发是无法满足精确地++操作的。</p>
 <h2 id="原子操作的计数"><a href="#原子操作的计数" class="headerlink" title="原子操作的计数"></a>原子操作的计数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;pthread.h&gt;</span><br><span class="line">#include &lt;atomic&gt;</span><br><span class="line">#include &quot;linux/atomic.h&quot;</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">atomic_t counter = new ATOMIC_INIT(0);</span><br><span class="line">int nTimes = 100000;</span><br><span class="line"></span><br><span class="line">void *inc_count(void *)&#123;</span><br><span class="line">        for(int i=0; i&lt;nTimes; i++)&#123;</span><br><span class="line">                atomic_inc(&amp;counter);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int64_t read_count(void)&#123;</span><br><span class="line">        return atomic_read(&amp;counter);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int main(int argc, char* argv[])&#123;</span><br><span class="line">        int nThreads = 2;</span><br><span class="line">        pthread_t *tid =static_cast&lt;pthread_t*&gt; (malloc(nThreads*sizeof(pthread_t)));</span><br><span class="line">        for(int j= 0; j &lt; nThreads; j++)&#123;</span><br><span class="line">                pthread_create(&amp;tid[j], NULL, inc_count, NULL);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        for(int j= 0; j &lt; nThreads; j++)&#123;</span><br><span class="line">                pthread_join(tid[j], NULL);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        int res = read_count();</span><br><span class="line">        std::cout &lt;&lt; &quot;the final counter value = &quot; &lt;&lt; res &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>以上是使用原子操作的代码。但是很遗憾。一直没有运行起来，报错就说</p>
-<p><font color="#FF0000">error: ‘atomic_t’ does not name a type</font><br><img src="TCP三次握手/OSI七层协议.jpg" alt="OSI七层协议" title="图2 OSI七层协议"><br><img src="并行编程有那么难吗-计数-Counting/延迟随着并发数量变化图.png" alt="延迟随着并发数量变化图" title="图1 延迟随着并发数量变化图"></p>
-<p>可以看出来。理想状况下，延迟增加图应该是靠近x轴的曲线，但是实际情况是当CPU核数增加，其延迟也在增加，并没有起到并发的作用。这就给并发带来了挑战！<br><img src="并行编程有那么难吗-计数-Counting/全局变量原子操作的数据流.png" alt="延迟随着并发数量变化图" title="  图2 全局变量++原子操作的数据流"></p>
+<p><font color="#FF0000">error: ‘atomic_t’ does not name a type</font><br><img src="延迟随着并发数量变化图.png" alt="延迟随着并发数量变化图" title="图1 延迟随着并发数量变化图"></p>
+<p>可以看出来。理想状况下，延迟增加图应该是靠近x轴的曲线，但是实际情况是当CPU核数增加，其延迟也在增加，并没有起到并发的作用。这就给并发带来了挑战！<br><img src="全局变量原子操作的数据流.png" alt="延迟随着并发数量变化图" title="  图2 全局变量++原子操作的数据流"></p>
 <p>可以看一个对全局变量进行原子操作的例子，如图2所示，In order for each CPU to get a chance to increment a given global variable, the cache line containing that variable must circulate among all the CPUs, as shown by the red arrows. Such circulation will take significant time, resulting in the poor performance seen in Figure 5.1(图1)。</p>
 
       

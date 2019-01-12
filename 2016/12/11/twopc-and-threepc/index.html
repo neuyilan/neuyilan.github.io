@@ -104,13 +104,13 @@
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="传统的关系型数据库以及很多的NewSql在事物处理方面都采用了两阶段提交协议。例如巨杉数据库[1,2]，以及小米在HBase上面利用coprocessor机制实现的强一致性的索引[3]。也就是说从关系型数据库到NoSql数据以及NewSql数据库，两阶段提交协议都在广泛的应用，那么两阶段体检协议到底是什么呢，到底神奇在什么地方呢？下面我们就在讲解一下两阶段提交协议以及它的变种，三阶段提交协议。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://neuyilan.github.io/2016/12/11/twopc-and-threepc/twopc-and-threepc/coordinator.png">
-<meta property="og:image" content="https://neuyilan.github.io/2016/12/11/twopc-and-threepc/twopc-and-threepc/participant.png">
-<meta property="og:updated_time" content="2019-01-12T01:32:20.141Z">
+<meta property="og:image" content="https://neuyilan.github.io/2016/12/11/twopc-and-threepc/coordinator.png">
+<meta property="og:image" content="https://neuyilan.github.io/2016/12/11/twopc-and-threepc/participant.png">
+<meta property="og:updated_time" content="2019-01-12T03:47:13.823Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="分布式中的两阶段提交和三阶段提交">
 <meta name="twitter:description" content="传统的关系型数据库以及很多的NewSql在事物处理方面都采用了两阶段提交协议。例如巨杉数据库[1,2]，以及小米在HBase上面利用coprocessor机制实现的强一致性的索引[3]。也就是说从关系型数据库到NoSql数据以及NewSql数据库，两阶段提交协议都在广泛的应用，那么两阶段体检协议到底是什么呢，到底神奇在什么地方呢？下面我们就在讲解一下两阶段提交协议以及它的变种，三阶段提交协议。">
-<meta name="twitter:image" content="https://neuyilan.github.io/2016/12/11/twopc-and-threepc/twopc-and-threepc/coordinator.png">
+<meta name="twitter:image" content="https://neuyilan.github.io/2016/12/11/twopc-and-threepc/coordinator.png">
 
 
 
@@ -403,7 +403,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-01-12 09:32:20" itemprop="dateModified" datetime="2019-01-12T09:32:20+08:00">2019-01-12</time>
+                <time title="Modified: 2019-01-12 11:47:13" itemprop="dateModified" datetime="2019-01-12T11:47:13+08:00">2019-01-12</time>
               
             
           </span>
@@ -481,8 +481,8 @@
 </li>
 </ul>
 <p>以上就是两阶段提交的具体步骤，可以看出来，两阶段提交其实并不复杂，也很简单。但是在分布式系统中，主要的问题就是容错，假设协调者或是其中任何一个参与者出错了会怎么办呢？下面就着重分析下，在两阶段提交的具体步骤中，每一个步骤会出现的错误以及解决办法。</p>
-<p>首先给出2PC中的协调者与参与者的状态转换图,如下图所示（备注：横线上面的消息是来自对方的消息，横线下面的消息是对此收到的消息所做出的应答消息）<br><img src="twopc-and-threepc/coordinator.png" alt="coordinator"><br>图1 协调者状态转换图</p>
-<p><img src="twopc-and-threepc/participant.png" alt="participant"><br>图2 参与者状态转换图</p>
+<p>首先给出2PC中的协调者与参与者的状态转换图,如下图所示（备注：横线上面的消息是来自对方的消息，横线下面的消息是对此收到的消息所做出的应答消息）<br><img src="coordinator.png" alt="coordinator"><br>图1 协调者状态转换图</p>
+<p><img src="participant.png" alt="participant"><br>图2 参与者状态转换图</p>
 <h2 id="容错阻塞"><a href="#容错阻塞" class="headerlink" title="容错阻塞"></a>容错阻塞</h2><p>那么下面分析2PC中的容错问题，因为此才产生了3PC，我们先从协调者这个角色开始分析，然后再分析参与者的阻塞问题</p>
 <h3 id="协调者阻塞情况"><a href="#协调者阻塞情况" class="headerlink" title="协调者阻塞情况"></a>协调者阻塞情况</h3><ul>
 <li>协调者在WAIT的时候阻塞，等待来自每个参与者的表决。这种情况的发生可能是参与者挂了，或是网络延迟造成的。解决办法就是：如果在某段时间内协调者没有收到所有的表决，那么协作者就决定中止表决，然后向所有的参与者发送GLOBAL_ABORT的消息。</li>

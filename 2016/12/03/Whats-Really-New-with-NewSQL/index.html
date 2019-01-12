@@ -104,12 +104,12 @@
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="本文主要讲述数据库的发展历程，以及实现一个数据库需要考虑的内容。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://neuyilan.github.io/2016/12/03/Whats-Really-New-with-NewSQL/Whats-Really-New-with-NewSQL/nosql-categories.png">
-<meta property="og:updated_time" content="2019-01-12T01:32:20.142Z">
+<meta property="og:image" content="https://neuyilan.github.io/2016/12/03/Whats-Really-New-with-NewSQL/nosql-categories.png">
+<meta property="og:updated_time" content="2019-01-12T03:47:02.417Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NewSql 崛起">
 <meta name="twitter:description" content="本文主要讲述数据库的发展历程，以及实现一个数据库需要考虑的内容。">
-<meta name="twitter:image" content="https://neuyilan.github.io/2016/12/03/Whats-Really-New-with-NewSQL/Whats-Really-New-with-NewSQL/nosql-categories.png">
+<meta name="twitter:image" content="https://neuyilan.github.io/2016/12/03/Whats-Really-New-with-NewSQL/nosql-categories.png">
 
 
 
@@ -402,7 +402,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-01-12 09:32:20" itemprop="dateModified" datetime="2019-01-12T09:32:20+08:00">2019-01-12</time>
+                <time title="Modified: 2019-01-12 11:47:02" itemprop="dateModified" datetime="2019-01-12T11:47:02+08:00">2019-01-12</time>
               
             
           </span>
@@ -475,7 +475,7 @@
 <ul>
 <li>以往的数据库都支持ACID特性，但是牺牲了可用性以及性能。但是现在的一些互联网应用更加关注可用性以及性能，他们希望能够支持更多的并发度以及on-line all the time.</li>
 <li>很多时候，现在的web应用并不需要以前DBMS的那么多的性能作为存储。</li>
-<li>现在的应用仅仅是简单的读写查询请求，关系型模型以及SQL复杂的语句对于现在的应用来说，就是杀鸡用牛刀。<br>所以，NoSql崛起。NoSql主要有以下几种类型。<br><img src="Whats-Really-New-with-NewSQL/nosql-categories.png" alt="nosql-categories"></li>
+<li>现在的应用仅仅是简单的读写查询请求，关系型模型以及SQL复杂的语句对于现在的应用来说，就是杀鸡用牛刀。<br>所以，NoSql崛起。NoSql主要有以下几种类型。<br><img src="nosql-categories.png" alt="nosql-categories"></li>
 </ul>
 <p>到2000年末的时候，虽然一些应用已经可以很好的应用到NoSql系统中，但是还有很多的应用并不能应用Nosql（比如金融系统或是订单系统），因为这些系统需要很强的一致性。而大部分的Nosql系统都是弱一致性(eventual consistent)，所以NewSql出现了。所以简单的讲，NewSql就是结合了Nosql数据库的可扩展性，同时又满足了关系型数据库中的事物特性(ACID)。</p>
 <h2 id="NewSql的特性"><a href="#NewSql的特性" class="headerlink" title="NewSql的特性"></a>NewSql的特性</h2><h3 id="新的架构"><a href="#新的架构" class="headerlink" title="新的架构"></a>新的架构</h3><h3 id="Transparent-Sharding-Middleware"><a href="#Transparent-Sharding-Middleware" class="headerlink" title="Transparent Sharding Middleware"></a>Transparent Sharding Middleware</h3><h3 id="Database-as-a-Service"><a href="#Database-as-a-Service" class="headerlink" title="Database-as-a-Service"></a>Database-as-a-Service</h3><h2 id="设计一个数据库系统需要考虑的问题"><a href="#设计一个数据库系统需要考虑的问题" class="headerlink" title="设计一个数据库系统需要考虑的问题"></a>设计一个数据库系统需要考虑的问题</h2><h3 id="Main-Memory-Storage"><a href="#Main-Memory-Storage" class="headerlink" title="Main Memory Storage"></a>Main Memory Storage</h3><h3 id="Partitioning-Sharding"><a href="#Partitioning-Sharding" class="headerlink" title="Partitioning / Sharding"></a>Partitioning / Sharding</h3><h3 id="Concurrency-Control"><a href="#Concurrency-Control" class="headerlink" title="Concurrency Control"></a>Concurrency Control</h3><ul>

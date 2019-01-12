@@ -104,12 +104,12 @@
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="这篇文章是记录一些常用命令的以便查找。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://neuyilan.github.io/2017/12/13/常用命令/常用命令/通过PID查看进程详细信息.jpg">
-<meta property="og:updated_time" content="2019-01-12T01:32:20.145Z">
+<meta property="og:image" content="https://neuyilan.github.io/2017/12/13/常用命令/通过PID查看进程详细信息.jpg">
+<meta property="og:updated_time" content="2019-01-12T03:47:10.912Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="常用命令">
 <meta name="twitter:description" content="这篇文章是记录一些常用命令的以便查找。">
-<meta name="twitter:image" content="https://neuyilan.github.io/2017/12/13/常用命令/常用命令/通过PID查看进程详细信息.jpg">
+<meta name="twitter:image" content="https://neuyilan.github.io/2017/12/13/常用命令/通过PID查看进程详细信息.jpg">
 
 
 
@@ -402,7 +402,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-01-12 09:32:20" itemprop="dateModified" datetime="2019-01-12T09:32:20+08:00">2019-01-12</time>
+                <time title="Modified: 2019-01-12 11:47:10" itemprop="dateModified" datetime="2019-01-12T11:47:10+08:00">2019-01-12</time>
               
             
           </span>
@@ -478,7 +478,7 @@
 <p>输入:wq保存即可。</p>
 <h2 id="查看端口被占用情况"><a href="#查看端口被占用情况" class="headerlink" title="查看端口被占用情况"></a>查看端口被占用情况</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">netstat -tunpl | grep port</span><br></pre></td></tr></table></figure>
 <h2 id="根据进程号查看进程的详细信息"><a href="#根据进程号查看进程的详细信息" class="headerlink" title="根据进程号查看进程的详细信息"></a>根据进程号查看进程的详细信息</h2><p>Linux在启动一个进程时，系统会在/proc下创建一个以PID命名的文件夹，在该文件夹下会有我们的进程的信息，其中包括一个名为exe的文件即记录了绝对路径，通过ll或ls –l命令即可查看。</p>
-<p><img src="常用命令/通过PID查看进程详细信息.jpg" alt="读取数据过程中的同步部分" title="图1 通过PID查看进程详细信息"></p>
+<p><img src="通过PID查看进程详细信息.jpg" alt="读取数据过程中的同步部分" title="图1 通过PID查看进程详细信息"></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ll /proc/PID</span><br></pre></td></tr></table></figure>
 <p>cwd符号链接的是进程运行目录；</p>
 <p>exe符号连接就是执行程序的绝对路径；</p>
