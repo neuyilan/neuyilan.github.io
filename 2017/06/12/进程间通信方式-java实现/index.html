@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="UNIX 为实现这样的进程间通信 提供了多种技术。一些技术提供同一主机上的进程间通信，其他技术可以实现主机到主机的信息交换。另外，各种技术的速度不同，所以必须选择最合适自己需求的技术。还必须进行协调（实施时间控制和排他控制）。例如，如果一个应用程序产生数据，另一个应用程序消费数据，那么当读完共享池时消费者必须停下来等待生产者。另一方面，如果消费者无法足够快地读取池，生产者必须慢下来或暂停。">
+<meta name="keywords" content="分布式系统,面试,操作系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="进程间通信方式-java实现">
+<meta property="og:url" content="https://neuyilan.github.io/2017/06/12/进程间通信方式-java实现/index.html">
+<meta property="og:site_name" content="yilan">
+<meta property="og:description" content="UNIX 为实现这样的进程间通信 提供了多种技术。一些技术提供同一主机上的进程间通信，其他技术可以实现主机到主机的信息交换。另外，各种技术的速度不同，所以必须选择最合适自己需求的技术。还必须进行协调（实施时间控制和排他控制）。例如，如果一个应用程序产生数据，另一个应用程序消费数据，那么当读完共享池时消费者必须停下来等待生产者。另一方面，如果消费者无法足够快地读取池，生产者必须慢下来或暂停。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://neuyilan.github.io/2017/06/12/进程间通信方式-java实现/进程间通信方式-java实现/out_not_close_error.png">
+<meta property="og:updated_time" content="2019-01-12T01:32:20.149Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="进程间通信方式-java实现">
+<meta name="twitter:description" content="UNIX 为实现这样的进程间通信 提供了多种技术。一些技术提供同一主机上的进程间通信，其他技术可以实现主机到主机的信息交换。另外，各种技术的速度不同，所以必须选择最合适自己需求的技术。还必须进行协调（实施时间控制和排他控制）。例如，如果一个应用程序产生数据，另一个应用程序消费数据，那么当读完共享池时消费者必须停下来等待生产者。另一方面，如果消费者无法足够快地读取池，生产者必须慢下来或暂停。">
+<meta name="twitter:image" content="https://neuyilan.github.io/2017/06/12/进程间通信方式-java实现/进程间通信方式-java实现/out_not_close_error.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://neuyilan.github.io/2017/06/12/进程间通信方式-java实现/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>进程间通信方式-java实现 | yilan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">yilan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/404/" rel="section"><i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>Commonweal 404</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2017/06/12/进程间通信方式-java实现/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="伊蓝">
+      <meta itemprop="description" content="记录点滴">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yilan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">进程间通信方式-java实现
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-06-12 11:18:24" itemprop="dateCreated datePublished" datetime="2017-06-12T11:18:24+08:00">2017-06-12</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-12 09:32:20" itemprop="dateModified" datetime="2019-01-12T09:32:20+08:00">2019-01-12</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/操作系统/" itemprop="url" rel="index"><span itemprop="name">操作系统</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>UNIX 为实现这样的进程间通信 提供了多种技术。一些技术提供同一主机上的进程间通信，其他技术可以实现主机到主机的信息交换。另外，各种技术的速度不同，所以必须选择最合适自己需求的技术。还必须进行协调（实施时间控制和排他控制）。例如，如果一个应用程序产生数据，另一个应用程序消费数据，那么当读完共享池时消费者必须停下来等待生产者。另一方面，如果消费者无法足够快地读取池，生产者必须慢下来或暂停。</p>
+<a id="more"></a>
+<p>表 1 总结在典型的 UNIX 系统上可用的进程间通信形式。</p>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>说明</th>
+<th>范围</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文件</td>
+<td>在典型的 UNIX 文件中读写数据。任意数量的进程都可以互操作。</td>
+<td>本地</td>
+<td>共享大数据集</td>
+</tr>
+<tr>
+<td>管道</td>
+<td>使用专用的文件描述符在两个进程之间传输数据。通信只在父进程和子进程之间进行。</td>
+<td>本地</td>
+<td>简单的数据共享，比如生产者和消费者</td>
+</tr>
+<tr>
+<td>命名管道</td>
+<td>通过专用的文件描述符在进程之间交换数据。通信可以在同一主机上的任意两个对等进程之间进行。</td>
+<td>本地</td>
+<td>生产者和消费者或命令-控制，比如 MySQL 和它的命令行查询工具</td>
+</tr>
+<tr>
+<td>信号</td>
+<td>通过中断通知应用程序某一情况。</td>
+<td>本地</td>
+<td>无法在信号中传输数据，所以信号主要用于进程管理</td>
+</tr>
+<tr>
+<td>共享内存</td>
+<td>通过在同一内存段中读写数据共享信息。</td>
+<td>本地</td>
+<td>任何类型的协作，尤其适合需要安全性的情况</td>
+</tr>
+<tr>
+<td>套接字</td>
+<td>完成特殊的设置过程之后，使用一般的输入/输出操作传输数据。</td>
+<td>本地或远程</td>
+<td>FTP、ssh 和 Apache Web Server 等网络服务</td>
+</tr>
+</tbody>
+</table>
+<h1 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h1><h2 id="管道的相关概念"><a href="#管道的相关概念" class="headerlink" title="管道的相关概念"></a>管道的相关概念</h2><p>操作系统中的管道是linux支持的最初的Unix IPC 形式之一，且具有以下特点</p>
+<ul>
+<li>管道是半双工的，数据只能向一个方向流动；需要双方通信时，需要建立两个管道。</li>
+<li>只能用于父子进程或是兄弟进程之间的通信（具有亲缘关系的进程）</li>
+<li>单独构成一个独立的文件系统：管道对于管道两端的进程而言，就是一个文件，但是他不是普通的文件，它不属于某种文件系统，而是自立门户，单独构成一种文件系统，并且只存在内存中。</li>
+<li>数据的读出和写入：一个进程向管道中写的内容被管道另一端的进程读出。写入的内容每次都添加在管道缓冲区的末尾，并且每次都是从缓冲区的头部读出数据。</li>
+</ul>
+<h2 id="管道注意的点"><a href="#管道注意的点" class="headerlink" title="管道注意的点"></a>管道注意的点</h2><h2 id="Java-中的管道"><a href="#Java-中的管道" class="headerlink" title="Java 中的管道"></a>Java 中的管道</h2><p>操作系统中默认的管道是进程间的通信当时，但是在java中，管道是进程内线程之间的通信方式。这是java中的管道和操作系统中的管道的最大的区别。<br><img src="进程间通信方式-java实现/out_not_close_error.png" alt="不正确关闭output流报错" title="图1 不正确关闭output流报错"></p>
+<p>如果是在同一个线程中去使用java中的管道还会引起引起死锁，主要的原因就是java中申请的管道默认最大为1k即1024B.当缓冲区满，并且写还没写完的时候，就会阻塞。直至等待读，但此时因为在同一个线程，读也被阻塞。所以，就会造成死锁。详细请看文章<a href="http://blog.csdn.net/zlp1992/article/details/50298195" target="_blank" rel="noopener"> Java里的管道输入流PipedInputStream与管道输出流 PipedOutputStream</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">package ipc;</span><br><span class="line"></span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.io.PipedInputStream;</span><br><span class="line">import java.io.PipedOutputStream;</span><br><span class="line"></span><br><span class="line">public class PipeExample &#123;</span><br><span class="line">	public static void main(String[] args) &#123;</span><br><span class="line">		final PipedOutputStream out = new PipedOutputStream();</span><br><span class="line">		final PipedInputStream in = new PipedInputStream();</span><br><span class="line"></span><br><span class="line">		Thread thread1 = new Thread(new Runnable()&#123;</span><br><span class="line">			@Override</span><br><span class="line">			public void run() &#123;</span><br><span class="line">				try&#123;</span><br><span class="line">					while(true)&#123;</span><br><span class="line">						out.write(&quot;hello world,pile!&quot;.getBytes());</span><br><span class="line">					&#125;</span><br><span class="line">					//如果上面不是while(true)循环，并且还没有执行out.close()方法的话，则就会报错图1的错误</span><br><span class="line">					//原因就是：PipedInputStream throws this exception on read()</span><br><span class="line">					//when there is no writing thread and writer is not properly closed</span><br><span class="line">					//所以，当一直是while(true)不断写东西的时候，是不会报错的</span><br><span class="line">//					out.close();</span><br><span class="line">				&#125;catch (IOException e)&#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;);</span><br><span class="line"></span><br><span class="line">		Thread thread2 = new Thread(new Runnable()&#123;</span><br><span class="line"></span><br><span class="line">			@Override</span><br><span class="line">			public void run() &#123;</span><br><span class="line">				try &#123;</span><br><span class="line">					int data = in.read();</span><br><span class="line">					while(data!=-1)&#123;</span><br><span class="line">						System.out.println((char)data);</span><br><span class="line">						data = in.read();</span><br><span class="line">					&#125;</span><br><span class="line">				&#125; catch (Exception e) &#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		&#125;);</span><br><span class="line">		try &#123;</span><br><span class="line">			in.connect(out);</span><br><span class="line">		&#125; catch (IOException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line">		thread1.start();</span><br><span class="line">		thread2.start();</span><br><span class="line">		try &#123;</span><br><span class="line">			//等待线程执行完</span><br><span class="line">			thread1.join();</span><br><span class="line">			thread2.join();</span><br><span class="line">			in.close();</span><br><span class="line">			out.close();</span><br><span class="line">		&#125; catch (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="共享内存"><a href="#共享内存" class="headerlink" title="共享内存"></a>共享内存</h1><p>请参考此文章:<a href="https://www.ibm.com/developerworks/cn/aix/library/au-spunix_sharedmemory/#ibm-pcon" target="_blank" rel="noopener">对话 UNIX: 通过共享内存进行进程间通信</a></p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul>
+<li><a href="https://www.ibm.com/developerworks/cn/linux/l-ipc/part1/#ibm-pcon" target="_blank" rel="noopener">Linux环境进程间通信（一）</a></li>
+<li><a href="http://tutorials.jenkov.com/java-io/pipes.html" target="_blank" rel="noopener">Java IO:Pipes</a></li>
+<li><a href="http://blog.csdn.net/zlp1992/article/details/50298195" target="_blank" rel="noopener"> Java里的管道输入流 PipedInputStream与管道输出流PipedOutputStream</a></li>
+<li><a href="https://github.com/EStormLynn/IPC" target="_blank" rel="noopener">Inter-Process Communication 进程间通信</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/aix/library/au-spunix_sharedmemory/#ibm-pcon" target="_blank" rel="noopener">对话 UNIX: 通过共享内存进行进程间通信</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/分布式系统/" rel="tag"># 分布式系统</a>
+          
+            <a href="/tags/面试/" rel="tag"># 面试</a>
+          
+            <a href="/tags/操作系统/" rel="tag"># 操作系统</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/19/TCP三次握手/" rel="next" title="TCP三次握手[转载]">
+                <i class="fa fa-chevron-left"></i> TCP三次握手[转载]
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/26/B-tree-与B-Tree的区别以及原理和应用场景/" rel="prev" title="B tree 与B+Tree的区别以及原理和应用场景">
+                B tree 与B+Tree的区别以及原理和应用场景 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="伊蓝">
+            
+              <p class="site-author-name" itemprop="name">伊蓝</p>
+              <p class="site-description motion-element" itemprop="description">记录点滴</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">36</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">59</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/neuyilan/" title="GitHub &rarr; https://github.com/neuyilan/" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#管道"><span class="nav-number">1.</span> <span class="nav-text">管道</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#管道的相关概念"><span class="nav-number">1.1.</span> <span class="nav-text">管道的相关概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#管道注意的点"><span class="nav-number">1.2.</span> <span class="nav-text">管道注意的点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java-中的管道"><span class="nav-number">1.3.</span> <span class="nav-text">Java 中的管道</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#共享内存"><span class="nav-number">2.</span> <span class="nav-text">共享内存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">伊蓝</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.7.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.7.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

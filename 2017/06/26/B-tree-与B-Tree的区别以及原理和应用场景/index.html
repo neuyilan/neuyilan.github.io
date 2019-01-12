@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="B-tree的由来？为什么非得是树呢，而不是直接是数组。Memory locality &amp;amp; the magic of B-Trees!:说了很清楚，就是因为在申请内存的时候，不知道要申请多大的内存，所以没办法申请很大的一块内存，所以就变成了一个数组被打断为好几段，然后每段用链表连接起来，这其实就是树的基本模型。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="B tree 与B+Tree的区别以及原理和应用场景">
+<meta property="og:url" content="https://neuyilan.github.io/2017/06/26/B-tree-与B-Tree的区别以及原理和应用场景/index.html">
+<meta property="og:site_name" content="yilan">
+<meta property="og:description" content="B-tree的由来？为什么非得是树呢，而不是直接是数组。Memory locality &amp;amp; the magic of B-Trees!:说了很清楚，就是因为在申请内存的时候，不知道要申请多大的内存，所以没办法申请很大的一块内存，所以就变成了一个数组被打断为好几段，然后每段用链表连接起来，这其实就是树的基本模型。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-12T01:32:20.128Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="B tree 与B+Tree的区别以及原理和应用场景">
+<meta name="twitter:description" content="B-tree的由来？为什么非得是树呢，而不是直接是数组。Memory locality &amp;amp; the magic of B-Trees!:说了很清楚，就是因为在申请内存的时候，不知道要申请多大的内存，所以没办法申请很大的一块内存，所以就变成了一个数组被打断为好几段，然后每段用链表连接起来，这其实就是树的基本模型。">
+
+
+
+
+
+
+  <link rel="canonical" href="https://neuyilan.github.io/2017/06/26/B-tree-与B-Tree的区别以及原理和应用场景/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>B tree 与B+Tree的区别以及原理和应用场景 | yilan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">yilan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/404/" rel="section"><i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>Commonweal 404</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2017/06/26/B-tree-与B-Tree的区别以及原理和应用场景/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="伊蓝">
+      <meta itemprop="description" content="记录点滴">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yilan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">B tree 与B+Tree的区别以及原理和应用场景
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-06-26 23:04:05" itemprop="dateCreated datePublished" datetime="2017-06-26T23:04:05+08:00">2017-06-26</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-12 09:32:20" itemprop="dateModified" datetime="2019-01-12T09:32:20+08:00">2019-01-12</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="B-tree的由来？"><a href="#B-tree的由来？" class="headerlink" title="B-tree的由来？"></a>B-tree的由来？</h1><p>为什么非得是树呢，而不是直接是数组。<a href="https://loveforprogramming.quora.com/Memory-locality-the-magic-of-B-Trees" target="_blank" rel="noopener">Memory locality &amp; the magic of B-Trees!</a>:<br>说了很清楚，就是因为在申请内存的时候，不知道要申请多大的内存，所以没办法申请很大的一块内存，所以就变成了一个数组被打断为好几段，然后每段用链表连接起来，这其实就是树的基本模型。<br><a id="more"></a></p>
+<h1 id="B-tree和B-tree的区别是什么？"><a href="#B-tree和B-tree的区别是什么？" class="headerlink" title="B-tree和B+tree的区别是什么？"></a>B-tree和B+tree的区别是什么？</h1><ul>
+<li>B-tree中非叶子节点可以存值；但是B+tree非叶子节点不可以存值，只能存key，值只存在叶子节点中。</li>
+<li>B-tree中叶子节点没有用指针连接起来；而B+tree中的叶子节点用指针连接起来，所以B+tree的查询很快，当定位到叶子节点后，只需要遍历叶子节点即可。B+树相比于B树能够更加方便的遍历。</li>
+<li>B+树简单的说就是变成了一个索引一样的东西。 B+的搜索与B-树也基本相同，区别是B+树只有达到叶子结点才命中（B-树可以在非叶子结点命中），B+树的性能相当于是给叶子节点做一次二分查找。</li>
+<li>B+树的查找算法：当B+树进行查找的时候，你首先一定需要记住，就是B+树的非叶子节点中并不储存节点，只存一个键值方便后续的操作，所以非叶子节点就是索引部分，所有的叶子节点是在同一层上，包含了全部的关键值和对应数据所在的地址指针。这样其实，进行 B+树的查找的时候，只需要在叶子节点中进行查找就可以了。</li>
+</ul>
+<h1 id="各自的应用场景有什么不同"><a href="#各自的应用场景有什么不同" class="headerlink" title="各自的应用场景有什么不同?"></a>各自的应用场景有什么不同?</h1><p>mysql的MyISAM和InnoDB两个存储引擎的索引实现方式：</p>
+<ul>
+<li>MyISAM引擎使用B+ Tree作为索引结构，叶节点存放的是数据记录的地址。</li>
+<li>MyISAM引擎的辅助索引（二级索引）和主索引在结构上没有区别，只是辅助索引的key可以重复，叶节点上存放的也是数据记录的地址。</li>
+<li>MyISAM索引文件和数据文件是分离的，索引文件仅保存数据记录的地址。</li>
+<li>InnoDB中表数据本身就是按B+ Tree组织的一个索引结构，叶节点存放的就不是数据记录的地址，而是完整的数据记录。所以InnoDB这种存储方式，又称为聚集索引，使得按主键的搜索十分高效，但二级索引搜索需要检索两遍索引：首先二级索引获得主键，然后用主键到主索引中检索到数据记录。</li>
+<li>因为主键是InnoDB表记录的”逻辑地址“，所以InnoDB要求表必须有主键，MyISAM可以没有。</li>
+</ul>
+<h1 id="自己的一点想法"><a href="#自己的一点想法" class="headerlink" title="自己的一点想法"></a>自己的一点想法</h1><p>看了很多的文章，心中一直在问自己一个问题，既然B+树那么好，那么B树存在的意义什么呢？因为innodb存储引擎和MyISAM存储都是使用的B+树。我自己的理解是：B树适合那种访问之后能够把相应的数据一起返回的数据结构。</p>
+<p>那么，什么样子的才是访问到key之后把相应的value数据一起就返回的呢？上面也提到了因为B+树非叶子节点不存储value，所以占得空间小，所以相同的内存大小，B+树存储的节点更多，这说明了能够放在内存中的非叶子节点就更多。那么，B树存在的意义又是什么呢？</p>
+<p>我觉得B树存在的意义是当都在内存中的时候，若是能够根据key直接把value得到然后返回，不用去磁盘查找， 明显要快很多，因为B+树的数据(value)是存在叶子节点中的，而叶子节点是存在于磁盘中的。也就是说当数据很小的时候，使用B数把数据跟key一起存放在非叶子节点中，可以更快的加速查找。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul>
+<li><a href="https://yq.aliyun.com/articles/65126" target="_blank" rel="noopener">https://yq.aliyun.com/articles/65126</a></li>
+<li><a href="http://www.itwendao.com/article/detail/68322.html" target="_blank" rel="noopener">http://www.itwendao.com/article/detail/68322.html</a></li>
+<li><a href="https://loveforprogramming.quora.com/Memory-locality-the-magic-of-B-Trees" target="_blank" rel="noopener">https://loveforprogramming.quora.com/Memory-locality-the-magic-of-B-Trees</a></li>
+<li><a href="http://www.cnblogs.com/yanghuahui/p/3483047.html" target="_blank" rel="noopener">http://www.cnblogs.com/yanghuahui/p/3483047.html</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/12/进程间通信方式-java实现/" rel="next" title="进程间通信方式-java实现">
+                <i class="fa fa-chevron-left"></i> 进程间通信方式-java实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/28/希腊神话故事/" rel="prev" title="希腊神话故事">
+                希腊神话故事 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="伊蓝">
+            
+              <p class="site-author-name" itemprop="name">伊蓝</p>
+              <p class="site-description motion-element" itemprop="description">记录点滴</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">36</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">59</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/neuyilan/" title="GitHub &rarr; https://github.com/neuyilan/" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#B-tree的由来？"><span class="nav-number">1.</span> <span class="nav-text">B-tree的由来？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#B-tree和B-tree的区别是什么？"><span class="nav-number">2.</span> <span class="nav-text">B-tree和B+tree的区别是什么？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#各自的应用场景有什么不同"><span class="nav-number">3.</span> <span class="nav-text">各自的应用场景有什么不同?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自己的一点想法"><span class="nav-number">4.</span> <span class="nav-text">自己的一点想法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">伊蓝</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.7.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.7.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

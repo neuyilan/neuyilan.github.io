@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="这篇文章是databricks的一篇博客，主要讲解了为什么在存储计算分离之后，选用S3而不选用HDFS的原因。简单说就是Cost, elasticity, availability, durability, performance, and data integrity。后面是原文地址Top 5 Reasons for Choosing S3 over HDFS.">
+<meta name="keywords" content="对象存储,S3,HDFS,存储计算分离">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Top 5 Reasons for Choosing S3 over HDFS">
+<meta property="og:url" content="https://neuyilan.github.io/2017/12/08/Top 5 Reasons for Choosing S3 over HDFS/index.html">
+<meta property="og:site_name" content="yilan">
+<meta property="og:description" content="这篇文章是databricks的一篇博客，主要讲解了为什么在存储计算分离之后，选用S3而不选用HDFS的原因。简单说就是Cost, elasticity, availability, durability, performance, and data integrity。后面是原文地址Top 5 Reasons for Choosing S3 over HDFS.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-01-12T01:32:20.141Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Top 5 Reasons for Choosing S3 over HDFS">
+<meta name="twitter:description" content="这篇文章是databricks的一篇博客，主要讲解了为什么在存储计算分离之后，选用S3而不选用HDFS的原因。简单说就是Cost, elasticity, availability, durability, performance, and data integrity。后面是原文地址Top 5 Reasons for Choosing S3 over HDFS.">
+
+
+
+
+
+
+  <link rel="canonical" href="https://neuyilan.github.io/2017/12/08/Top 5 Reasons for Choosing S3 over HDFS/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Top 5 Reasons for Choosing S3 over HDFS | yilan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">yilan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/404/" rel="section"><i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>Commonweal 404</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2017/12/08/Top 5 Reasons for Choosing S3 over HDFS/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="伊蓝">
+      <meta itemprop="description" content="记录点滴">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yilan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Top 5 Reasons for Choosing S3 over HDFS
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2017-12-08 22:37:00" itemprop="dateCreated datePublished" datetime="2017-12-08T22:37:00+08:00">2017-12-08</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-12 09:32:20" itemprop="dateModified" datetime="2019-01-12T09:32:20+08:00">2019-01-12</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/云存储/" itemprop="url" rel="index"><span itemprop="name">云存储</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这篇文章是databricks的一篇博客，主要讲解了为什么在存储计算分离之后，选用S3而不选用HDFS的原因。<br>简单说就是Cost, elasticity, availability, durability, performance, and data integrity。<br>后面是原文地址<a href="https://databricks.com/blog/2017/05/31/top-5-reasons-for-choosing-s3-over-hdfs.html" target="_blank" rel="noopener">Top 5 Reasons for Choosing S3 over HDFS</a>.<br><a id="more"></a><br>At Databricks, our engineers guide thousands of organizations to define their big data and cloud strategies. When migrating big data workloads to the cloud, one of the most commonly asked questions is how to evaluate HDFS versus the storage systems provided by cloud providers, such as Amazon’s S3, Microsoft’s Azure Blob Storage, and Google’s Cloud Storage. In this blog post, we share our thoughts on why cloud storage is the optimal choice for data storage.</p>
+<p>In this discussion, we use Amazon S3 as an example, but the conclusions generalize to other cloud platforms. We compare S3 and HDFS along the following dimensions:</p>
+<ul>
+<li>Cost</li>
+<li>Elasticity</li>
+<li>SLA (availability and durability)</li>
+<li>Performance per dollar</li>
+<li>Transactional writes and data integrity</li>
+</ul>
+<h2 id="Cost"><a href="#Cost" class="headerlink" title="Cost"></a>Cost</h2><p>Let’s consider the total cost of storage, which is a combination of storage cost and human cost (to maintain them).</p>
+<p>First, let’s estimate the cost of storing 1 terabyte of data per month.</p>
+<p>As of May 2017, S3’s standard storage price for the first 1TB of data is $23/month. Note that depending on your usage pattern, S3 listing and file transfer might cost money. On the other hand, cold data using infrequent-access storage would cost only half, at $12.5/month. For the purpose of this discussion, let’s use $23/month to approximate the cost. S3 does not come with compute capacity but it does give you the freedom to leverage ephemeral clusters and to select instance types best suited for a workload (e.g., compute intensive), rather than simply for what is the best from a storage perspective.</p>
+<p>For HDFS, the most cost-efficient storage instances on EC2 is the d2 family. To be generous and work out the best case for HDFS, we use the following assumptions that are virtually impossible to achieve in practice:</p>
+<ul>
+<li>A crystal ball into the future to perfectly predict the storage requirements three years in advance, so we can use the maximum discount using 3-year reserved instances.</li>
+<li>Workloads are stable with a peak-to-trough ratio of 1.0. This means our storage system does not need to be elastic at all.</li>
+<li>Storage utilization is at 70%, and standard HDFS replication factor set at 3.</li>
+</ul>
+<p>With the above assumptions, using d2.8xl instance types ($5.52/hr with 71% discount, 48TB HDD), it costs 5.52 x 0.29 x 24 x 30 / 48 x 3 / 0.7 = $103/month for 1TB of data. (Note that with reserved instances, it is possible to achieve lower price on the d2 family.)</p>
+<p>So in terms of storage cost alone, <strong>S3 is 5X cheaper than HDFS</strong>.</p>
+<p>Based on our experience managing petabytes of data, S3’s human cost is virtually zero, whereas it usually takes a team of Hadoop engineers or vendor support to maintain HDFS. Once we factor in human cost, <strong>S3 is 10X cheaper than HDFS</strong> clusters on EC2 with comparable capacity.</p>
+<h2 id="Elasticity"><a href="#Elasticity" class="headerlink" title="Elasticity"></a>Elasticity</h2><p>Capacity planning is tough to get right, and very few organizations can accurately estimate their resource requirements upfront. In the on-premise world, this leads to either massive pain in the post-hoc provisioning of more resources or huge waste due to low utilization from over-provisioning upfront.</p>
+<p>One of the nicest benefits of S3, or cloud storage in general, is its elasticity and pay-as-you-go pricing model: you are only charged what you put in, and if you need to put more data in, just dump them there. Under the hood, the cloud provider automatically provisions resources on demand.</p>
+<p>Simply put, <strong>S3 is elastic, HDFS is not.</strong></p>
+<h2 id="SLA-Availability-and-Durability"><a href="#SLA-Availability-and-Durability" class="headerlink" title="SLA (Availability and Durability)"></a>SLA (Availability and Durability)</h2><p>Based on our experience, S3’s availability has been fantastic. Only twice in the last six years have we experienced S3 downtime and we have never experienced data loss from S3.</p>
+<p>Amazon claims 99.999999999% durability and 99.99% availability. Note that this is higher than the vast majority of organizations’ in-house services. The official SLA from Amazon can be found here: <a href="https://aws.amazon.com/s3/sla/" target="_blank" rel="noopener">Service Level Agreement – Amazon Simple Storage Service (S3)</a>.</p>
+<p>For HDFS, in contrast, it is difficult to estimate availability and durability. One could theoretically compute the two SLA attributes based on EC2’s mean time between failures (MTTF), plus upgrade and maintenance downtimes. In reality, those are difficult to quantify. Our understanding working with customers is that the majority of Hadoop clusters have availability lower than 99.9%, i.e. at least 9 hours of downtime per year.</p>
+<p>With cross-AZ replication that automatically replicates across different data centers,<strong>S3’s availability and durability is far superior to HDFS’</strong>.</p>
+<h2 id="Performance-per-Dollar"><a href="#Performance-per-Dollar" class="headerlink" title="Performance per Dollar"></a>Performance per Dollar</h2><p>The main problem with S3 is that the consumers no longer have data locality and all reads need to transfer data across the network, and S3 performance tuning itself is a black box.</p>
+<p>When using HDFS and getting perfect data locality, it is possible to get ~3GB/node local read throughput on some of the instance types (e.g. i2.8xl, roughly 90MB/s per core). DBIO, our cloud I/O optimization module, provides optimized connectors to S3 and can sustain ~600MB/s read throughput on i2.8xl (roughly 20MB/s per core).</p>
+<p>That is to say, on a per node basis, HDFS can yield 6X higher read throughput than S3. Thus, <strong>given that the S3 is 10x cheaper than HDFS, we find that S3 is almost 2x better compared to HDFS on performance per dollar.</strong></p>
+<p>However, a big benefit with S3 is we can separate storage from compute, and as a result, we can just launch a larger cluster for a smaller period of time to increase throughput, up to allowable physical limits. This separation of compute and storage also allow for different Spark applications (such as a data engineering ETL job and an ad-hoc data science model training cluster) to run on their own clusters, preventing concurrency issues that affect multi-user fixed-sized Hadoop clusters. This separation (and the flexible accommodation of disparate workloads) not only lowers cost but also improves the user experience.</p>
+<p>One advantage HDFS has over S3 is metadata performance: it is relatively fast to list thousands of files against HDFS namenode but can take a long time for S3. However, the scalable partition handling feature we implemented in Apache Spark 2.1 mitigates this issue with metadata performance in S3.</p>
+<p>Stay tuned for announcements in the near future that completely eliminates this issue with DBIO.</p>
+<h2 id="Transactional-Writes-and-Data-Integrity"><a href="#Transactional-Writes-and-Data-Integrity" class="headerlink" title="Transactional Writes and Data Integrity"></a>Transactional Writes and Data Integrity</h2><p>Most of the big data systems (e.g., Spark, Hive) rely on HDFS’ atomic rename feature to support atomic writes: that is, the output of a job is observed by the readers in an “all or nothing” fashion. This is important for data integrity because when a job fails, no partial data should be written out to corrupt the dataset.</p>
+<p><strong>S3’s lack of atomic directory renames has been a critical problem for guaranteeing data integrity.</strong> This has led to complicated application logic to guarantee data integrity, e.g. never append to an existing partition of data.</p>
+<p>Today, we are happy to announce the support for transactional writes in our DBIO artifact, which features high-performance connectors to S3 (and in the future other cloud storage systems) with transactional write support for data integrity. See this blog post for more information.</p>
+<h2 id="Other-Operational-Concerns"><a href="#Other-Operational-Concerns" class="headerlink" title="Other Operational Concerns"></a>Other Operational Concerns</h2><p>So far, we have discussed durability, performance, and cost considerations, but there are several other areas where systems like S3 have lower operational costs and greater ease-of-use than HDFS:</p>
+<p>Encryption, access control, and auditing: S3 supports multiple types of encryption, with both AWS- and customer-managed keys, and has easy-to-configure audit logging and access control capabilities. These features make it easy to meet regulatory compliance needs, such as PCI or HIPAA compliance.<br>Backups and disaster recovery: S3’s opt-in versioning feature automatically maintains backups of modified or deleted files, making it easy to recover from accidental data deletion. Cross-region replication can be used to enhance S3’s already strong availability guarantees in order to withstand the complete outage of an AWS region.<br>Data lifecycle management: S3 can be configured to automatically migrate objects to cold storage after a configurable time period. In many organizations, data is read frequently when it is new and is read significantly less often over time. S3’s lifecycle management policies can automatically perform migration of old objects to Infrequent Access storage in order to save on cost, or to Glacier to achieve even larger cost savings; the latter is useful for organizations where regulatory compliance mandates long-term storage of data.<br>Supporting these additional requirements on HDFS requires even more work on the part of system administrators and further increases operational cost and complexity.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>In this blog post we used S3 as the example to compare cloud storage vs HDFS:</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th style="text-align:center">S3</th>
+<th style="text-align:right">HDFS</th>
+<th style="text-align:right">S3 vs HDFS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elasticity</td>
+<td style="text-align:center">Yes</td>
+<td style="text-align:right">No</td>
+<td style="text-align:right">S3 is more elastic</td>
+</tr>
+<tr>
+<td>Cost/TB/month</td>
+<td style="text-align:center">$23</td>
+<td style="text-align:right">$206</td>
+<td style="text-align:right">10X</td>
+</tr>
+<tr>
+<td>Availability</td>
+<td style="text-align:center">99.99%</td>
+<td style="text-align:right">99.9% (estimated)</td>
+<td style="text-align:right">10X</td>
+</tr>
+<tr>
+<td>Durability</td>
+<td style="text-align:center">99.999999999%</td>
+<td style="text-align:right">99.9999% (estimated)</td>
+<td style="text-align:right">10X+</td>
+</tr>
+<tr>
+<td>Transactional writes</td>
+<td style="text-align:center">Yes with DBIO</td>
+<td style="text-align:right">Yes</td>
+<td style="text-align:right">Comparable</td>
+</tr>
+</tbody>
+</table>
+<p>To summarize, S3 and cloud storage provide elasticity, with an order of magnitude better availability and durability and 2X better performance, at 10X lower cost than traditional HDFS data storage clusters.</p>
+<p>Hadoop and HDFS commoditized big data storage by making it cheap to store and distribute a large amount of data. However, in a cloud native architecture, the benefit of HDFS is minimal and not worth the operational complexity. That is why many organizations do not operate HDFS in the cloud, but instead use S3 as the storage backend.</p>
+<p>With Databricks’ DBIO, our customers can sit back and enjoy the merits of performant connectors to cloud storage without sacrificing data integrity.</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/对象存储/" rel="tag"># 对象存储</a>
+          
+            <a href="/tags/S3/" rel="tag"># S3</a>
+          
+            <a href="/tags/HDFS/" rel="tag"># HDFS</a>
+          
+            <a href="/tags/存储计算分离/" rel="tag"># 存储计算分离</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/28/希腊神话故事/" rel="next" title="希腊神话故事">
+                <i class="fa fa-chevron-left"></i> 希腊神话故事
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/13/常用命令/" rel="prev" title="常用命令">
+                常用命令 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="伊蓝">
+            
+              <p class="site-author-name" itemprop="name">伊蓝</p>
+              <p class="site-description motion-element" itemprop="description">记录点滴</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">36</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">59</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/neuyilan/" title="GitHub &rarr; https://github.com/neuyilan/" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Cost"><span class="nav-number">1.</span> <span class="nav-text">Cost</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Elasticity"><span class="nav-number">2.</span> <span class="nav-text">Elasticity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SLA-Availability-and-Durability"><span class="nav-number">3.</span> <span class="nav-text">SLA (Availability and Durability)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Performance-per-Dollar"><span class="nav-number">4.</span> <span class="nav-text">Performance per Dollar</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Transactional-Writes-and-Data-Integrity"><span class="nav-number">5.</span> <span class="nav-text">Transactional Writes and Data Integrity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Other-Operational-Concerns"><span class="nav-number">6.</span> <span class="nav-text">Other Operational Concerns</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">7.</span> <span class="nav-text">Conclusion</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">伊蓝</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.7.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.7.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

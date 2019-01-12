@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.7.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="传统的关系型数据库以及很多的NewSql在事物处理方面都采用了两阶段提交协议。例如巨杉数据库[1,2]，以及小米在HBase上面利用coprocessor机制实现的强一致性的索引[3]。也就是说从关系型数据库到NoSql数据以及NewSql数据库，两阶段提交协议都在广泛的应用，那么两阶段体检协议到底是什么呢，到底神奇在什么地方呢？下面我们就在讲解一下两阶段提交协议以及它的变种，三阶段提交协议。">
+<meta name="keywords" content="两阶段提交,two pc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分布式中的两阶段提交和三阶段提交">
+<meta property="og:url" content="https://neuyilan.github.io/2016/12/11/twopc-and-threepc/index.html">
+<meta property="og:site_name" content="yilan">
+<meta property="og:description" content="传统的关系型数据库以及很多的NewSql在事物处理方面都采用了两阶段提交协议。例如巨杉数据库[1,2]，以及小米在HBase上面利用coprocessor机制实现的强一致性的索引[3]。也就是说从关系型数据库到NoSql数据以及NewSql数据库，两阶段提交协议都在广泛的应用，那么两阶段体检协议到底是什么呢，到底神奇在什么地方呢？下面我们就在讲解一下两阶段提交协议以及它的变种，三阶段提交协议。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://neuyilan.github.io/2016/12/11/twopc-and-threepc/twopc-and-threepc/coordinator.png">
+<meta property="og:image" content="https://neuyilan.github.io/2016/12/11/twopc-and-threepc/twopc-and-threepc/participant.png">
+<meta property="og:updated_time" content="2019-01-12T01:32:20.141Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="分布式中的两阶段提交和三阶段提交">
+<meta name="twitter:description" content="传统的关系型数据库以及很多的NewSql在事物处理方面都采用了两阶段提交协议。例如巨杉数据库[1,2]，以及小米在HBase上面利用coprocessor机制实现的强一致性的索引[3]。也就是说从关系型数据库到NoSql数据以及NewSql数据库，两阶段提交协议都在广泛的应用，那么两阶段体检协议到底是什么呢，到底神奇在什么地方呢？下面我们就在讲解一下两阶段提交协议以及它的变种，三阶段提交协议。">
+<meta name="twitter:image" content="https://neuyilan.github.io/2016/12/11/twopc-and-threepc/twopc-and-threepc/coordinator.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://neuyilan.github.io/2016/12/11/twopc-and-threepc/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>分布式中的两阶段提交和三阶段提交 | yilan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">yilan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/404/" rel="section"><i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>Commonweal 404</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2016/12/11/twopc-and-threepc/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="伊蓝">
+      <meta itemprop="description" content="记录点滴">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yilan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">分布式中的两阶段提交和三阶段提交
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2016-12-11 22:57:20" itemprop="dateCreated datePublished" datetime="2016-12-11T22:57:20+08:00">2016-12-11</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-01-12 09:32:20" itemprop="dateModified" datetime="2019-01-12T09:32:20+08:00">2019-01-12</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/分布式/" itemprop="url" rel="index"><span itemprop="name">分布式</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>传统的关系型数据库以及很多的NewSql在事物处理方面都采用了两阶段提交协议。例如巨杉数据库[1,2]，以及小米在HBase上面利用coprocessor机制实现的强一致性的索引[3]。也就是说从关系型数据库到NoSql数据以及NewSql数据库，两阶段提交协议都在广泛的应用，那么两阶段体检协议到底是什么呢，到底神奇在什么地方呢？下面我们就在讲解一下两阶段提交协议以及它的变种，三阶段提交协议。<br><a id="more"></a></p>
+<h1 id="两阶段提交协议"><a href="#两阶段提交协议" class="headerlink" title="两阶段提交协议"></a>两阶段提交协议</h1><p>两阶段提交协议，从名字中也看得出来，分为两个阶段，第一阶段主要是投票阶段，第二阶段才是提交阶段。主要角色也分为两个，一个是参与者，一个是协调者。</p>
+<h2 id="协议步骤"><a href="#协议步骤" class="headerlink" title="协议步骤"></a>协议步骤</h2><ul>
+<li><p>第一阶段：投票阶段</p>
+<ul>
+<li>协调者向所有的参与者发送一个VOTE_REQUEST的消息</li>
+<li>当参与者接收到VOTE_REQUEST的消息后，就像协调者发送一个VOTE_COMMIT的消息通知协调者已经准备好提交本地事物，否则就返回一个VOTE_ABORT的消息。</li>
+</ul>
+</li>
+<li><p>第二阶段：提交阶段</p>
+<ul>
+<li>协调者收到所有的参与者的返回的消息，如果所有的参与者都表决要提交事物的时候，那么协调者就会向每一个参与者发送一个GLOBAL_COMMIT的消息；但是只要有一个参与者表决要取消事物，那么协调者就会决定取消事物，并且多播一个GLOBAL_ABORT的消息给所有的参与者。</li>
+<li>每个参与者等待协调者的返回消息，然后根据此消息做出最后的反应。如果参与者收到的是GLOBAL_COMMIT的消息，那么参与者就会提交本地事物；相反的，如果参与者收到时GLOBAL_ABORT的消息，那么参与者就会取消本地事物。</li>
+</ul>
+</li>
+</ul>
+<p>以上就是两阶段提交的具体步骤，可以看出来，两阶段提交其实并不复杂，也很简单。但是在分布式系统中，主要的问题就是容错，假设协调者或是其中任何一个参与者出错了会怎么办呢？下面就着重分析下，在两阶段提交的具体步骤中，每一个步骤会出现的错误以及解决办法。</p>
+<p>首先给出2PC中的协调者与参与者的状态转换图,如下图所示（备注：横线上面的消息是来自对方的消息，横线下面的消息是对此收到的消息所做出的应答消息）<br><img src="twopc-and-threepc/coordinator.png" alt="coordinator"><br>图1 协调者状态转换图</p>
+<p><img src="twopc-and-threepc/participant.png" alt="participant"><br>图2 参与者状态转换图</p>
+<h2 id="容错阻塞"><a href="#容错阻塞" class="headerlink" title="容错阻塞"></a>容错阻塞</h2><p>那么下面分析2PC中的容错问题，因为此才产生了3PC，我们先从协调者这个角色开始分析，然后再分析参与者的阻塞问题</p>
+<h3 id="协调者阻塞情况"><a href="#协调者阻塞情况" class="headerlink" title="协调者阻塞情况"></a>协调者阻塞情况</h3><ul>
+<li>协调者在WAIT的时候阻塞，等待来自每个参与者的表决。这种情况的发生可能是参与者挂了，或是网络延迟造成的。解决办法就是：如果在某段时间内协调者没有收到所有的表决，那么协作者就决定中止表决，然后向所有的参与者发送GLOBAL_ABORT的消息。</li>
+</ul>
+<h3 id="参与者阻塞情况"><a href="#参与者阻塞情况" class="headerlink" title="参与者阻塞情况"></a>参与者阻塞情况</h3><ul>
+<li><p>参与者可能在INIT的状态时候阻塞，等待协调者的VOTE_REQUEST的消息。这也可能是由于协调者挂了，或是网络延迟造成的。解决办法：如果在某一段时间之内参与者没有收到协调者的这个消息，那么参与者就简单的在本地中止事物，并且向协调者发送一个VOTE_ABORT的消息。</p>
+</li>
+<li><p>参与者可能在READY的状态阻塞，等待协作者发送全局表决消息。这也可能是由于协调者挂了，或是网络延迟造成的。这个时候解决办法比较多，同时，也是因为这个状态阻塞后，事物的不确定性，才产生了3PC。一般的解决办法如下：</p>
+<ul>
+<li>让每个参与者在协调者恢复之前一直阻塞</li>
+<li>参与者P与参与者Q联系，然后根据Q的状态来决定做什么，那么Q主要有以下几种状态，同时每种状态的对应关系如下：<ul>
+<li>Q状态为COMMIT，那么有可能就是协作者在崩溃之前把GLOBAL_COMMIT的消息发送给了Q，但是还没来得及发送给P，因此，P应该决定进行提交。</li>
+<li>Q状态为ABORT，同样的，是因为协作者在崩溃之前把GLOBAL_ABORT的消息发送给了Q，但是还没来得及发送给P，所以，此时P应该决定ABORT。</li>
+<li>Q状态为INIT，当协调者已经向所有的的参与者发送了VOTE_REQUEST消息，但是这个消息只到达P（然后它用VOTE_COMMIT消息作为应答），而没有到达Q时候，就是这种情况，换句话说，协调者在多播VOTE_REQUEST消息的时候崩溃了。在这种情况下，中止事务是安全的，P和Q都可以把状态转换为ABORT。</li>
+<li>当Q处于READY状态时候，这个时候是最难判断的，特别的，如果所有的参与者都处于READY的状态，那么他们就无法做出决定。问题就是因为尽管所有的参与者都想要提交，但还是需要协调者的表决才能做出最后的决定。因此，这个协议在协调者恢复之前阻塞。</li>
+</ul>
+</li>
+</ul>
+<p>总结一下所有的Q的状态以及对应的解决办法如下：</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Q的状态</th>
+<th style="text-align:center">P采取的行为</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>COMMIT</td>
+<td style="text-align:center">转换到COMMIT</td>
+</tr>
+<tr>
+<td>ABORT</td>
+<td style="text-align:center">转换到ABORT</td>
+</tr>
+<tr>
+<td>INIT</td>
+<td style="text-align:center">转换到ABORT</td>
+</tr>
+<tr>
+<td>READY</td>
+<td style="text-align:center">与其他参与者联系</td>
+</tr>
+</tbody>
+</table>
+<p>两阶段提交协议先写到这里，3PC之所以出现，也是因为2PC在上述表格中所有的参与者都处于READY的状态下，不知道如何进行事务；所以，才有了3PC。3PC的具体内容，以后有时间在聊。3PC在工业界用的不多。大都是2PC。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1] <a href="http://www.sequoiadb.com/cn/" target="_blank" rel="noopener">http://www.sequoiadb.com/cn/</a><br>[2]<a href="http://download.csdn.net/meeting/speech_preview/258" target="_blank" rel="noopener">http://download.csdn.net/meeting/speech_preview/258</a><br>[3]<a href="http://download.csdn.net/meeting/speech_preview/292" target="_blank" rel="noopener">http://download.csdn.net/meeting/speech_preview/292</a></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/两阶段提交/" rel="tag"># 两阶段提交</a>
+          
+            <a href="/tags/two-pc/" rel="tag"># two pc</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/03/Whats-Really-New-with-NewSQL/" rel="next" title="NewSql 崛起">
+                <i class="fa fa-chevron-left"></i> NewSql 崛起
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/18/linux-monitor/" rel="prev" title="服务器监控cacti与snmpd配置">
+                服务器监控cacti与snmpd配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="伊蓝">
+            
+              <p class="site-author-name" itemprop="name">伊蓝</p>
+              <p class="site-description motion-element" itemprop="description">记录点滴</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">36</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">59</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/neuyilan/" title="GitHub &rarr; https://github.com/neuyilan/" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#两阶段提交协议"><span class="nav-number">1.</span> <span class="nav-text">两阶段提交协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#协议步骤"><span class="nav-number">1.1.</span> <span class="nav-text">协议步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#容错阻塞"><span class="nav-number">1.2.</span> <span class="nav-text">容错阻塞</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#协调者阻塞情况"><span class="nav-number">1.2.1.</span> <span class="nav-text">协调者阻塞情况</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参与者阻塞情况"><span class="nav-number">1.2.2.</span> <span class="nav-text">参与者阻塞情况</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">2.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">伊蓝</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.7.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.7.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
