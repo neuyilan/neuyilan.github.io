@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[goland导入k8s源码]]></title>
+    <url>%2F2018%2F10%2F15%2Fgoland%20%E5%AF%BC%E5%85%A5k8s%E6%BA%90%E7%A0%81%2F</url>
+    <content type="text"><![CDATA[前言最近在调研 Google kubernetes 开源的容器编排平台，刚好也在学习 Go 语言，所以想看看 Google 这样的大厂是怎么撸 Go 语言的，本文简单介绍如何下载 k8s 源代码，导入 Idea GoLand（对，我是搞 Java的～），对于这么庞大的项目，没有 IDE 看起来还是很费劲的，当然牛人除外。 下载源代码这个不用说了，地球村的人应该都知道 1234mkdir -p /opt/kubernetes-src/src/k8s.iocd /opt/kubernetes-src/src/k8s.io/git clone https://github.com/kubernetes/kubernetes.gitgit checkout release-1.12（checkout 最新版本的分支即可） 因为等下在 GoLand 里面会配置 Project GOPATH（每个工程私有的 GOPATH）为 /opt/kubernetes-src，所以在 /opt/kubernetes-src 下建了 src/k8s.io 目录，至于为什么目录名叫 k8s.io，这个翻翻代码中的 import 就明白了，如果你不想导入代码后出现各种找不到导入包（符号）的化。 导入 GoLand在 GoLand 之前一直用的 Intellij + Go 插件，GoLand 出了之后立马下载下来体验，感觉还是不错的 打开 GoLand选择 New Project将目标文件夹指向 /opt/kubernetes-src确认之后会提示文件夹不为空，是否继续，点击确定就行慢慢等待 IDE 完成对源代码的索引。 注意：一定要设置导入源码的 Project GOPATH为当前路径/opt/kubernetes-src/src。路径为preferences-&gt;Go-&gt;GOPATH。 总结本文介绍了如何将 k8s 源码导入到 GoLand，为后续深入学习源码做好准备]]></content>
+      <categories>
+        <category>k8s</category>
+      </categories>
+      <tags>
+        <tag>goland</tag>
+        <tag>k8s</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Kubernetes Controllers 窥探]]></title>
+    <url>%2F2018%2F10%2F12%2FKubernetes%20Controllers%20%E7%AA%A5%E6%8E%A2%2F</url>
+    <content type="text"></content>
+      <categories>
+        <category>k8s</category>
+      </categories>
+      <tags>
+        <tag>controller manager</tag>
+        <tag>api-server</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[存储计算分离]]></title>
+    <url>%2F2018%2F08%2F08%2F%E5%AD%98%E5%82%A8%E8%AE%A1%E7%AE%97%E5%88%86%E7%A6%BB%E6%80%BB%E7%BB%93%2F</url>
+    <content type="text"><![CDATA[一句话：学术界往往要比工业界提前，就像google永远比其他公司提前一样。 在本人的硕士毕设中，标题是“面向存储计算分离的云化大规模数据库缓存系统”，故整理如下内容。 其实早在2009年，就有人提出针对Hadoop提出了SuperDataNode的概念，提出了计算分离的想法。具体请参考论文。往往学术界要比工业界提前好几年，等到真正技术成熟的时候，就是工业界开始尝试的时候。最近炒的火热的存储计算分离也开始在工业界中使用了。这篇论文提出9年后的今天，hadoop 3.0 正式提出了存储计算分离的概念。Hadoop 3.0 and the Decoupling of Hadoop Compute from Storage]]></content>
+      <categories>
+        <category>存储计算分离</category>
+      </categories>
+      <tags>
+        <tag>存储计算分离</tag>
+        <tag>分布式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Alluxio技术内幕:高性能的异步读缓存]]></title>
+    <url>%2F2018%2F08%2F08%2FAlluxio%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95-%E9%AB%98%E6%80%A7%E8%83%BD%E7%9A%84%E5%BC%82%E6%AD%A5%E8%AF%BB%E7%BC%93%E5%AD%98%2F</url>
+    <content type="text"><![CDATA[概览Alluxio服务通过连接底层持久化存储并按需将数据缓存至内存中，为不同的应用作业提供了一个可以高速并发访问的数据层。在Alluxio中，每一个文件根据其大小在逻辑上被划分成不同的“块”（默认512MB）。块在Alluxio中是缓存的最小单位。当Alluxio客户端用从Alluxio服务中读取文件时，如果被请求的数据块并未缓存在Alluxio中，则会触发缓存操作。将数据缓存在Alluxio空间后可以极大地提高后续分析作业的性能。 在Alluxio v1.7之前，当客户端向Alluixo请求读的数据没有命中缓存时，Alluxio客户端会默认地在读数据的时候同步地执行缓存操作。但当应用程序第一次读取一个文件并且仅需要读取该文件的一小部分的时候，这种同步缓存的操作可能对应用程序的性能造成损失。具体地说，在缓存没有命中的情况下，Alluxio客户端会（通过worker）去底层存储系统读取一个完整的数据块，将其缓存至Alluxio，同时把所需数据返回给应用程序。例如，对于很多SQL类型的作业，客户端常常只需要读取Parquet文件的表尾（不超过数MB大小），但第一次请求Alluxio时，Alluxio会尝试读取并缓存一个完整的数据块，以便于响应未来的请求。 Alluxio v1.7开始实现了优化的异步数据缓存操作。客户端不再同时负责数据的读取和缓存，而是将缓存操作交给worker节点与客户端的读操作异步进行。这一改进极大的简化了应用程序客户端在数据读取时的角色，并且由于客户端不等待缓存操作完成，可以显著提高某些类型作业的性能。本文解释了Alluxio v1.7及更高版本中的数据缓存操作，并对如何最大化地利用该功能提供了建议。本文涵盖的主题包括： 异步缓存策略 调整和配置异步缓存 异步缓存的优点 异步缓存策略异步缓存将缓存操作的开销由客户端转移到worker。客户端读数据的同时，缓存数据块的任务被交给worker在后台异步来处理（除非用户指定读取类型为”NO_CACHE”）。不论是读取完整或部分数据块，缓存操作对客户端性能均没有额外的影响，用户也不再需要像在Alluxio 1.7以前那样设置参数“alluxio.user.file.cache.partially.read.block”来启动或者关闭对只读了一部分的数据块的缓存。 Worker内部也利用帮客户端读取底层存储的过程中获取的数据做出了优化：如果客户端使用读取类型”CACHE”，从头到尾顺序从底层存储读取一个完整数据块，那么worker会在帮助客户端读底层存储系统的过程中积累了完整的数据。因此在客户端读顺序取完一个数据块以后，worker就可以直接缓存该数据了。 图1显示了读取数据块过程中的这一同步优化的部分。客户端只读取所需数据（步骤1，2，4，5），而worker在读取的时候顺便缓存(步骤3)。 当客户端读取完整的块，则将整个数据块会被缓存（步骤6）。 但如果worker发现，客户端只是读取数据块的一部分，或者正在以非顺序的方式读取数据块内部数据，那么worker便会放弃在读的时候顺便缓存。而客户端则会在读取完成后向worker节点发送异步缓存命令并继续。之后worker节点再从底层存储获取完整的块。 如图2所示，在客户端和worker节点间的异步缓存请求使用轻量级RPC通信（步骤1）。在worker确认请求后（步骤2），客户端可以立即继续运行，而步骤3和4可以在worker后台异步进行。 调整和配置异步缓存Alluxio worker节点在后台并行执行异步缓存，同时也服务于来自客户端的同步读取请求。每个worker节点有一个线程池，其大小由参数“alluxio.worker.network.netty.async.cache.manager.threads.max”指定。 参数默认值为8，这意味着worker最多可以使用8个核从其他worker或底层存储系统下载块，并在本地缓存以供将来使用。可以调高此值以加快后台异步缓存速度，但CPU使用率会增加。 降低该值则会减慢异步缓存速度，同时也释放了CPU资源。 异步缓存的优点这里我们提供一个简单的例子来展示异步缓存的好处：用户需要先从作为底层存储系统的S3中读取某一文件的一小部分，但之后还会有更多的读取请求，因此还是打算缓存整个文件。(1) 使用异步缓存之后，从S3中读取文件的前5KB只需要大约几秒钟，客户端从而可以在下载完5KB后立即返回。(2) 而对于Alluxio 1.7之前版本中，由于要缓存整个块，第一次读取这5KB数据将花费大约几分钟（速度将取决于网络连接条件）。在这两种情况下，数据块在初始请求后的几分钟内将完全缓存到Alluxio。但使用异步缓存后，客户端在初始读取所需的数据后可以继续执行，同时可以在worker后台缓存完整数据块。 异步缓存极大地提高了工作负载冷读取的性能，它们不需要完整顺序地读取数据块，比如在Presto或SparkSQL等计算框架上运行SQL工作负载。使用异步缓存，第一次查询将和直接从连接存储读取数据花费相同的时间量，并且随着数据异步缓存到Alluxio中，集群的整体性能将逐渐提高。 未来工作管理Alluxio存储是Alluxio系统的一个重要部分。 在将来的版本中，异步缓存机制将得到进一步改进，包括： 删除被动缓存的概念（ALLUXIO-3136） 更细粒度地控制资源使用情况，如网络带宽，异步缓存（ALLUXIO-3137） 改进worker间的数据传输机制（ALLUXIO-3138） 优化异步缓存数据读取（ALLUXIO-3141）]]></content>
+      <categories>
+        <category>分布式存储</category>
+      </categories>
+      <tags>
+        <tag>Alluxio</tag>
+        <tag>缓存</tag>
+        <tag>异步</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[预取技术-prefetching]]></title>
+    <url>%2F2018%2F04%2F27%2F%E9%A2%84%E5%8F%96%E6%8A%80%E6%9C%AF-prefetching%2F</url>
+    <content type="text"></content>
+  </entry>
+  <entry>
+    <title><![CDATA[并行编程有那么难吗？-计数(Counting)]]></title>
+    <url>%2F2018%2F04%2F24%2F%E5%B9%B6%E8%A1%8C%E7%BC%96%E7%A8%8B%E6%9C%89%E9%82%A3%E4%B9%88%E9%9A%BE%E5%90%97%EF%BC%9F-%E8%AE%A1%E6%95%B0-Counting%2F</url>
+    <content type="text"><![CDATA[计数可以说是比较常见也是并发的书本中最开始讲述的例子，本章将会讲述简单的计数需要面临的问题。 简单的计数操作非原子计数操作123456789101112131415161718192021222324252627282930313233#include &lt;iostream&gt;#include &lt;pthread.h&gt;int64_t counter = 0;int nTimes = 100000;void *inc_count(void *)&#123; for(int i=0; i&lt;nTimes; i++)&#123; counter++; &#125;&#125;int64_t read_count(void)&#123; return counter;&#125;int main(int argc, char* argv[])&#123; int nThreads = 2; pthread_t *tid =static_cast&lt;pthread_t*&gt; (malloc(nThreads*sizeof(pthread_t))); /* create number of nThreads threads*/ for(int j= 0; j &lt; nThreads; j++)&#123; pthread_create(&amp;tid[j], NULL, inc_count, NULL); &#125; /* wait for the threads to finish worrk*/ for(int j= 0; j &lt; nThreads; j++)&#123; pthread_join(tid[j], NULL); &#125; int res = read_count(); std::cout &lt;&lt; &quot;the final counter value = &quot; &lt;&lt; res &lt;&lt; std::endl;&#125; 以上是一个多线程并发程序，对一个变量进行++操作，可以看出，通过运行结果可以看出，其最后的输出结果不等于nThreads*nTimes。这就可以看出在非原子操作的情况下。这种并发是无法满足精确地++操作的。 原子操作的计数1234567891011121314151617181920212223242526272829303132333435#include &lt;iostream&gt;#include &lt;pthread.h&gt;#include &lt;atomic&gt;#include &quot;linux/atomic.h&quot;using namespace std;atomic_t counter = new ATOMIC_INIT(0);int nTimes = 100000;void *inc_count(void *)&#123; for(int i=0; i&lt;nTimes; i++)&#123; atomic_inc(&amp;counter); &#125;&#125;int64_t read_count(void)&#123; return atomic_read(&amp;counter);&#125;int main(int argc, char* argv[])&#123; int nThreads = 2; pthread_t *tid =static_cast&lt;pthread_t*&gt; (malloc(nThreads*sizeof(pthread_t))); for(int j= 0; j &lt; nThreads; j++)&#123; pthread_create(&amp;tid[j], NULL, inc_count, NULL); &#125; for(int j= 0; j &lt; nThreads; j++)&#123; pthread_join(tid[j], NULL); &#125; int res = read_count(); std::cout &lt;&lt; &quot;the final counter value = &quot; &lt;&lt; res &lt;&lt; std::endl;&#125; 以上是使用原子操作的代码。但是很遗憾。一直没有运行起来，报错就说 error: ‘atomic_t’ does not name a type 可以看出来。理想状况下，延迟增加图应该是靠近x轴的曲线，但是实际情况是当CPU核数增加，其延迟也在增加，并没有起到并发的作用。这就给并发带来了挑战！ 可以看一个对全局变量进行原子操作的例子，如图2所示，In order for each CPU to get a chance to increment a given global variable, the cache line containing that variable must circulate among all the CPUs, as shown by the red arrows. Such circulation will take significant time, resulting in the poor performance seen in Figure 5.1(图1)。]]></content>
+      <categories>
+        <category>并行编程</category>
+      </categories>
+      <tags>
+        <tag>并行</tag>
+        <tag>计数</tag>
+        <tag>count</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[楚门的世界]]></title>
+    <url>%2F2018%2F04%2F22%2F%E6%A5%9A%E9%97%A8%E7%9A%84%E4%B8%96%E7%95%8C%2F</url>
+    <content type="text"></content>
+  </entry>
+  <entry>
+    <title><![CDATA[git 命令相关]]></title>
+    <url>%2F2018%2F04%2F20%2Fgit-%E5%91%BD%E4%BB%A4%E7%9B%B8%E5%85%B3%2F</url>
+    <content type="text"><![CDATA[一般的github协作流程： fork一个自己的项目 master分支保持不变，去follow最新变更 每次开发新功能的时候创建新分支branch1 在新branch1分支commit 代码 在push branch1的代码之前回到master分支pull最新的远端代码 回到branch1运行rebase master命令，保证自己的所有代码提交都在master之后最新 push branch1到自己的github项目库 到github界面上提交pull request选择远端master分支 分支(branch)操作相关命令 查看本地分支：$ git branch 查看远程分支：$ git branch -r 创建本地分支：$ git branch [name] —-注意新分支创建后不会自动切换为当前分支切换分支：$ git checkout [name] 创建新分支并立即切换到新分支：$ git checkout -b [name] 删除分支：$ git branch -d [name] —- -d选项只能删除已经参与了合并的分支，对于未有合并的分支是无法删除的。如果想强制删除一个分支，可以使用-D选项 合并分支：$ git merge [name] —-将名称为[name]的分支与当前分支合并 git pull push 相关命令 git pull &lt;远程主机名&gt; &lt;远程分支名&gt;:&lt;本地分支名&gt; git push &lt;远程主机名&gt; &lt;本地分支名&gt;:&lt;远程分支名&gt;]]></content>
+      <categories>
+        <category>常用命令</category>
+      </categories>
+      <tags>
+        <tag>协作</tag>
+        <tag>git</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[BDTC2017总结]]></title>
+    <url>%2F2018%2F04%2F20%2FBDTC2017%E6%80%BB%E7%BB%93%2F</url>
+    <content type="text"><![CDATA[罗韩梅-资源调度项目背景 目标是整合集群硬件资源, 对外提供统一的标准接口, 海量任务的管理以及资源调配. 自研 vs 开源. 开源主要是关注Yarn, Mesos, swarm, kubernetes. 使用开源, 减少用户迁移的成本. 规模: 1.7亿container, 10000+资源, 微服务 介绍总体架构, 使用在线和离线混部, 利用不同任务的资源使用特点. 研发介绍kernel方面 增加了资源隔离的唯独, 包括了CPU, 内存, 磁盘容量, 网络出带宽, 网络入带宽, Disk IO, Buffer IO的控制. 首先对于网络IO的控制, 主要是多个进程竞争网络带宽的时候, 需要提供带宽和时延的保证. 设计的时候, 希望能够设置弹性目标, 充分利用资源, 又保证配额不被占用, 并且支持优先级. 具体实现: ECN标记, 滑动窗口, 令牌桶…(tc+cgroups) 对于Disk IO的控制: cgroup 通过识别pid控制磁盘IO. 但在buffer io中没有pid. 这方面做了修改. 并且解决了当前cgroups对io控制模式是hard(不会超过配额)的问题.以及解决io weight 通过cfq机制分割导致的数据波动我难题. docker方面 bug fix 热升级 网络插件 弹性内存控制 RBD插件 ceph使用方便, 非hadoop 生态的东西, 用ceph比较多. k8s quota APP引入Tapp 网络模式 网络模式多种支持, 包括NAT, Host, Floating IP等. 磁盘管理 GPU应用 registry: 做了相关的优化(P2P的分发等) 参考文献原文slice 徐东-MaxComputemax_compute 结构介绍总体结构, metadata存储统计等信息. 底层使用分布式文件系统, kv等作为存储. 任务执行使用fuxi等调度系统. 上层提供了计算接口, 包括SQL, 图等. SQL的软件层次sql的三个层次, compiler(语法解析), optimizer(基于代价优化)以及runtime(用于执行具体的执行plan) (参考 llvm, hive) 数据分布 做数据分布, 一方面是因为数据量的问题, 一方面是为了并行处理 简单一致性模型, 认为多个分片的数据完全独立, 不考虑使用多个分片之间的关系. 数据分布的方式有5种: hash, 排序按range, any(任意分), broadcast, singleton(类型spark中的collect, 集中到单机处理) 多种数据分片方式之间可以通过一定的关系进行转化 可以利用数据分布, 来对sql做查询优化, 举例来说: 这里, 下层先做table scan, 然后提供结构做join, 然后上层做aggregate. 如果使用的是sort merge join算法, 那么下层的数据就是排序好的, 在做aggregate的时候, 如果能够知道数据已经排序好, 就不用继续调用排序操作了. 这就是一个已知数据分布的优化方法. 这个优化要求各层操作之间能够互相传递消息. 所以进行分布式计算过程中, 每个操作子可以选择算法, 可以选择数据分布的方式, 这些选择, 可以结合cost的预测, 做cost-based的优化 ###分布特性搜集 做查询优化, 需要有统计信息, 需要数据分布的信息, 这些信息有两个来源: 用户指定(也就是建表的时候, 通过sql语句指定分布方式) 信息传递, 比如用了sort merge join, 后续可以记住这个sort的特点, 用起来 参考文献slice 链接 曹龙-Hbase阿里云三组件使用 组件 内部规模 公有云产品 主要功能 ODPS 7w MaxCompute 离线计算&amp;机器学习 HBase 1.2+W 云Hbase 在线存储 Flink 数千 StreamCompute 实时计算 其中Hbase有几百个集群, 从4太到2000台都有, 数据量从几百G到10P. Hbase使用场景和各个系统搭配使用, 不同的场景有各自的需求. Hbase部署模式包括了线下物理机部署, 以及基于云的部署. 需要考虑售出价格机器使用率等因素. 最佳组合下面的图展示了不同组件如何搭配, 以及数据流动. 常见的模型有 kafka =&gt; 流计算做实时ETL或者离线计算做ETL=&gt;存储结果到HBASE spark连接Hbase&amp;Phoenix, 做HTAP, 进行一些spark方面的优化如谓词下推 Hbase 给MR提供数据. 或者通过消息中间件, 进一步导入ODPS&amp;ES, 进行计算, 报表生成. 真实案例 车联网公司, 上传数据, 通过流计算做数据清洗, 然后导入Hbase, 提供给spark做分析. 数据的特点: RowKey设计, 每辆车10s上传1K数据, 1年数据量3P, 100W台车 安骑士: APP到HBase, 然后计算报表. 数据特点: 200T soul社交: spark streaming 实时写入Hbase, Hbase用主备. 输入推荐结果到客户. 数据特点: 30T, QPS高峰 800w+ 金融公司: 导入Hbase做数据查询. 数据特点: 单表10000亿+. 数据量100T. 有多个字段的二级索引. 内核优化 减少java的gc. 实现了ccsmap. 自己管理写缓存生命周期 jvm申请一块不用归还的内存自己管理 JVM的GC的优化 HDFS的串行pipeline 改为并发Quorum机制, 降低写抖动. 这边优化前后, YGCT 从120ms 降低到5ms. 使用了ZSTD 压缩算法. 使用indexable delta encoding, 添加了认证机制(user/password), 支持混合网访问 使用bloom filter, 提高读性能. 减少写入量,提高写性能. 平台能力 未来 现在是行存,OLAP不好, 增强分析的支持(如kudo,列存储, 索引) hbase+spark htap 计算和存储分离 参考文献原始slice链接 推荐学习资料 金海-内存计算背景以及为什么会出现内存计算 淘宝的例子, 每秒12w到25w笔交易, 数据量大以及实时性的要求, 需要低延迟的系统. 使用内存计算, 相比基于disk的系统, 延迟从秒级到纳秒 内存计算最早80年代就有, 现在兴起原因: 64位系统, 以及1T的内存的机器可以搭建了. 并且内存价格下降(今年变成4倍), 促进内存计算的发展. 内存计算的好处: 比如SAP HANA, 以及内存文件系统为例子说明 内存计算的挑战主要有四点: DRAM介质易失性 DRAM的存储密度低, 要一个T就比较大了 DRAM的功耗高(数据:容量增大的时候,占系统功耗的46%, 其中用于刷新的静态功耗又占DRAM功耗的50%) 内存子系统成本高(??)//查找IBM power 7子系统能耗比例 NVM相关 international technology roadmap for semiconductor 里面给出了集中存储介质的比较. 比如Memristor, PCM, STT-RAM,DRAM,FLASH, 以及HD. 现有的实际产品是Intel的3D xPoint. SCM具有如下的特性: 字节寻址, 持久存储, 写比读高10倍延迟. 读延迟和DRAM接近. 比flash快1000倍, 存储密度以及耐久性都比NAND的flash高1000倍.并且0静态功耗. 使用这种器件, 有可能可以解决内存计算的 易失性, 存储密度低, 功耗高的问题. 很容易构建一台上T内存的机器. SCM的存在, 从计算机的存储结构上来看, 有可能可以替代DISK, 从而改变整个存储层次. 另外一种可能的情况就是, 把PCM放在和DRAM一样的层次上, 出现计算和数据相结合的情况(也就是存储设备有计算能力) 一个使用NVM的内存计算的例子是HP:The Machine. 40个节点共享160T的内存, 是一个内存为中心的计算系统, 在各方面性能测试都很牛x. NVM带来的挑战对编程模型的影响https://www.snia.org/forums/sssi/nvmp 有一个SNLA NVM Programming TWG这样的组织. 出了一个NVM Programming Model 这样的手册. HP 的工程师也做了相关的报告, 在这里 从例子来看, 就是传统的应用IO路径发生了变化, 比如绕过了文件系统层, 或者针对NVM做的文件系统优化. 混合架构带来的几个影响和挑战对体系结构, 操作系统, 编程模型, 数据管理都有影响. 体系结构: 1. 大内存与多和的内存带宽问题(带宽瓶颈, 做内存并行?). 2. 异构存储的管理问题, 比如NVM和DRAM是层次化组织, 还是采用并列的方式组织. 操作系统: 1. 大内存, 页表大, 需要大页. 但是页太大, 有并发锁粒度大的问题. 2. 混合内存的情况下, 系统如何做任务的调度 数据管理: NVM中的数据放置问题,用什么样的结构, 比如KV, 文件系统 编程模型: 不再需要考虑磁盘IO以及数据持久化的问题 另外, 数据非易失, 存在安全性的问题, 有相关的攻击方式. 自己的一些工作.混合内存模拟器 HME: A Lightweight Emulator for Hybrid Memory Memory equalizer for lateral management of heterogeneous memory hardware/software cooperative caching for hybrid dram/nvm memory architectures MALRU: Miss-penalty aware LRU-based cache replacement for hybrid memory systems Lifetime-based memory management for distributed data processing systems mammoth gearing hadoop towards memory-intensive mapreduce applications(这里给出一些常见系统的分类统计) 分别是基于DRAM, NVM, 以及DISK的系统. 认为发展趋势是存算一体, 也就是NVM本身有计算功能. 原始slice链接 舒继武-文件系统背景等 磁盘的局限, 包括能耗和体积. 出现了flahs, 以及SCM. 对DRAM, PCM, NAND Flash, HDD的性能比较 带来的挑战: 1. 存储设备访问变快, 软件的相对开销变大. 2. 现有的软件基于老的硬件做设计, 不能充分发挥当前新硬件的特性: 所以, 对于大数据处理, 以及新硬件这块, 主要有两点变革: 1. 硬件方面存储结构的变革 2. 系统软件的变革. 对于存储结构的变革, 主要是集中flash, pcie, sata接口等. 以及NVM的相关技术指标的介绍. 这些改变了存储层次结构. 对于软件的变革, 主要:1. 硬件变快, 软件相对开销占比变大. 2. 硬件提供了新的接口给软件使用. 相关工作 基于flahs的kv store(WiscKey,NVMKV,FlashKv) 基于flash的文件系统(DFS,F2FS) 基于flahs 的事务管理 分布式闪存 NVM相关研究 大数据,实时要求. 以及大内存, NVM的出现, 开始做内存计算 相关的方向有: NVM的编程模型, NVM的内存空间管理, NVM的文件系统. 分布式存储的研究 基于RMDA而不是以太网做互联. 速度更快, 软件的相对开销占比例更大. 代表的有Octopus 分布式文件系统 相关资料slice链接]]></content>
+      <tags>
+        <tag>会议</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[hash join算法总结]]></title>
+    <url>%2F2018%2F01%2F04%2Fhash%20join%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93%2F</url>
+    <content type="text"><![CDATA[先给出一些hash join比较不错的连接。 hash join wiki; 常见的join算法 hive Hybrid Hybrid Grace Hash Join 一个总结的ppt。 ;]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>hash join</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Linux C ftruncate函数清空文件注意事项_要使用lseek重置偏移量]]></title>
+    <url>%2F2017%2F12%2F19%2FLinux%20C%20ftruncate%E5%87%BD%E6%95%B0%E6%B8%85%E7%A9%BA%E6%96%87%E4%BB%B6%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9_%E8%A6%81%E4%BD%BF%E7%94%A8lseek%E9%87%8D%E7%BD%AE%E5%81%8F%E7%A7%BB%E9%87%8F%2F</url>
+    <content type="text"><![CDATA[ftruncate是改变文件长度的一个函数，一般在操作文件的时候用到，例如我之前写的log的时候，由于log是append only的，所以log的record会越老越多，但是某个时间点的时候，需要把文件中的log都读出来，并且汇总成一条log，也就是log的compat，这个时候，当把所有的log读出来的时候，就需要把以前的log全部删掉，并写入新compact的log。所以此时就会用到ftruncate。但是千万要注意的事情就是，用这个函数并不会真的把文件的offset置为0，需要用lseek重新seek一下。这篇文章介绍的很详细。当时主要还是函数说明没有看仔细。 之前有个要把打开的文件清空，然后重新写入的需求，但是使用 ftruncate(fd, 0)后，并没有达到效果，反而文件头部有了’\0’，长度比预想的大了。究其原因是没有使用 lseek 重置文件偏移量，是我太天真了，以为清空文件就会从头开始写入。 ————————————- 我是解释分割线 ————————————– 首先 man ftruncate 看下帮助手册 NAME&emsp;&emsp;truncate, ftruncate - truncate a file to a specified length SYNOPSIS&emsp;&emsp;int truncate (const char* path, off_t length);&emsp;&emsp;int ftruncate(int fd, off_t length); DESCRIPTION&emsp;&emsp;The truncate() and ftruncate() functions cause the regular file named by path or referenced by fd to be truncated to a size of precisely length bytes.&emsp;&emsp;If the file previously was larger than this size, the extra data is lost. If the file previously was shorter, it is extended, and the extended part reads as null bytes (‘\0’).&emsp;&emsp;The file offset is not changed.&emsp;&emsp;If the size changed, then the st_ctime and st_mtime fields (respectively, time of last status change and time of last modification; see stat(2)) for the file are updated, and the set-user-ID and set-group-ID permission bits may be cleared.&emsp;&emsp;With ftruncate(), the file must be open for writing; with truncate(), the file must be writable. 之前就是因为没有看到红色那行字，导致我产生了文件开头的错误，都说了文件偏移量是不会改变的！ 实验如下： 12345678910111213141516171819202122232425262728#include &lt;stdio.h&gt;#include &lt;string.h&gt;#include &lt;unistd.h&gt;#include &lt;sys/types.h&gt;#include &lt;sys/stat.h&gt;#include &lt;fcntl.h&gt;int main(void)&#123; int fd; const char *s1 = &quot;0123456789&quot;; const char *s2 = &quot;abcde&quot;; fd = open(&quot;test.txt&quot;, O_CREAT | O_WRONLY | O_TRUNC, 0666); /* if error */ write(fd, s1, strlen(s1)); ftruncate(fd, 0); // lseek(fd, 0, SEEK_SET); write(fd, s2, strlen(s2)); close(fd); return 0;&#125; 去掉lseek(fd, 0, SEEK_SET); 的注释后，效果如下： 结论： 从以上两张图中，可以看出，不用 lseek 的文件大小为15，用 xxd 查看16进制格式看到 文件头有10个 ‘\0’ 填充。 而重置文件偏移量后，文件大小为5，内容也正确。 因此，在用 ftruncate 函数时，再次写入一定要重新设置文件偏移量（在 ftruncate 之前或之后都行，用 lseek 或 rewind 都可以）。]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>ftruncate</tag>
+        <tag>linux</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[The History of RocksDB]]></title>
+    <url>%2F2017%2F12%2F14%2Fthe%20history%20of%20rocksdb%2F</url>
+    <content type="text"><![CDATA[这篇文章讲述了rocksdb的由来。 首先确定了为什么要做成Embedded database. 而不是其他server类型的数据库，具体请看Dhruba Borthakur的一个presentation-Tech Talk: RocksDB Slides by Dhruba Borthakur &amp; Haobo Xu of Facebook. 为什么不使用leveldb，而是使用rocksdb。文章详情请戳THE HISTORY OF ROCKSDB.]]></content>
+      <categories>
+        <category>数据库</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>rocksdb</tag>
+        <tag>leveldb</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[常用命令]]></title>
+    <url>%2F2017%2F12%2F13%2F%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%2F</url>
+    <content type="text"><![CDATA[这篇文章是记录一些常用命令的以便查找。 vncserver centos 7 修改屏幕分辨率 vncserver -geometry 1440x900 ubutun 修改屏幕分辨率 vncserver -geometry 1440x900 linux查看系统内存大小 free -m linux下将用户添加到sudoers中linux下将用户添加到sudoers中 root 账户键入visudo即可进入sudo配置，这个命令要比vim /etc/sudoers要好很多，因为使用visudo进行sudo配置，将会得到很多提示.键入visudo后, 在编辑器下键入 /root 寻找root，找到第三个root的那一行 1root ALL=(ALL) AL 按yyp键复制并在粘贴在下一行，在这一行的 root处输入cw将root替换为你所需要添加用户的账户名，比如blinux，结果就是 12root ALL=(ALL) ALLblinux ALL=(ALL) ALL 如果你希望之后执行sudo命令时不需要输入密码，那么可以形如 12root ALL=(ALL) ALLblinux ALL=(ALL) NOPASSWD:ALL 输入:wq保存即可。 查看端口被占用情况1netstat -tunpl | grep port 根据进程号查看进程的详细信息Linux在启动一个进程时，系统会在/proc下创建一个以PID命名的文件夹，在该文件夹下会有我们的进程的信息，其中包括一个名为exe的文件即记录了绝对路径，通过ll或ls –l命令即可查看。 1ll /proc/PID cwd符号链接的是进程运行目录； exe符号连接就是执行程序的绝对路径； cmdline就是程序运行时输入的命令行命令； environ记录了进程运行时的环境变量； fd目录下是进程打开或使用的文件的符号连接。 Linux下vim快捷键多行注释： 首先按esc进入命令行模式下，按下Ctrl + v，进入列（也叫区块）模式; 在行首使用上下键选择需要注释的多行; 按下键盘（大写）“I”键，进入插入模式； 然后输入注释符（“//”、“#”等）; 最后按下“Esc”键。注意：在按下esc键后，会稍等一会才会出现注释，不要着急~~时间很短的 删除多行注释： 首先按esc进入命令行模式下，按下Ctrl + v, 进入列模式; 选定要取消注释的多行; 按下“x”或者“d”.注意：如果是“//”注释，那需要执行两次该操作，如果是“#”注释，一次即可 vim多行文本删除 首先在命令模式下，输入“：set nu”显示行号； 通过行号确定你要删除的行； 命令输入“：32,65d”,回车键，32-65行就被删除了，很快捷吧注意：如果无意中删除错了，可以使用‘u’键恢复（命令模式下） vim行内跳转 （mac 下） w：跳转到下一个单词的开始 e：跳到单词的结束 b：向后跳 CTRL+E：向下一行 CTRL+Y：向上一行 ^：行首 $：行尾 shell行内跳转 CTRL+a：行首 CTRL+e：行尾 CTRL+b：往回（左）移动一个字符 CTRL+f：往后（右）移动一个字符 ALT+b：往回（左）移动一个单词 ALT+F：往后（右）移动一个单词 vim中json格式化:%!python -m json.tool mac 下快捷键]]></content>
+      <categories>
+        <category>常用命令</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>vncserver</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Top 5 Reasons for Choosing S3 over HDFS]]></title>
+    <url>%2F2017%2F12%2F08%2FTop%205%20Reasons%20for%20Choosing%20S3%20over%20HDFS%2F</url>
+    <content type="text"><![CDATA[这篇文章是databricks的一篇博客，主要讲解了为什么在存储计算分离之后，选用S3而不选用HDFS的原因。简单说就是Cost, elasticity, availability, durability, performance, and data integrity。后面是原文地址Top 5 Reasons for Choosing S3 over HDFS.At Databricks, our engineers guide thousands of organizations to define their big data and cloud strategies. When migrating big data workloads to the cloud, one of the most commonly asked questions is how to evaluate HDFS versus the storage systems provided by cloud providers, such as Amazon’s S3, Microsoft’s Azure Blob Storage, and Google’s Cloud Storage. In this blog post, we share our thoughts on why cloud storage is the optimal choice for data storage. In this discussion, we use Amazon S3 as an example, but the conclusions generalize to other cloud platforms. We compare S3 and HDFS along the following dimensions: Cost Elasticity SLA (availability and durability) Performance per dollar Transactional writes and data integrity CostLet’s consider the total cost of storage, which is a combination of storage cost and human cost (to maintain them). First, let’s estimate the cost of storing 1 terabyte of data per month. As of May 2017, S3’s standard storage price for the first 1TB of data is $23/month. Note that depending on your usage pattern, S3 listing and file transfer might cost money. On the other hand, cold data using infrequent-access storage would cost only half, at $12.5/month. For the purpose of this discussion, let’s use $23/month to approximate the cost. S3 does not come with compute capacity but it does give you the freedom to leverage ephemeral clusters and to select instance types best suited for a workload (e.g., compute intensive), rather than simply for what is the best from a storage perspective. For HDFS, the most cost-efficient storage instances on EC2 is the d2 family. To be generous and work out the best case for HDFS, we use the following assumptions that are virtually impossible to achieve in practice: A crystal ball into the future to perfectly predict the storage requirements three years in advance, so we can use the maximum discount using 3-year reserved instances. Workloads are stable with a peak-to-trough ratio of 1.0. This means our storage system does not need to be elastic at all. Storage utilization is at 70%, and standard HDFS replication factor set at 3. With the above assumptions, using d2.8xl instance types ($5.52/hr with 71% discount, 48TB HDD), it costs 5.52 x 0.29 x 24 x 30 / 48 x 3 / 0.7 = $103/month for 1TB of data. (Note that with reserved instances, it is possible to achieve lower price on the d2 family.) So in terms of storage cost alone, S3 is 5X cheaper than HDFS. Based on our experience managing petabytes of data, S3’s human cost is virtually zero, whereas it usually takes a team of Hadoop engineers or vendor support to maintain HDFS. Once we factor in human cost, S3 is 10X cheaper than HDFS clusters on EC2 with comparable capacity. ElasticityCapacity planning is tough to get right, and very few organizations can accurately estimate their resource requirements upfront. In the on-premise world, this leads to either massive pain in the post-hoc provisioning of more resources or huge waste due to low utilization from over-provisioning upfront. One of the nicest benefits of S3, or cloud storage in general, is its elasticity and pay-as-you-go pricing model: you are only charged what you put in, and if you need to put more data in, just dump them there. Under the hood, the cloud provider automatically provisions resources on demand. Simply put, S3 is elastic, HDFS is not. SLA (Availability and Durability)Based on our experience, S3’s availability has been fantastic. Only twice in the last six years have we experienced S3 downtime and we have never experienced data loss from S3. Amazon claims 99.999999999% durability and 99.99% availability. Note that this is higher than the vast majority of organizations’ in-house services. The official SLA from Amazon can be found here: Service Level Agreement – Amazon Simple Storage Service (S3). For HDFS, in contrast, it is difficult to estimate availability and durability. One could theoretically compute the two SLA attributes based on EC2’s mean time between failures (MTTF), plus upgrade and maintenance downtimes. In reality, those are difficult to quantify. Our understanding working with customers is that the majority of Hadoop clusters have availability lower than 99.9%, i.e. at least 9 hours of downtime per year. With cross-AZ replication that automatically replicates across different data centers,S3’s availability and durability is far superior to HDFS’. Performance per DollarThe main problem with S3 is that the consumers no longer have data locality and all reads need to transfer data across the network, and S3 performance tuning itself is a black box. When using HDFS and getting perfect data locality, it is possible to get ~3GB/node local read throughput on some of the instance types (e.g. i2.8xl, roughly 90MB/s per core). DBIO, our cloud I/O optimization module, provides optimized connectors to S3 and can sustain ~600MB/s read throughput on i2.8xl (roughly 20MB/s per core). That is to say, on a per node basis, HDFS can yield 6X higher read throughput than S3. Thus, given that the S3 is 10x cheaper than HDFS, we find that S3 is almost 2x better compared to HDFS on performance per dollar. However, a big benefit with S3 is we can separate storage from compute, and as a result, we can just launch a larger cluster for a smaller period of time to increase throughput, up to allowable physical limits. This separation of compute and storage also allow for different Spark applications (such as a data engineering ETL job and an ad-hoc data science model training cluster) to run on their own clusters, preventing concurrency issues that affect multi-user fixed-sized Hadoop clusters. This separation (and the flexible accommodation of disparate workloads) not only lowers cost but also improves the user experience. One advantage HDFS has over S3 is metadata performance: it is relatively fast to list thousands of files against HDFS namenode but can take a long time for S3. However, the scalable partition handling feature we implemented in Apache Spark 2.1 mitigates this issue with metadata performance in S3. Stay tuned for announcements in the near future that completely eliminates this issue with DBIO. Transactional Writes and Data IntegrityMost of the big data systems (e.g., Spark, Hive) rely on HDFS’ atomic rename feature to support atomic writes: that is, the output of a job is observed by the readers in an “all or nothing” fashion. This is important for data integrity because when a job fails, no partial data should be written out to corrupt the dataset. S3’s lack of atomic directory renames has been a critical problem for guaranteeing data integrity. This has led to complicated application logic to guarantee data integrity, e.g. never append to an existing partition of data. Today, we are happy to announce the support for transactional writes in our DBIO artifact, which features high-performance connectors to S3 (and in the future other cloud storage systems) with transactional write support for data integrity. See this blog post for more information. Other Operational ConcernsSo far, we have discussed durability, performance, and cost considerations, but there are several other areas where systems like S3 have lower operational costs and greater ease-of-use than HDFS: Encryption, access control, and auditing: S3 supports multiple types of encryption, with both AWS- and customer-managed keys, and has easy-to-configure audit logging and access control capabilities. These features make it easy to meet regulatory compliance needs, such as PCI or HIPAA compliance.Backups and disaster recovery: S3’s opt-in versioning feature automatically maintains backups of modified or deleted files, making it easy to recover from accidental data deletion. Cross-region replication can be used to enhance S3’s already strong availability guarantees in order to withstand the complete outage of an AWS region.Data lifecycle management: S3 can be configured to automatically migrate objects to cold storage after a configurable time period. In many organizations, data is read frequently when it is new and is read significantly less often over time. S3’s lifecycle management policies can automatically perform migration of old objects to Infrequent Access storage in order to save on cost, or to Glacier to achieve even larger cost savings; the latter is useful for organizations where regulatory compliance mandates long-term storage of data.Supporting these additional requirements on HDFS requires even more work on the part of system administrators and further increases operational cost and complexity. ConclusionIn this blog post we used S3 as the example to compare cloud storage vs HDFS: Item S3 HDFS S3 vs HDFS Elasticity Yes No S3 is more elastic Cost/TB/month $23 $206 10X Availability 99.99% 99.9% (estimated) 10X Durability 99.999999999% 99.9999% (estimated) 10X+ Transactional writes Yes with DBIO Yes Comparable To summarize, S3 and cloud storage provide elasticity, with an order of magnitude better availability and durability and 2X better performance, at 10X lower cost than traditional HDFS data storage clusters. Hadoop and HDFS commoditized big data storage by making it cheap to store and distribute a large amount of data. However, in a cloud native architecture, the benefit of HDFS is minimal and not worth the operational complexity. That is why many organizations do not operate HDFS in the cloud, but instead use S3 as the storage backend. With Databricks’ DBIO, our customers can sit back and enjoy the merits of performant connectors to cloud storage without sacrificing data integrity.]]></content>
+      <categories>
+        <category>云存储</category>
+      </categories>
+      <tags>
+        <tag>对象存储</tag>
+        <tag>S3</tag>
+        <tag>HDFS</tag>
+        <tag>存储计算分离</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[希腊神话故事]]></title>
+    <url>%2F2017%2F11%2F28%2F%E5%B8%8C%E8%85%8A%E7%A5%9E%E8%AF%9D%E6%95%85%E4%BA%8B%2F</url>
+    <content type="text"><![CDATA[本文主要讲解希腊神话故事的一些名词以及解释。 人名 哈迪斯(Hades):希腊冥界老大 珀尔赛福涅(Persephone):被Hades拐走当妻子的少女 得墨忒耳(Demeter):掌农业，结婚，丰饶之女神;Persephone的妈妈。 克洛诺斯（Kronos）:统治希腊天神的首领，哈迪斯的爸爸，代表这泰坦（Titans）族诸神的势力。 宙斯(Zeus):最后推翻他老爸克洛诺斯的天神，建立了新的王朝，代表着奥林匹斯（Olympians）诸神； 卡戎（Charon）:摆渡的船夫；冥府渡神 西西弗斯（Sisyphus）:古希腊神话中一位邪恶的国王，他死后得到的惩罚是把一块巨石滚上陡峭的山坡。每次快要滚到山顶，巨石都会滚落回山脚，他又得重新开始，如此永远反复下去。一项不可能完成的艰巨任务有时被形容为 a Sisyphean task. 动物名 刻尔泊洛斯（Cerberus）：把守冥府的三头犬 俄耳甫斯(Orpheus):希腊神话人物，一个出色的音乐家 欧律狄刻（Eurydice）：欧律狄刻; 一林中仙女，俄耳甫斯之妻，在其死后，俄耳甫斯到冥府去寻找她；俄耳甫斯未能遵守禁令回头看了欧律狄刻，最后欧律狄刻仍被抓回阴间 Satyrs：色情狂（satyr的复数形式）；希腊神话中的半人半兽 地名 长春花平原(Asphodel): 阴间，大多数无名小辈死后居住的地方 塔尔塔洛斯(Tartarus)：天上的神犯了重大错误待的地方，也就是早期基督教中的地域 天堂(paradise):那些达官显贵等人死后待的地方 多利斯(Diros):希腊地下延绵数英里的洞穴群，应该是哈迪斯统治的地方（地狱）的一个现实版的对应，]]></content>
+      <categories>
+        <category>神话</category>
+      </categories>
+      <tags>
+        <tag>希腊神话</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[B tree 与B+Tree的区别以及原理和应用场景]]></title>
+    <url>%2F2017%2F06%2F26%2FB-tree-%E4%B8%8EB-Tree%E7%9A%84%E5%8C%BA%E5%88%AB%E4%BB%A5%E5%8F%8A%E5%8E%9F%E7%90%86%E5%92%8C%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%2F</url>
+    <content type="text"><![CDATA[B-tree的由来？为什么非得是树呢，而不是直接是数组。Memory locality &amp; the magic of B-Trees!:说了很清楚，就是因为在申请内存的时候，不知道要申请多大的内存，所以没办法申请很大的一块内存，所以就变成了一个数组被打断为好几段，然后每段用链表连接起来，这其实就是树的基本模型。 B-tree和B+tree的区别是什么？ B-tree中非叶子节点可以存值；但是B+tree非叶子节点不可以存值，只能存key，值只存在叶子节点中。 B-tree中叶子节点没有用指针连接起来；而B+tree中的叶子节点用指针连接起来，所以B+tree的查询很快，当定位到叶子节点后，只需要遍历叶子节点即可。B+树相比于B树能够更加方便的遍历。 B+树简单的说就是变成了一个索引一样的东西。 B+的搜索与B-树也基本相同，区别是B+树只有达到叶子结点才命中（B-树可以在非叶子结点命中），B+树的性能相当于是给叶子节点做一次二分查找。 B+树的查找算法：当B+树进行查找的时候，你首先一定需要记住，就是B+树的非叶子节点中并不储存节点，只存一个键值方便后续的操作，所以非叶子节点就是索引部分，所有的叶子节点是在同一层上，包含了全部的关键值和对应数据所在的地址指针。这样其实，进行 B+树的查找的时候，只需要在叶子节点中进行查找就可以了。 各自的应用场景有什么不同?mysql的MyISAM和InnoDB两个存储引擎的索引实现方式： MyISAM引擎使用B+ Tree作为索引结构，叶节点存放的是数据记录的地址。 MyISAM引擎的辅助索引（二级索引）和主索引在结构上没有区别，只是辅助索引的key可以重复，叶节点上存放的也是数据记录的地址。 MyISAM索引文件和数据文件是分离的，索引文件仅保存数据记录的地址。 InnoDB中表数据本身就是按B+ Tree组织的一个索引结构，叶节点存放的就不是数据记录的地址，而是完整的数据记录。所以InnoDB这种存储方式，又称为聚集索引，使得按主键的搜索十分高效，但二级索引搜索需要检索两遍索引：首先二级索引获得主键，然后用主键到主索引中检索到数据记录。 因为主键是InnoDB表记录的”逻辑地址“，所以InnoDB要求表必须有主键，MyISAM可以没有。 自己的一点想法看了很多的文章，心中一直在问自己一个问题，既然B+树那么好，那么B树存在的意义什么呢？因为innodb存储引擎和MyISAM存储都是使用的B+树。我自己的理解是：B树适合那种访问之后能够把相应的数据一起返回的数据结构。 那么，什么样子的才是访问到key之后把相应的value数据一起就返回的呢？上面也提到了因为B+树非叶子节点不存储value，所以占得空间小，所以相同的内存大小，B+树存储的节点更多，这说明了能够放在内存中的非叶子节点就更多。那么，B树存在的意义又是什么呢？ 我觉得B树存在的意义是当都在内存中的时候，若是能够根据key直接把value得到然后返回，不用去磁盘查找， 明显要快很多，因为B+树的数据(value)是存在叶子节点中的，而叶子节点是存在于磁盘中的。也就是说当数据很小的时候，使用B数把数据跟key一起存放在非叶子节点中，可以更快的加速查找。 参考文献 https://yq.aliyun.com/articles/65126 http://www.itwendao.com/article/detail/68322.html https://loveforprogramming.quora.com/Memory-locality-the-magic-of-B-Trees http://www.cnblogs.com/yanghuahui/p/3483047.html]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[进程间通信方式-java实现]]></title>
+    <url>%2F2017%2F06%2F12%2F%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E6%96%B9%E5%BC%8F-java%E5%AE%9E%E7%8E%B0%2F</url>
+    <content type="text"><![CDATA[UNIX 为实现这样的进程间通信 提供了多种技术。一些技术提供同一主机上的进程间通信，其他技术可以实现主机到主机的信息交换。另外，各种技术的速度不同，所以必须选择最合适自己需求的技术。还必须进行协调（实施时间控制和排他控制）。例如，如果一个应用程序产生数据，另一个应用程序消费数据，那么当读完共享池时消费者必须停下来等待生产者。另一方面，如果消费者无法足够快地读取池，生产者必须慢下来或暂停。 表 1 总结在典型的 UNIX 系统上可用的进程间通信形式。 名称 说明 范围 用途 文件 在典型的 UNIX 文件中读写数据。任意数量的进程都可以互操作。 本地 共享大数据集 管道 使用专用的文件描述符在两个进程之间传输数据。通信只在父进程和子进程之间进行。 本地 简单的数据共享，比如生产者和消费者 命名管道 通过专用的文件描述符在进程之间交换数据。通信可以在同一主机上的任意两个对等进程之间进行。 本地 生产者和消费者或命令-控制，比如 MySQL 和它的命令行查询工具 信号 通过中断通知应用程序某一情况。 本地 无法在信号中传输数据，所以信号主要用于进程管理 共享内存 通过在同一内存段中读写数据共享信息。 本地 任何类型的协作，尤其适合需要安全性的情况 套接字 完成特殊的设置过程之后，使用一般的输入/输出操作传输数据。 本地或远程 FTP、ssh 和 Apache Web Server 等网络服务 管道管道的相关概念操作系统中的管道是linux支持的最初的Unix IPC 形式之一，且具有以下特点 管道是半双工的，数据只能向一个方向流动；需要双方通信时，需要建立两个管道。 只能用于父子进程或是兄弟进程之间的通信（具有亲缘关系的进程） 单独构成一个独立的文件系统：管道对于管道两端的进程而言，就是一个文件，但是他不是普通的文件，它不属于某种文件系统，而是自立门户，单独构成一种文件系统，并且只存在内存中。 数据的读出和写入：一个进程向管道中写的内容被管道另一端的进程读出。写入的内容每次都添加在管道缓冲区的末尾，并且每次都是从缓冲区的头部读出数据。 管道注意的点Java 中的管道操作系统中默认的管道是进程间的通信当时，但是在java中，管道是进程内线程之间的通信方式。这是java中的管道和操作系统中的管道的最大的区别。 如果是在同一个线程中去使用java中的管道还会引起引起死锁，主要的原因就是java中申请的管道默认最大为1k即1024B.当缓冲区满，并且写还没写完的时候，就会阻塞。直至等待读，但此时因为在同一个线程，读也被阻塞。所以，就会造成死锁。详细请看文章 Java里的管道输入流PipedInputStream与管道输出流 PipedOutputStream 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465package ipc;import java.io.IOException;import java.io.PipedInputStream;import java.io.PipedOutputStream;public class PipeExample &#123; public static void main(String[] args) &#123; final PipedOutputStream out = new PipedOutputStream(); final PipedInputStream in = new PipedInputStream(); Thread thread1 = new Thread(new Runnable()&#123; @Override public void run() &#123; try&#123; while(true)&#123; out.write(&quot;hello world,pile!&quot;.getBytes()); &#125; //如果上面不是while(true)循环，并且还没有执行out.close()方法的话，则就会报错图1的错误 //原因就是：PipedInputStream throws this exception on read() //when there is no writing thread and writer is not properly closed //所以，当一直是while(true)不断写东西的时候，是不会报错的// out.close(); &#125;catch (IOException e)&#123; e.printStackTrace(); &#125; &#125; &#125;); Thread thread2 = new Thread(new Runnable()&#123; @Override public void run() &#123; try &#123; int data = in.read(); while(data!=-1)&#123; System.out.println((char)data); data = in.read(); &#125; &#125; catch (Exception e) &#123; e.printStackTrace(); &#125; &#125; &#125;); try &#123; in.connect(out); &#125; catch (IOException e) &#123; e.printStackTrace(); &#125; thread1.start(); thread2.start(); try &#123; //等待线程执行完 thread1.join(); thread2.join(); in.close(); out.close(); &#125; catch (Exception e) &#123; e.printStackTrace(); &#125; &#125;&#125; 共享内存请参考此文章:对话 UNIX: 通过共享内存进行进程间通信 参考文献 Linux环境进程间通信（一） Java IO:Pipes Java里的管道输入流 PipedInputStream与管道输出流PipedOutputStream Inter-Process Communication 进程间通信 对话 UNIX: 通过共享内存进行进程间通信]]></content>
+      <categories>
+        <category>操作系统</category>
+      </categories>
+      <tags>
+        <tag>分布式系统</tag>
+        <tag>面试</tag>
+        <tag>操作系统</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[TCP三次握手[转载]]]></title>
+    <url>%2F2017%2F05%2F19%2FTCP%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B%2F</url>
+    <content type="text"><![CDATA[TCP是什么？具体的关于TCP是什么，我不打算详细的说了；当你看到这篇文章时，我想你也知道TCP的概念了，想要更深入的了解TCP的工作，我们就继续。它只是一个超级麻烦的协议，而它又是互联网的基础，也是每个程序员必备的基本功。首先来看看OSI的七层模型： 我们需要知道TCP工作在网络OSI的七层模型中的第四层——Transport层，IP在第三层——Network层，ARP在第二层——Data Link层；在第二层上的数据，我们把它叫Frame，在第三层上的数据叫Packet，第四层的数据叫Segment。 同时，我们需要简单的知道，数据从应用层发下来，会在每一层都会加上头部信息，进行封装，然后再发送到数据接收端。这个基本的流程你需要知道，就是每个数据都会经过数据的封装和解封装的过程。 在OSI七层模型中，每一层的作用和对应的协议如下： TCP是一个协议，那这个协议是如何定义的，它的数据格式是什么样子的呢？要进行更深层次的剖析，就需要了解，甚至是熟记TCP协议中每个字段的含义。哦，来吧。 上面就是TCP协议头部的格式，由于它太重要了，是理解其它内容的基础，下面就将每个字段的信息都详细的说明一下。 Source Port和Destination Port:分别占用16位，表示源端口号和目的端口号；用于区别主机中的不同进程，而IP地址是用来区分不同的主机的，源端口号和目的端口号配合上IP首部中的源IP地址和目的IP地址就能唯一的确定一个TCP连接； Sequence Number:用来标识从TCP发端向TCP收端发送的数据字节流，它表示在这个报文段中的的第一个数据字节在数据流中的序号；主要用来解决网络报乱序的问题； Acknowledgment Number:32位确认序列号包含发送确认的一端所期望收到的下一个序号，因此，确认序号应当是上次已成功收到数据字节序号加1。不过，只有当标志位中的ACK标志（下面介绍）为1时该确认序列号的字段才有效。主要用来解决不丢包的问题； Offset:给出首部中32 bit字的数目，需要这个值是因为任选字段的长度是可变的。这个字段占4bit（最多能表示15个32bit的的字，即4*15=60个字节的首部长度），因此TCP最多有60字节的首部。然而，没有任选字段，正常的长度是20字节； TCP Flags:TCP首部中有6个标志比特，它们中的多个可同时被设置为1，主要是用于操控TCP的状态机的，依次为URG，ACK，PSH，RST，SYN，FIN。每个标志位的意思如下： URG：此标志表示TCP包的紧急指针域（后面马上就要说到）有效，用来保证TCP连接不被中断，并且督促中间层设备要尽快处理这些数据； ACK：此标志表示应答域有效，就是说前面所说的TCP应答号将会包含在TCP数据包中；有两个取值：0和1，为1的时候表示应答域有效，反之为0； PSH：这个标志位表示Push操作。所谓Push操作就是指在数据包到达接收端以后，立即传送给应用程序，而不是在缓冲区中排队； RST：这个标志表示连接复位请求。用来复位那些产生错误的连接，也被用来拒绝错误和非法的数据包； SYN：表示同步序号，用来建立连接。SYN标志位和ACK标志位搭配使用，当连接请求的时候，SYN=1，ACK=0；连接被响应的时候，SYN=1，ACK=1；这个标志的数据包经常被用来进行端口扫描。扫描者发送一个只有SYN的数据包，如果对方主机响应了一个数据包回来 ，就表明这台主机存在这个端口；但是由于这种扫描方式只是进行TCP三次握手的第一次握手，因此这种扫描的成功表示被扫描的机器不很安全，一台安全的主机将会强制要求一个连接严格的进行TCP的三次握手； FIN： 表示发送端已经达到数据末尾，也就是说双方的数据传送完成，没有数据可以传送了，发送FIN标志位的TCP数据包后，连接将被断开。这个标志的数据包也经常被用于进行端口扫描。 Window:窗口大小，也就是有名的滑动窗口，用来进行流量控制；这是一个复杂的问题，这篇博文中并不会进行总结的；好了，基本知识都已经准备好了，开始下一段的征程吧。 三次握手又是什么？TCP是面向连接的，无论哪一方向另一方发送数据之前，都必须先在双方之间建立一条连接。在TCP/IP协议中，TCP协议提供可靠的连接服务，连接是通过三次握手进行初始化的。三次握手的目的是同步连接双方的序列号和确认号并交换 TCP窗口大小信息。这就是面试中经常会被问到的TCP三次握手。只是了解TCP三次握手的概念，对你获得一份工作是没有任何帮助的，你需要去了解TCP三次握手中的一些细节。先来看图说话。 多么清晰的一张图，当然了，也不是我画的，我也只是引用过来说明问题了。 第一次握手：建立连接。客户端发送连接请求报文段，将SYN位置为1，Sequence Number为x；然后，客户端进入SYN_SEND状态，等待服务器的确认； 第二次握手：服务器收到SYN报文段。服务器收到客户端的SYN报文段，需要对这个SYN报文段进行确认，设置Acknowledgment Number为x+1(Sequence Number+1)；同时，自己自己还要发送SYN请求信息，将SYN位置为1，Sequence Number为y；服务器端将上述所有信息放到一个报文段（即SYN+ACK报文段）中，一并发送给客户端，此时服务器进入SYN_RECV状态； 第三次握手：客户端收到服务器的SYN+ACK报文段。然后将Acknowledgment Number设置为y+1，向服务器发送ACK报文段，这个报文段发送完毕以后，客户端和服务器端都进入ESTABLISHED状态，完成TCP三次握手。完成了三次握手，客户端和服务器端就可以开始传送数据。以上就是TCP三次握手的总体介绍。 那四次分手呢？当客户端和服务器通过三次握手建立了TCP连接以后，当数据传送完毕，肯定是要断开TCP连接的啊。那对于TCP的断开连接，这里就有了神秘的“四次分手”。 第一次分手：主机1（可以使客户端，也可以是服务器端），设置Sequence Number和Acknowledgment Number，向主机2发送一个FIN报文段；此时，主机1进入FIN_WAIT_1状态；这表示主机1没有数据要发送给主机2了； 第二次分手：主机2收到了主机1发送的FIN报文段，向主机1回一个ACK报文段，Acknowledgment Number为Sequence Number加1；主机1进入FIN_WAIT_2状态；主机2告诉主机1，我“同意”你的关闭请求； 第三次分手：主机2向主机1发送FIN报文段，请求关闭连接，同时主机2进入LAST_ACK状态； 第四次分手：主机1收到主机2发送的FIN报文段，向主机2发送ACK报文段，然后主机1进入TIME_WAIT状态；主机2收到主机1的ACK报文段以后，就关闭连接；此时，主机1等待2MSL后依然没有收到回复，则证明Server端已正常关闭，那好，主机1也可以关闭连接了。至此，TCP的四次分手就这么愉快的完成了。当你看到这里，你的脑子里会有很多的疑问，很多的不懂，感觉很凌乱；没事，我们继续总结。 为什么要三次握手白话例子1但是为什么一定要进行三次握手来保证连接是双工的呢，一次不行么？两次不行么？我们举一个现实生活中两个人进行语言沟通的例子来模拟三次握手。 引用网上的一些通俗易懂的例子，虽然不太正确，后面会指出，但是不妨碍我们理解，大体就是这么个理解法。 第一次对话： 老婆让甲出去打酱油，半路碰到一个朋友乙，甲问了一句：哥们你吃饭了么？ 结果乙带着耳机听歌呢，根本没听到，没反应。甲心里想：跟你说话也没个音，不跟你说了，沟通失败。说明乙接受不到甲传过来的信息的情况下沟通肯定是失败的。 如果乙听到了甲说的话，那么第一次对话成功，接下来进行第二次对话。 第二次对话： 乙听到了甲说的话，但是他是老外，中文不好，不知道甲说的啥意思也不知道怎样回答，于是随便回答了一句学过的中文 ：我去厕所了。甲一听立刻笑喷了，“去厕所吃饭”?道不同不相为谋，离你远点吧，沟通失败。说明乙无法做出正确应答的情况下沟通失败。 如果乙听到了甲的话，做出了正确的应答，并且还进行了反问：我吃饭了，你呢？那么第二次握手成功。 通过前两次对话证明了乙能够听懂甲说的话，并且能做出正确的应答。 接下来进行第三次对话。 第三次对话： 甲刚和乙打了个招呼，突然老婆喊他，“你个死鬼，打个酱油咋这么半天，看我回家咋收拾你”，甲是个妻管严，听完吓得二话不说就跑回家了，把乙自己晾那了。乙心想：这什么人啊，得，我也回家吧，沟通失败。说明甲无法做出应答的情况下沟通失败。 如果甲也做出了正确的应答：我也吃了。那么第三次对话成功，两人已经建立起了顺畅的沟通渠道，接下来开始持续的聊天。 通过第二次和第三次的对话证明了甲能够听懂乙说的话，并且能做出正确的应答。 可见，两个人进行有效的语言沟通，这三次对话的过程是必须的。 为了保证服务端能收接受到客户端的信息并能做出正确的应答而进行前两次(第一次和第二次)握手，为了保证客户端能够接收到服务端的信息并能做出正确的应答而进行后两次(第二次和第三次)握手。 例子2在谢希仁的《计算机网络》中是这样说的： 为了防止已失效的连接请求报文段突然又传送到了服务端，因而产生错误。 在书中同时举了一个例子，如下： “已失效的连接请求报文段”的产生在这样一种情况下：client发出的第一个连接请求报文段并没有丢失，而是在某个网络结点长时间的滞留了，以致延误到连接释放以后的某个时间才到达server。本来这是一个早已失效的报文段。但server收到此失效的连接请求报文段后，就误认为是client再次发出的一个新的连接请求。于是就向client发出确认报文段，同意建立连接。假设不采用“三次握手”，那么只要server发出确认，新的连接就建立了。由于现在client并没有发出建立连接的请求，因此不会理睬server的确认，也不会向server发送数据。但server却以为新的运输连接已经建立，并一直等待client发来数据。这样，server的很多资源就白白浪费掉了。采用“三次握手”的办法可以防止上述现象发生。例如刚才那种情况，client不会向server的确认发出确认。server由于收不到确认，就知道client并没有要求建立连接。” 这就很明白了，防止了服务器端的一直等待而浪费资源。 总结在Google Groups的TopLanguage中看到一帖讨论TCP“三次握手”觉得很有意思。贴主提出“TCP建立连接为什么是三次握手？”的问题，在众多回复中，有一条回复写道：“这个问题的本质是, 信道不可靠, 但是通信双发需要就某个问题达成一致. 而要解决这个问题, 无论你在消息中包含什么信息, 三次通信是理论上的最小值. 所以三次握手不是TCP本身的要求, 而是为了满足”在不可靠信道上可靠地传输信息”这一需求所导致的. 请注意这里的本质需求,信道不可靠, 数据传输要可靠. 三次达到了, 那后面你想接着握手也好, 发数据也好, 跟进行可靠信息传输的需求就没关系了. 因此,如果信道是可靠的, 即无论什么时候发出消息, 对方一定能收到, 或者你不关心是否要保证对方收到你的消息, 那就能像UDP那样直接发送消息就可以了.”。这可视为对“三次握手”目的的另一种解答思路。 为什么要四次分手那四次分手又是为何呢？TCP协议是一种面向连接的、可靠的、基于字节流的运输层通信协议。TCP是全双工模式，这就意味着，当主机1发出FIN报文段时，只是表示主机1已经没有数据要发送了，主机1告诉主机2，它的数据已经全部发送完毕了；但是，这个时候主机1还是可以接受来自主机2的数据；当主机2返回ACK报文段时，表示它已经知道主机1没有数据发送了，但是主机2还是可以发送数据到主机1的；当主机2也发送了FIN报文段时，这个时候就表示主机2也没有数据要发送了，就会告诉主机1，我也没有数据要发送了，之后彼此就会愉快的中断这次TCP连接。如果要正确的理解四次分手的原理，就需要了解四次分手过程中的状态变化。 FIN_WAIT_1: 这个状态要好好解释一下，其实FIN_WAIT_1和FIN_WAIT_2状态的真正含义都是表示等待对方的FIN报文。而这两种状态的区别是：FIN_WAIT_1状态实际上是当SOCKET在ESTABLISHED状态时，它想主动关闭连接，向对方发送了FIN报文，此时该SOCKET即进入到FIN_WAIT_1状态。而当对方回应ACK报文后，则进入到FIN_WAIT_2状态，当然在实际的正常情况下，无论对方何种情况下，都应该马上回应ACK报文，所以FIN_WAIT_1状态一般是比较难见到的，而FIN_WAIT_2状态还有时常常可以用netstat看到。（主动方） FIN_WAIT_2：上面已经详细解释了这种状态，实际上FIN_WAIT_2状态下的SOCKET，表示半连接，也即有一方要求close连接，但另外还告诉对方，我暂时还有点数据需要传送给你(ACK信息)，稍后再关闭连接。（主动方） CLOSE_WAIT：这种状态的含义其实是表示在等待关闭。怎么理解呢？当对方close一个SOCKET后发送FIN报文给自己，你系统毫无疑问地会回应一个ACK报文给对方，此时则进入到CLOSE_WAIT状态。接下来呢，实际上你真正需要考虑的事情是察看你是否还有数据发送给对方，如果没有的话，那么你也就可以 close这个SOCKET，发送FIN报文给对方，也即关闭连接。所以你在CLOSE_WAIT状态下，需要完成的事情是等待你去关闭连接。（被动方） LAST_ACK: 这个状态还是比较容易好理解的，它是被动关闭一方在发送FIN报文后，最后等待对方的ACK报文。当收到ACK报文后，也即可以进入到CLOSED可用状态了。（被动方） TIME_WAIT: 表示收到了对方的FIN报文，并发送出了ACK报文，就等2MSL后即可回到CLOSED可用状态了。如果FINWAIT1状态下，收到了对方同时带FIN标志和ACK标志的报文时，可以直接进入到TIME_WAIT状态，而无须经过FIN_WAIT_2状态。（主动方） CLOSED: 表示连接中断。 TIME_WAIT状态的含义简单来说，TIME_WAIT有两个作用，如下： 1） 确认主动关闭的一方最后发出的ack能够到达被动关闭的一方。 TCP协议在关闭连接的四次握手过程中，最终的ACK是由主动关闭连接的一端（后面统称A端）发出的，如果这个ACK丢失，对方（后面统称B端）将重发出最终的FIN，因此A端必须维护状态信息（TIME_WAIT）允许它重发最终的ACK。如果A端不维持TIME_WAIT状态，而是处于CLOSED 状态，那么A端将响应RST分节，B端收到后将此分节解释成一个错误（在java中会抛出connection reset的SocketException)。因而，要实现TCP全双工连接的正常终止，必须处理终止过程中四个分节任何一个分节的丢失情况，主动关闭连接的A端必须维持TIME_WAIT状态 。 2）允许老的重复分节在网络中消逝 TCP分节可能由于路由器异常而“迷途”，在迷途期间，TCP发送端可能因确认超时而重发这个分节，迷途的分节在路由器修复后也会被送到最终目的地，这个迟到的迷途分节到达时可能会引起问题。在关闭“前一个连接”之后，马上又重新建立起一个相同的IP和端口之间的“新连接”，“前一个连接”的迷途重复分组在“前一个连接”终止后到达，而被“新连接”收到了。为了避免这个情况，TCP协议不允许处于TIME_WAIT状态的连接启动一个新的可用连接，因为TIME_WAIT状态持续2MSL，就可以保证当成功建立一个新TCP连接的时候，来自旧连接重复分组已经在网络中消逝。 参考资料http://www.jellythink.com/archives/705http://www.cnblogs.com/techzi/archive/2011/10/18/2216751.htmlhttps://github.com/jawil/blog/issues/14]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+        <tag>TCP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[tcp以及udp的区别[转载]]]></title>
+    <url>%2F2017%2F05%2F17%2Ftcp%E4%BB%A5%E5%8F%8Audp%E7%9A%84%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[基本概念： 面向报文 面向报文的传输方式是应用层交给UDP多长的报文，UDP就照样发送，即一次发送一个报文。因此，应用程序必须选择合适大小的报文。若报文太长，则IP层需要分片，降低效率。若太短，会是IP太小。UDP对应用层交下来的报文，既不合并，也不拆分，而是保留这些报文的边界。这也就是说，应用层交给UDP多长的报文，UDP就照样发送，即一次发送一个报文。 面向字节流 面向字节流的话，虽然应用程序和TCP的交互是一次一个数据块（大小不等），但TCP把应用程序看成是一连串的无结构的字节流。TCP有一个缓冲，当应用程序传送的数据块太长，TCP就可以把它划分短一些再传送。如果应用程序一次只发送一个字节，TCP也可以等待积累有足够多的字节后再构成报文段发送出去。 下图是TCP和UDP协议的一些应用。 下图是TCP和UDP协议的比较。 这里再详细说一下面向连接和面向无连接的区别： 面向连接举例：两个人之间通过电话进行通信; 面向无连接举例：邮政服务，用户把信函放在邮件中期待邮政处理流程来传递邮政包裹。显然，不可达代表不可靠。 TCP/UDP编程模型从程序实现的角度来看，可以用下图来进行描述。 下图是TCP和UDP协议的比较。 从上图也能清晰的看出，TCP通信需要服务器端侦听listen、接收客户端连接请求accept，等待客户端connect建立连接后才能进行数据包的收发（recv/send）工作。而UDP则服务器和客户端的概念不明显，服务器端即接收端需要绑定端口，等待客户端的数据的到来。后续便可以进行数据的收发（recvfrom/sendto）工作。在前面讲解UDP时，提到了UDP保留了报文的边界，下面我们来谈谈TCP和UDP中报文的边界问题。在默认的阻塞模式下，TCP无边界，UDP有边界。对于TCP协议，客户端连续发送数据，只要服务端的这个函数的缓冲区足够大，会一次性接收过来，即客户端是分好几次发过来，是有边界的，而服务端却一次性接收过来，所以证明是无边界的；而对于UDP协议，客户端连续发送数据，即使服务端的这个函数的缓冲区足够大，也只会一次一次的接收，发送多少次接收多少次，即客户端分几次发送过来，服务端就必须按几次接收，从而证明，这种UDP的通讯模式是有边界的。 TCP/UDP的优缺点：TCP的优点：可靠，稳定TCP的可靠体现在TCP在传递数据之前，会有三次握手来建立连接，而且在数据传递时，有确认、窗口、重传、拥塞控制机制，在数据传完后，还会断开连接用来节约系统资源。 TCP的缺点：慢，效率低，占用系统资源高，易被攻击TCP在传递数据之前，要先建连接，这会消耗时间，而且在数据传递时，确认机制、重传机制、拥塞控制机制等都会消耗大量的时间，而且要在每台设备上维护所有的传输连接，事实上，每个连接都会占用系统的CPU、内存等硬件资源。而且，因为TCP有确认机制、三次握手机制，这些也导致TCP容易被人利用，实现DOS、DDOS、CC等攻击。 UDP的优点：快，比TCP稍安全UDP没有TCP的握手、确认、窗口、重传、拥塞控制等机制，UDP是一个无状态的传输协议，所以它在传递数据时非常快。没有TCP的这些机制，UDP较TCP被攻击者利用的漏洞就要少一些。但UDP也是无法避免攻击的，比如：UDP Flood攻击…… UDP的缺点：不可靠，不稳定因为UDP没有TCP那些可靠的机制，在数据传递时，如果网络质量不好，就会很容易丢包。 TCP/UDP应用场景：基于上面的优缺点，那么： 什么时候应该使用TCP：当对网络通讯质量有要求的时候，比如：整个数据要准确无误的传递给对方，这往往用于一些要求可靠的应用，比如HTTP、HTTPS、FTP等传输文件的协议，POP、SMTP等邮件传输的协议。在日常生活中，常见使用TCP协议的应用如下： 浏览器，用的HTTPFlashFXP，用的FTPOutlook，用的POP、SMTPPutty，用的Telnet、SSHQQ文件传输………… 那么什么时候应该使用UDP：当对网络通讯质量要求不高的时候，要求网络通讯速度能尽量的快，这时就可以使用UDP。比如，日常生活中，常见使用UDP协议的应用如下： QQ语音QQ视频TFTP…… 参考文献：http://blog.csdn.net/ce123_zhouwei/article/details/8976006http://zhidao.baidu.com/link?url=lMFVNDmMnTe_c3a66Zj0tXaqiIp_VO_mmT2_3fdfgx-GJNnpsUOroV_-uDEZ9FgoPcSU-CAM8ZPAdgW3iGyKiKhttp://blog.csdn.net/u013777351/article/details/49226101]]></content>
+      <categories>
+        <category>计算机网络</category>
+      </categories>
+      <tags>
+        <tag>计算机网络</tag>
+        <tag>TCP</tag>
+        <tag>UDP</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[面试准备基础知识]]></title>
+    <url>%2F2017%2F05%2F16%2F%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%2F</url>
+    <content type="text"><![CDATA[计算机网络 TCP/IP卷一（一定要看，优先看17-24章tcp那块的内容，看完之后，对TCP的理解会提高很多） TCP和UDP区别,分别适用于哪些场景 三次握手和四次握手，是否可以两次握手，为何要四次握手？TIME_WAIT状态 Get和post区别 PAWS，几种定时器，close_wait状态。 必须能记住几张图，并且知道大多数细节 TCP拥塞控制。 操作系统 IPC PIPE 共享内存 信号量，介绍一下信号量和互斥锁 Socket 服务器客户端通信 多线程 多进程模型 IO多路复用 select poll epoll 线程和进程有什么区别？ 协议栈实现原理推荐 阿里陶辉 的博客 。网络编程基础推荐，游双的linux高性能服务器编程，最好理解全文。 Java 如何在Java中实现线程？ java多线程会有同步的问题，讲一下synchronized和lock的区别？ 知道cookie么？讲一下（cookie是重要考点，一定要可以讲的超级清楚） jvm:full gc,内存泄漏，CMS收集器 jvm内存区域和GC，finalize方法，哪些对象可以作为GC Root NIO的DirectByteBuffer和HeapByteBuffer，同步和异步，阻塞和非阻塞 ReentrantLock源码，AQS，synchronized实现，乐观锁和悲观锁，volatile，ThreadLocal原理，线程池工作流程 HashMap和ConcurrentHashMap基本原理，扩容机制等 jre和jdk的区别 jvm内存模型。每个区什么用。区别。 讲下堆的作用。 堆的垃圾回收对象选择原则。 垃圾回收算法。谈到了年轻代和年老代。 年轻代怎么分。为何分为eden和s区。大小比例为何是1：8,还有别的区分方法吗？各个代的垃圾回收算法。 是否可以在static环境中访问非static变量？ 数据库 innodb和myisam区别? B+树性质 多列索引及最左前缀原则和其他使用场景 发散问题 Linux命令相关，问有一个文件A.txt，里面有许多行，找出其中带关键字’B’的行，并统计重复度。我问了下重复度是指啥，他说，这样吧，假设每一行都是由空格分隔开的若干字符，若整个文件中，有2行的最后一个字符都是’10’，你就输出 “10” : 2。 假如在服务器上执行一个进程时，你发现服务器很卡顿，你会怎么查找原因。感觉这道题真有点坑，本来就有点蒙，针对你的一些回答，还会多问一些东西。 有8个小球，其中七个的重量是相同的，有一个较轻。给你一个天平，问秤几次能找出那个较轻的小球，若天平只能秤两次，又该怎么秤（这个问题当时居然没答出来，真是悲剧，后来回去再想了想，发现其实很简单的。。。） 参考面经http://m.nowcoder.com/discuss/26140?type=0&amp;order=0&amp;pos=12&amp;page=1http://m.nowcoder.com/discuss/25665https://www.nowcoder.com/discuss/25226https://www.nowcoder.com/discuss/22089]]></content>
+      <categories>
+        <category>分布式</category>
+      </categories>
+      <tags>
+        <tag>分布式系统</tag>
+        <tag>面试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[看过这两张图，就明白 Buffer 和 Cache 之间区别[转载]]]></title>
+    <url>%2F2017%2F04%2F26%2F%E7%9C%8B%E8%BF%87%E8%BF%99%E4%B8%A4%E5%BC%A0%E5%9B%BE%EF%BC%8C%E5%B0%B1%E6%98%8E%E7%99%BD-Buffer-%E5%92%8C-Cache-%E4%B9%8B%E9%97%B4%E5%8C%BA%E5%88%AB%2F</url>
+    <content type="text"><![CDATA[看过这两张图，就明白 Buffer 和 Cache 之间区别]]></content>
+      <categories>
+        <category>缓存</category>
+      </categories>
+      <tags>
+        <tag>缓存</tag>
+        <tag>buffer</tag>
+        <tag>cache</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[HDFS集中式的缓存管理原理与代码剖析[转载]]]></title>
+    <url>%2F2017%2F04%2F26%2FHDFS%E9%9B%86%E4%B8%AD%E5%BC%8F%E7%9A%84%E7%BC%93%E5%AD%98%E7%AE%A1%E7%90%86%E5%8E%9F%E7%90%86%E4%B8%8E%E4%BB%A3%E7%A0%81%E5%89%96%E6%9E%90%2F</url>
+    <content type="text"><![CDATA[HDFS集中式的缓存管理原理与代码剖析]]></content>
+      <categories>
+        <category>缓存</category>
+      </categories>
+      <tags>
+        <tag>HDFS</tag>
+        <tag>集中式缓存</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[分布式系统面试清单]]></title>
+    <url>%2F2017%2F04%2F26%2F%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F%E9%9D%A2%E8%AF%95%E6%B8%85%E5%8D%95%2F</url>
+    <content type="text"><![CDATA[操作系统系统（基本知识） GFS（high avaialbe, scalable, data replication, erasure code） ext4 (disk layout, io scheduler, performance tunning) 了解 btrfs(the last file sytem, which is now being developed. You take some knowledge about the disk layout, snapshot, data integrity. You can search btrfs wiki on google ) 了解 os kernel(page cache) 了解 进程(通信机制包括消息队列，共享内存, pipeline等，进程线程区别) 存储（基本知识、设计） 内存 k-v(redis) (memory data structure, hash algorithm, distributed data partition alogrithm, data avaiable) 分布式数据库(Hbase) (CAP, BASE, multi-version concurrent control, WAL, LSM tree) MySQL (InnoDB log, InnoDB data structure) 网络 TCP/IP 三次握手(three-way handshake, four-way finalization, TCP reset packet, TCP timeout, TCP RTT, TCP MSL, TCP state machine) zero copy (sendfile system call, the os kernel data copy path) RPC (epoll, select, poll mechanic, interrupt mechaic) 数据分发 路由 数据迁移 (load balance, multi-tier data storage including memory, ssd, disk) 计算 mapreduce(Hadoop, Spark) (RDD, Shuffle, distributed computing framework task scheduler, which includes FAIR, FIFO, CFQ) 流计算(Flink, HERO, Spark Streaming) (difference between real-time computing and batch compputing) 图计算 (GraphX, Dremel) (BSP, SSP model) 高并发 生产者、消费者模式 无锁数据结构(linkedlist, map) (wikipedia word item, Consistency) CAS (volatile cost overhead) 可重入 (reentrant wikepeida’s word item) kafka raftor模式]]></content>
+      <categories>
+        <category>分布式</category>
+      </categories>
+      <tags>
+        <tag>分布式系统</tag>
+        <tag>面试</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[kafka深度解读[转载]]]></title>
+    <url>%2F2017%2F04%2F26%2Fkafka%E6%B7%B1%E5%BA%A6%E8%A7%A3%E8%AF%BB%2F</url>
+    <content type="text"><![CDATA[kafka数据可靠性深度解读]]></content>
+      <categories>
+        <category>Kafka</category>
+      </categories>
+      <tags>
+        <tag>kafka</tag>
+        <tag>可靠性</tag>
+        <tag>消息队列</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[bandwidth教程]]></title>
+    <url>%2F2017%2F03%2F07%2Fbandwidth%E6%95%99%E7%A8%8B%2F</url>
+    <content type="text"><![CDATA[本文主要讲述一下内存吞吐量的测试。在开发，特别是压力测试的时候，需要知道测试的瓶颈在哪里(是在内存、网络还是磁盘呢？)，所以就需要对内存、网络以及磁盘的真实的吞吐量有一定的了解。本文主要讲述内存顺序随机等读写测试。Bandwidth[1]是一个内存测试工具。本文主要讲述bandwidth安装以及测试步骤，以及结果查看方式。 1、点击下载[2]之后。解压到目录下。 2、安装nasm以及gcc。yum install nasm； yum install gcc 3、编译：输入make会提示你在不同机器上不同的编译指令。在centos x86_64 上面的命令是: make bandwidth64 备注：第3步有可能出现stropts.h: No such file or directory的错误。解决方法就是此文章[3]说的[编译程序时，出现了这个错误，因为linux不支持STREAMS，缺少这个文件。stropts.h是POSIX XSR的一部分，但是linux不支持。解决办法很简单，在/usr/include目录下创建一个空的stropts.h文件.] 4、运行：当编译成功后，直接运行./bandwidth64 即可。会产生一个图片文件。你还可以重定向把日志输出到一个日志文件中，以便查看日志。./bandwidth64 &gt; out.log 5、运行结果查看上图可以看出来在三个地方曲线有明显的转折。分别是32k、256K、12MB。这分别是三级缓存的大小。就跟下图所示一样 也就是说：当读写的size大小落在相应的cache里面的时候，吞吐量是最大的。当读写的大小的size超过这个cache，而落入到下一个cache的时候，吞吐量就会降低。内存是最低的。 名字解释：non-temporal[4]. 说白了non-temporal就是读写数据不经过cache，而是直接去内存中。所以，反应的能力就是内存的能力，而不是cache的能力。 [备注]non-temporal解释：Non-Temporal SSE instructions (MOVNTI, MOVNTQ, etc.), don’t follow the normal cache-coherency rules. Therefore non-temporal stores must be followed by an SFENCE instruction in order for their results to be seen by other processors in a timely fashion. When data is produced and not (immediately) consumed again, the fact that memory store operations read a full cache line first and then modify the cached data is detrimental to performance. This operation pushes data out of the caches which might be needed again in favor of data which will not be used soon. This is especially true for large data structures, like matrices, which are filled and then used later. Before the last element of the matrix is filled the sheer size evicts the first elements, making caching of the writes ineffective. For this and similar situations, processors provide support for non-temporal write operations. Non-temporal in this context means the data will not be reused soon, so there is no reason to cache it. These non-temporal write operations do not read a cache line and then modify it; instead, the new content is directly written to memory. 参考文献 [1] http://zsmith.co/bandwidth.html [2] http://zsmith.co/archives/bandwidth-1.3.2.tar.gz [3] http://blogger.org.cn/blog/more.asp?name=hongrui&amp;id=52186 [4] http://stackoverflow.com/questions/37070/what-is-the-meaning-of-non-temporal-memory-accesses-in-x86]]></content>
+      <categories>
+        <category>运维</category>
+      </categories>
+      <tags>
+        <tag>bandwidth</tag>
+        <tag>内存测试</tag>
+        <tag>memory benchmark</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[深入理解JAVA虚拟机(2)-Java 内存区域与内存溢出异常]]></title>
+    <url>%2F2017%2F02%2F16%2FJava-jvm-2%2F</url>
+    <content type="text"></content>
+      <categories>
+        <category>深入理解JAVA虚拟机</category>
+      </categories>
+      <tags>
+        <tag>java</tag>
+        <tag>虚拟机</tag>
+        <tag>内存溢出</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[鸡汤-TED]]></title>
+    <url>%2F2017%2F02%2F15%2F%E9%B8%A1%E6%B1%A4%2F</url>
+    <content type="text"><![CDATA[20岁光阴不再来: Thrity is not the new 20, so claim your adulthood, get some identity captial, use your weak ties, pick your family. Don’t be defined by what you didn’t know or didn’t do. You’re deciding your life right now. 人生就是一列开往坟墓的列车，路途上会有很多站，很难有人可以自始至终陪着走完。当陪你的人要下车时，即使不舍也该心存感激，然后挥手道别。 如何掌控你的自由时间]]></content>
+      <categories>
+        <category>鸡汤</category>
+      </categories>
+      <tags>
+        <tag>鸡汤</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[索引优化与设计(4)-为SELECT语句创建理想的索引]]></title>
+    <url>%2F2017%2F02%2F12%2Findex-4%2F</url>
+    <content type="text"><![CDATA[本章节主要覆盖如下内容： 影响表以及索引扫描性能的主要因素列表 随机/顺序读时间以及CPU成本 根据三个最重要的需求为查询语句的索引指定星级 三星索引的设计-最理想的索引设计 宽索引 为查询语句设计最好索引的算法 根据现存索引情况设计最使用的索引，将CPU时间、磁盘读时间和耗费时间(elapsed time)考虑在内 从维护开销来看，对现有索引进行所建议的改变可能产生的结果 响应时间、驱动负载和磁盘代价 一些建议 简介在SQL查询中，当程序中的SQL使用了一个或者多个索引的时候，许多的DBA就会对此表示满意，但是，使用一个不合适的索引有可能会导致比全表扫描更差的性能。 接下来，本章就会重点分析这其中的缘由，首先，给出我们接下来分析所依赖的前提。 磁盘以及CPU时间的基础假设下图是给出的磁盘和CPU的基础假设。 评注：由于作者写作的时间是2005年，所以这些数据有的已经发生变化，磁盘顺序读可以达到100M/S。具体请参考磁盘性能指标–IOPS、吞吐量及测试[1]。关于CPU time的定义，请参考此文章[2] 不合适索引(inadequate index)此处给出了一个例子，就是说明，使用索引并不一定比全表扫描好。假设有如下的一个查询语句，仅有两个合理的访问路径：1、使用索引(LNAME)2、全表扫描 索引列是LNAME 和 FNAME,并且过滤因子是1%。在这个查询语句中，显然只能够使用索引列LNAME。 对于第一种情况来说，DBMS会选择谓词条件LNAME=:LNAME扫描索引片。对于索引片中的每一个索引行，DBMS都必须回到表中校验CITY字段的值。由于表中的行是根据CNO字段而不是LNAME字段来聚簇的，所以这个校验操作需要做一次磁盘随机读[评注:即先读取了索引数据，然后再去表中进行随机读]。 假设索引(LNAME,FNAME)的总大小是1000,000&times;100byte = 100M。包括数据以及分散的空闲时间，另外，在假设顺序读是40MB/s[评注：现在可以达到100MB/s].那么读取宽度为1%的索引片，即1MB，需要花费10ms+1MB/40MB/s=35ms。这显然没有问题，但是10,000次[评注：因为索引总条数为1000,000条，过滤因子为1%，所以结果条数为10,000.相应的，去表中随机读的次数就为10,000次]随机读将花费10,000*10ms=100s。所以，总的花费时间为100s+35ms。这种方式太慢了。 对于第二种方式来说，只需要第一个页是随机读。如果表的大小为1000,000&times;600byte=600MB,包括分散的空闲时间，那么花费的IO时间将会是10ms+600MB/40MB/s=15s，虽然仍然比较慢，但是相比使用索引已经变得快多了。 第二种方案的CPU时间将会比第一种方案的CPU时间长很多，因为DBMS必须对1000,000行而不是20,000行[评注：索引10,000行；数据表10,000行]，并且还需要对这些行进行排序[评注：因为SQL语句有ORDER BY]。从另一个角度来说，由于是顺序读，CPU时间可以与IO时间交叠。在这个场景下，全表扫描比在不合适的索引上扫描要快很多，但是这还不够快，仍然需要一个更好的索引。 三星索引(three-star index)-查询语句的理想索引前面讨论了一个非常不合适的索引，这一小节，我们来讨论 # 参考文献[1] http://wushank.blog.51cto.com/3489095/1708168[2] https://www.techopedia.com/definition/2858/cpu-time]]></content>
+      <categories>
+        <category>索引优化与设计</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>索引</tag>
+        <tag>三星索引</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[索引优化与设计(3)-SQL处理过程]]></title>
+    <url>%2F2017%2F02%2F11%2Findex-3%2F</url>
+    <content type="text"><![CDATA[本章主要讲解了一个查询语句过来之后，DBMS内部是如何处理这一过程的。但是本章并没有细致的讲解，主要是给出了一些术语和基本的概念。本章覆盖的术语主要如下： SQL处理的一些概念 谓词(Predicates) 优化器以及访问路径(Optimizers and access paths) 索引片(Index slices)，匹配索引扫描(matching index scans)，匹配列(matching columns)，索引过滤(indexscreening)和过滤列(screening columns) 优化器何时确定访问路径 监控优化器 使用统计信息和所需FETCH调用的次数来指导优化器的行为 过滤因子(filter factor)。选择性(selectivity)和基数(cardinality)的概念以及对索引设计的影响 结果集物化(materialization)以及影响 谓词说白了谓词就是WHERE后面的条件 优化器以及访问路径用户一条查询语句下来，用户并不需要关系这条语句内部怎么执行的。但是这部分东西是交给DBMS来做的。在SQL语句真正能够被执行之前，优化器必须确定如何访问数据，这包括：应该使用哪一个索引，索引的访问方式如何以及是否需要辅助式随机读等等。所有的这些细节都包含在访问路径中。 索引片及匹配列索引片，说白了感觉跟谓词的个数有关系。如果WHERE后面只有一个谓词，那么显然索引片就只有一个。所以，有另外一种使用较为广泛的描述索引片的方法是定义索引匹配列的数量。 访问路径的成本很大程度上取决于索引片的厚度，即谓词表达式所确定的值域范围。索引片越厚，需要顺序扫描的索引页就会越多，需要处理的索引记录也就越多，当然最大的开销还是来自于对表的同步读操作上。相应的，如果索引片比较窄，就会显著减少索引访问的那部分开销，但是主要的成本节省还是在更少的对表的同步读取上面。 索引过滤以及过滤列有时候，列可能既存在于WHERE子句中(也就是谓词中)，也存在于索引中，但是这个列却不能参与索引片的定义(这里面我也没有弄明白为什么，希望能够在接下来的学习中明白其原因，此处借用原作者的一句话就是：现在我们只需要知道并不是所有的索引列都能够定义索引片的大小)。不过这些列仍然能够减少对表进行同步读操作的次数，所以这些列仍然扮演着重要的角色，我们称这些列为过滤列(screening columns)。 那么什么样的谓词能够定义索引片的大小；什么样的谓词不能够定义索引片的大小，只能够作为过滤列呢？附录1给了简单的一个例子。 访问路径中的术语(Access Path Terminology)在这里需要提及另外一个术语，就是执行计划(execution plan)。这两个术语比较相近，在本书中。使用访问路径来描述数据访问的方式，使用执行计划来描述DBMS提供的EXPLAIN工具所产生的输出结果。接下来进入我们关注的重点。 匹配谓词有时候也称作为范围限定谓词(range delimiting predicates)。当有合适的索引存在时，如果优化器能够识别到某些谓词为匹配谓词，那么我们就称这个谓词是可索引的(indexable,有时也叫可搜索的(sargable))。 SQL Server中使用表查找(table lookup)这一术语来描述使用索引并且需要读取表行的访问路径。这不同于使用索引的访问路径。消除表访问的最显而易见的方式就是将缺失的列添加至索引上。许多SQL Server的书籍将这种能够避免某个SELECT调用的表访问的索引成为覆盖索引(covering index)。[评注：很多NoSql数据库也是这么做的，例如HBase上面的Phoenix就有这种技术，CCIndex[1]论文就是在分布式顺序表上面提供覆盖索引(聚簇索引)的典型技术之一]。 监控优化器当发现一个慢SQL的时候，首先被怀疑的对象就是优化器，可能优化器选择了错误的访问路径。关系型数据库中的DBMS提供了一个叫做EXPLAIN的工具，用于解释优化器决定使用某个访问路径的原因。 帮助优化器(统计信息)优化器是否能够做出很好的决定取决于优化器进行成本估算的时候所使用的信息是否完整。正常情况下，优化器默认能够使用采集的信息包括如下：每张表的记录数和表页数、叶子页数、每个索引的聚簇率、某些列或者某列组的不同值个数（基数），以及某些列的最大最小值。其他可选的统计信息的选项能够提供更多关于列和列组的值分布情况。 过滤因子(filter factors)说白了就是描述谓词的选择性，即表中满足谓词条件的记录行数所占的比例，它主要依赖于列值的分布情况。 物化结果集物化结果集意味着执行必要的数据库访问来构建结果集。在最好的情况下，只需要简单的从数据库缓冲池向应用程序返回一条记录。在最坏的情况下，数据库管理系统需要发起大量的磁盘读取。 参考文献[1]Zou Y, Liu J, Wang S, et al. CCIndex: a complemental clustering index on distributed ordered tables for multi-dimensional range queries[C]// Ifip International Conference on Network and Parallel Computing. Springer-Verlag, 2010:247-261. 附录附录1]]></content>
+      <categories>
+        <category>索引优化与设计</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>索引</tag>
+        <tag>谓词</tag>
+        <tag>访问路径</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[技术博客收藏]]></title>
+    <url>%2F2017%2F01%2F19%2Fcollect-blog%2F</url>
+    <content type="text"><![CDATA[HDFS集中式的缓存管理原理与代码剖析 看过这两张图，就明白 Buffer 和 Cache 之间区别 Pinpoint is an open source APM (Application Performance Management) tool for large-scale distributed systems written in Java]]></content>
+      <categories>
+        <category>收藏博客</category>
+      </categories>
+      <tags>
+        <tag>技术收藏</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[索引优化与设计(2)-表以及索引的内部组织]]></title>
+    <url>%2F2017%2F01%2F10%2Findex-2%2F</url>
+    <content type="text"><![CDATA[本篇主要分析以下几个问题 索引表和原表的物理组织是什么样子的； 索引和表的页(page)、索引和表的行(rows)、缓冲池(buffer pool)以及disk cache使用的数据结构； 磁盘顺序IO和随机IO的特性； 一些辅助式顺序或随机读：包括跳跃式顺序读(skip-sequential), 列表预读(list prefetch)以及数据块预读(data block prefetching); 同步IO和异步IO的重要性； 各种数据库管理系统的相同点和不同点； 页和表聚簇，索引行，索引组织表以及页邻接 B-Tree的代替者 位图索引(bitmap-index)和哈希(hash) 介绍首先要明确的是，在数据库系统中，索引和数据中的数据全部在一个叫做页(page)的结构中，一般页的大小为4KB，这个大小并不是唯一的。页的大小影响着每个页中的数据的条数(record)以及总的页的数量。并且，每个页都会留出一定比例的空余空间，以满足向其添加新的表行或是索引行的需求。 索引行（index rows）索引列一般分为两种，根据索引列的值的唯一性分为唯一的和不唯一的两种。主键就是其中一个特殊的唯一的索引列，像学生的学号，或是身份证号码等，也一般都是唯一的，不唯一的就更多的了。对于唯一的索引列来说，一个索引行等同于叶子节点中的一个索引条目，这个索引条目的值就是索引列的值，然后每个索引条目都有一个指向原表中记录的指针。一般来说，页表编号(table page number)是这个指针的一部分。对于非唯一索引来说，一个特定的索引值所对应的索引行应该被想象成独立的索引条目(individual index entries),每一个都含有相同的值，但是却有不同的指针。大多数情况下，非唯一索引的实际存储方式是一个相同的值后带着多个不同的指针，指向原表中的记录。之所以将这些非唯一的索引记录想象成独立的索引条目的好处将在后面介绍。 索引结构(Index structure)索引的结构一般是B-Tree结构，非叶子节点包含着一个键值以及指向下一层节点的指针，该键值是下一层页的最大值，如图1所示。B-Tree 是一种平衡索引树，因为通过这种索引来查找任何一条记录都需要访问相同数量的非叶子页。 表行(Table Rows)图1中的每一个索引行都指向了表中的一行记录，这个指针通常都是能够定位这个记录所在的页以及它在页中的位置。同时表中的每一行除了存储行的字段之外，还包含了一些控制信息用于定义行并帮助DBMS处理插入或是删除的操作。 表行在表中存储的顺序，可以和某一个索引的顺序相同，我们平常都叫这个索引为主键。很显然，在众多的索引中，只能够有一个索引的顺序和表的顺序一模一样。其他的索引就无能为力了。这个和表中的数据一个顺序的索引（主键），可以加快查找的过程。而且非常的高效。其他的索引就没有这个高效。。为什么呢？举例来说，在一个没有和表中的数据保持同一个顺序组织的索引，第一条索引行可能指向了数据表的页17，第二个索引行指向了页2，第三个索引行指向了页85…等等。现在虽然索引是顺序的。但是因为索引和数据表并不是按照相同的顺序组织的，使得去访问数据表的时候变成了随机的。这就会非常的低效。 缓冲池和磁盘IO说白了，缓冲池就是为了能够加快响应时间，并且减少磁盘IO的。如果每次访问的页都能够在缓冲池中，那就不用去磁盘上去找了，显然减少了很多的磁盘IO.缓冲池就是干这个的。你现在仅仅需要知道，数据在不在缓冲池中，访问的成本是不一样的！ 从DBMS中的缓冲池中读数据如果一个索引或是表的页在缓冲池中在找到，那么很显然就不需要去磁盘访问了。只需要处理这些索引或是表中的记录就可以了。成本的大小取决于这些记录是否是DBMS想要的。如果不是，只需要很少的处理；如果是，可能需要稍微多一点的处理。 从磁盘驱动器进行的随机IO图2展示了一个页从磁盘中读到缓冲池中所需要等待的时间。这个时间大约是10ms。有一点需要注意的是，一个页包含很多的记录，不管你是访问一个页中全部记录，还是部分记录，甚至仅仅是其中一条的记录，你都需要把一整个页全部load到缓冲池中。所以花费都是一样的，大约是10ms。这10ms又是怎么来的呢？ 图3很好的解释了这10ms的来历。从图中可以看到，我们假设在这10ms中磁盘实际的繁忙时间是6ms。1ms左右的传输时间是将页从磁盘服务器缓存(disk server cache)移至数据库的缓冲池中. 其余的3ms是对于可能发生的排队时间的估计值，这是基于每秒50次读取的磁盘活动情况得出的。这些数字在实际情况中可能有变化，但是我们需要记住这10ms这一个粗略但是合理的数字即可。 从磁盘服务器缓存(disk server cache)进行读取磁盘服务器一般都会自带memory(cache)以降低响应时间上的巨大成本。图4展示了从磁盘服务器缓存读取一个表或者索引页的过程。磁盘缓存的作用跟数据库缓冲区的作用一样，磁盘服务器试图将频繁使用的数据保留在内存(cache)中。以降低高昂的磁盘读成本。若DBMS所需的页不在数据库缓冲池中，继而会向磁盘服务器发起请求，磁盘服务器会判断该页是否在反服务器缓存中，只有当它发现页不在磁盘缓存中的时候才从磁盘驱动器上读取该页。如果该页在磁盘服务器的缓冲中，那么花费的时间将会从10ms大幅降低为1ms。 所以，总而言之，当一个索引或表页被请求的时候，它的理想位置是在数据库的缓冲池中。如果它不在那儿，那么下一个最佳的位置就是磁盘服务器的缓存。如果它也不在那儿，那么就必须从磁盘驱动器上进行一个很慢的读取，这一过程可能要花费很长的时间等待磁盘设备空闲下来。 从磁盘驱动器进行的顺序读取到目前为止，我们仅仅考虑到了将一个索引页或是表页读取到缓冲池中。实际中，不仅仅是读一个单页那么简单。有时候要读很多的页到缓冲池中，并且顺序的处理他们。图5展示了这四种场景。DBMS会意识到多个索引或表页需要被顺序的读取，且能够识别出那些不在缓冲池中的页，随后，它将发出多页IO(multiple-page I/O)的请求，每次请求的页的数量由DBMS决定。只有那些不在缓冲池中的页才会被从磁盘服务器中读取，因为那些已经在缓冲池中的页可能包含了尚未被写入磁盘的更新数据。 顺序的读取页有两个非常重要的优势： 同时读取多个页意味着平均每个页的读取时间将会很少。在当前磁盘服务器的条件下，对于4KB大小的页而言，这一个值可能会低至0.1ms(假设磁盘是40MB/s，则一秒能够读 40MB/4KB=10000个页，则每个页花费=1s/10000=0.1ms. 现在磁盘速度已经能够达到100MB/s了，40MB/s还是2004年的数据) 预读，由于DBMS事先知道要读取哪些页，所以可以在页被真正请求之前就提前将其读取出来。 图5所使用的术语索引片(index slice)以及聚簇索引(clustering index)将在后面讨论。用于代指上述所描述的顺序读取的术语包括：顺序预读(Sequential Prefetch),多块IO(Multi-Block I/Os)以及多重顺序前读(Multiple Serial Read-Ahead Reads) 辅助式随机读(Assisted Random Reads)我们从上文中已经看到随机读的代价，并且知道了数据库的缓冲池以及磁盘缓存的作用和好处来降低成本的。还有一些其他的场景也能够降低成本。有时候是自然发生的，有时候是优化器有意为之，我们把它统称为辅助式随机读.注意这并不是DBMS中的术语 自动跳跃顺序读(Automatic Skip-Sequential)从定义的角度看，如果一系列不连续的行被按照同一个方向扫描，那么访问模式将会是跳跃式顺序的。于是，每行的平均IO时间自然比随机访问时间短，跳跃的距离越短则越节省时间。比如，当表行是通过一个聚簇索引读取时候并且筛选掉一些行的时候，访问模式就是跳跃式顺序读的。这带来的好处有以下两个方面。 磁盘服务器注意到对某一驱动器的访问是顺序的(或者几乎是顺序的)，于是服务器开始提前预读几个页。 DBMS可能注意到select语句正在以顺序或是几乎顺序的方式访问索引或页表，于是DBMS开始提前预读多个页，这在DB2 for z/OS中被称为动态预读。 列表预读(List Prefetch)在之前的例子中，由于索引行和表行的顺序都是一致的，所以很方便的做到了自动跳跃顺序读。事实上DB2 for z/OS 也能够在索引行和表行顺序不一致的情况下主动创造跳跃式顺序读。为了做到这一点，它事先需要访问满足条件的所有的索引行。然后按照表页的顺序对其进行排序后在访问表行。图2-6和图2-7对不使用和使用列表预读进行了对比，图中的数字代表了操作顺序。 数据块预读(Data Block Prefetching)当表行和索引行的访问顺序不一致的时候，Oracle中就会使用数据块预读这一特性。在这种方式下，如图2-8所示，DBMS首先从索引片上收集指针，然后在进行多重随机IO来并行的读取表行。如果第4，5，6步所代表的表行分别位于三个不同的磁盘驱动器上，那么这三个随机IO将会被并行执行。就像列表预取一样。注释：数据库预读就是并行的列表预读。 在结束辅助式随机读的话题之前，还需要考虑一下结果集的顺序。一个索引也许能够自动提供正确的顺序，但是上述所讨论的机制也许会在访问表行之前就破坏了这一顺序，因此，也就需要对结果集进行一次排序。 注释：就像设计HBase中IRIndex中索引预读，然后进行排序一样。 评注本书主要提及三种类型的读IO操作:同步读、顺序读以及辅助式随机读。需要提及的是SQL Server使用术语索引前读(Index Read-Ahead), Oracle使用术语索引跳跃扫描(Inedx Skip Scan)。前者是指提前向前读取下一组叶子页，而后者是指读取多个索引片而不进行全索引扫描。 辅助式顺序读(Assisted Sequential Reads)当要扫描一个大的表的时候，优化器可能会选择开启并行机制。例如，它可能会将一个游标拆分为多个用范围谓词限定的游标，每一个游标扫描一个索引片。当有多个处理器和磁盘驱动器可用的时候，所花费的时间将相应的减少。我们将在第15章讨论这个话题。请注意，辅助式顺序读这个术语同样也未被任何一个DBMS使用过。 同步和异步IO(Synchronous and Asynchronous I/Os)术语同步是指在进行IO操作的时候，DBMS不能继续进行其他的操作，必须等待，直至IO操作完成。 异步读指的是当前页尚在处理的时候就被提前发起了，这一处理时间和IO时间之间可能有很大的一部分重叠。理想情况下，在这些页被实际处理之前，异步IO就已经完成了。每一组页都是以这种方式被预读然后再处理。图2-9展示了这一过程。注意的是，整个预读过程从一次同步读开始，然后才开始预读过程，以此来最小化首次读取的等待时间。 #]]></content>
+      <categories>
+        <category>索引优化与设计</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>索引</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[索引优化与设计(1)-引言]]></title>
+    <url>%2F2016%2F12%2F30%2Findex-1%2F</url>
+    <content type="text"><![CDATA[本系列根据Relational Database Index Design and the Optimizers而写的读书笔记，这是第一篇，主要针对的是第一章。第一章主要介绍了传统的索引的设计的误区。随着磁盘的增大，磁盘访问时间的降低以及内存增大，以前用在索引设计上的“圣经”被证明是不对的，或是有缺陷的。本书从这一点出发，逐步讲述了索引设计以及优化的问题。 几个术语第一章提到了几个术语，下面首先解释下以下几个术语。便于后面行文的理解。 buffer pool这个是数据库中的概念，笔者参考了InnoDB[1]以及IBM DB2[2]概念和MySql技术内幕[3],buffer pool就是临时存放一些数据库page的内存区域。 InnoDB存储引擎是基于磁盘的，并且将其中的记录按照页(page)的方式进行管理。因此可以将其视为磁盘的数据库系统(Disk-base Database)。在数据库系统中，由于CPU的速度和磁盘速度之间的鸿沟，基于磁盘的数据库系统通常使用缓冲池技术来提高数据库的整体性能。 缓冲池简单来说就是一块内存区域，通过内存的速度来弥补磁盘的速度较慢对数据库的影响。在数据库中进行页的操作的时候，首先将从磁盘读到的页放到缓冲池中，这个过程称为将页“FIX”在缓冲池中。下一次再次读取的时候，首先判断该页是否在缓冲池中。若在缓冲池中，称为该页在缓冲池中命中，直接读取该页。否则，读取磁盘上的页。 InnoDB默认buffer pool的大小是128M[4]，可以存放好几百的page，甚至可以达到GB，这个值可以调节。 disk cache同样的，也是用RAM来存放部分磁盘数据的一部分区域[5]。这个RAM可以存在于磁盘上(这也称为hard disk cache or buffer)[6]，或者是普通的内存的RAM(这也称为soft disk cache)。hard disk cache更加的有效，因为直接是在磁盘上的一小部分区域，但是更贵，所以，会相对来说比较小。几乎所有的HDD都会有一部分很小的hard disk cache(8-256MB)，SSD的可能达到1GB[6]。 disk cache的作用也是将一些从磁盘读取的数据先存到disk cache中，避免了再次去disk读取耗费很长的时间。作用和原理跟buffer pool一样的。 那么问题来了，buffer pool和disk cache既然作用都是相同的，那么他们的区别在哪儿呢？这个问题找了很多的资料，还是没看懂，所以，这个后面有时间在详细研究。 笔者先尝试着解答上面的问题，参考了以下资料[7,8],个人认为这里面的buffer pool是数据库的概念。而disk cache是文件系统的概念。但是作用都是一样的，所以是没有差别的。但是假设都是操作系统的概念的话，那么就有差别了。差别就是文献7,8里面讲的。 几个索引的误区第一章主要分析了几个以前索引设计的误区，例如，index层数(主要针对B-Tree来说的)最好不要超过5层，但是作者通过分析，如果把非叶子节点存放到磁盘中，那么只要访问非叶子节点，都会造成磁盘IO(10ms，这个请参考Jeff Dean的一些数据，本文给贴出来了，图1),所以索引的层数并不是很重要。还有一个就是每个表中最好不要多余6个索引列。以及不要在列值经常变化的列上面建立索引等。这些都被后面的例子证明是错误的。 总结第一章主要给出了一些引言，本文主要着重分析了几个术语便于以后的理解。至于索引的优化细节，本文会继续跟随着作者章节的脚步慢慢深入分析。 参考文献 [1]https://dev.mysql.com/doc/refman/5.5/en/innodb-buffer-pool.html [2]http://www.ibm.com/support/knowledgecenter/SSEPGG_9.5.0/com.ibm.db2.luw.admin.dbobj.doc/doc/c0052482.html [3]MySql技术内幕 p35 [4]https://dev.mysql.com/doc/refman/5.5/en/innodb-parameters.html#sysvar_innodb_buffer_pool_size [5]http://www.webopedia.com/TERM/D/disk_cache.html [6]https://en.wikipedia.org/wiki/Disk_buffer [7]https://www.quora.com/What-is-the-major-difference-between-the-buffer-cache-and-the-page-cache [8]https://www.quora.com/What-is-the-difference-between-Buffers-and-Cached-columns-in-proc-meminfo-output]]></content>
+      <categories>
+        <category>索引优化与设计</category>
+      </categories>
+      <tags>
+        <tag>数据库</tag>
+        <tag>索引</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[服务器监控cacti与snmpd配置]]></title>
+    <url>%2F2016%2F12%2F18%2Flinux-monitor%2F</url>
+    <content type="text"><![CDATA[做系统的人，都少不了运维，也少不了对系统的监控，特别的想监控系统的CPU使用情况，磁盘使用情况以及内存使用使用情况，这三座大山(CPU,memory,disk)是必须的，所以，能够对这三个东西进行非常好的监控是一件非常好的事情，本文主要讲解监控这三个东西的软件cacti以及snmpd的配置。 在被监控机器上安装snmpd sudo apt-get install snmpd sudo apt-get install snmp sudo apt-get install snmp-mibs-downloader sudo download-mibs 然后在按照参考[1]中的安装即可。注意，然后按照[2]中的连接，运行如下命令查看是否可以。 snmpwalk -v2c -c myCommunity ip hrStorageTable 如果出现一下错误：dskTable: Unknown Object Identifier则请注释掉 /etc/snmp/snmp.conf 下面的mibs :。 变成如下： 在采集数据的机器上安装 cacti请参考[2]即可 安装disk io 监控软件请参考[2] 错误解决 最常见的错误就是dskTable: Unknown Object Identifier，此时按照上文所说的解决应该就可以。 图表不显示；有可能是因为服务器时间没有同步造成的。所以，最好运行下 ntpdate time.nist.gov 参考文献[1]http://xmodulo.com/monitor-linux-servers-snmp-cacti.html[2]https://nsrc.org/workshops/2014/pacnog16-ws/raw-attachment/wiki/Track2Agenda/4.3.2.exercises-cacti-disk.htm#hrstoragetable-.1.3.6.1.2.1.25.2.3[3]http://1161192890.blog.51cto.com/2041190/1404181/]]></content>
+      <categories>
+        <category>运维</category>
+      </categories>
+      <tags>
+        <tag>监控</tag>
+        <tag>monitor</tag>
+        <tag>cpu</tag>
+        <tag>disk</tag>
+        <tag>io</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[分布式中的两阶段提交和三阶段提交]]></title>
+    <url>%2F2016%2F12%2F11%2Ftwopc-and-threepc%2F</url>
+    <content type="text"><![CDATA[传统的关系型数据库以及很多的NewSql在事物处理方面都采用了两阶段提交协议。例如巨杉数据库[1,2]，以及小米在HBase上面利用coprocessor机制实现的强一致性的索引[3]。也就是说从关系型数据库到NoSql数据以及NewSql数据库，两阶段提交协议都在广泛的应用，那么两阶段体检协议到底是什么呢，到底神奇在什么地方呢？下面我们就在讲解一下两阶段提交协议以及它的变种，三阶段提交协议。 两阶段提交协议两阶段提交协议，从名字中也看得出来，分为两个阶段，第一阶段主要是投票阶段，第二阶段才是提交阶段。主要角色也分为两个，一个是参与者，一个是协调者。 协议步骤 第一阶段：投票阶段 协调者向所有的参与者发送一个VOTE_REQUEST的消息 当参与者接收到VOTE_REQUEST的消息后，就像协调者发送一个VOTE_COMMIT的消息通知协调者已经准备好提交本地事物，否则就返回一个VOTE_ABORT的消息。 第二阶段：提交阶段 协调者收到所有的参与者的返回的消息，如果所有的参与者都表决要提交事物的时候，那么协调者就会向每一个参与者发送一个GLOBAL_COMMIT的消息；但是只要有一个参与者表决要取消事物，那么协调者就会决定取消事物，并且多播一个GLOBAL_ABORT的消息给所有的参与者。 每个参与者等待协调者的返回消息，然后根据此消息做出最后的反应。如果参与者收到的是GLOBAL_COMMIT的消息，那么参与者就会提交本地事物；相反的，如果参与者收到时GLOBAL_ABORT的消息，那么参与者就会取消本地事物。 以上就是两阶段提交的具体步骤，可以看出来，两阶段提交其实并不复杂，也很简单。但是在分布式系统中，主要的问题就是容错，假设协调者或是其中任何一个参与者出错了会怎么办呢？下面就着重分析下，在两阶段提交的具体步骤中，每一个步骤会出现的错误以及解决办法。 首先给出2PC中的协调者与参与者的状态转换图,如下图所示（备注：横线上面的消息是来自对方的消息，横线下面的消息是对此收到的消息所做出的应答消息）图1 协调者状态转换图 图2 参与者状态转换图 容错阻塞那么下面分析2PC中的容错问题，因为此才产生了3PC，我们先从协调者这个角色开始分析，然后再分析参与者的阻塞问题 协调者阻塞情况 协调者在WAIT的时候阻塞，等待来自每个参与者的表决。这种情况的发生可能是参与者挂了，或是网络延迟造成的。解决办法就是：如果在某段时间内协调者没有收到所有的表决，那么协作者就决定中止表决，然后向所有的参与者发送GLOBAL_ABORT的消息。 参与者阻塞情况 参与者可能在INIT的状态时候阻塞，等待协调者的VOTE_REQUEST的消息。这也可能是由于协调者挂了，或是网络延迟造成的。解决办法：如果在某一段时间之内参与者没有收到协调者的这个消息，那么参与者就简单的在本地中止事物，并且向协调者发送一个VOTE_ABORT的消息。 参与者可能在READY的状态阻塞，等待协作者发送全局表决消息。这也可能是由于协调者挂了，或是网络延迟造成的。这个时候解决办法比较多，同时，也是因为这个状态阻塞后，事物的不确定性，才产生了3PC。一般的解决办法如下： 让每个参与者在协调者恢复之前一直阻塞 参与者P与参与者Q联系，然后根据Q的状态来决定做什么，那么Q主要有以下几种状态，同时每种状态的对应关系如下： Q状态为COMMIT，那么有可能就是协作者在崩溃之前把GLOBAL_COMMIT的消息发送给了Q，但是还没来得及发送给P，因此，P应该决定进行提交。 Q状态为ABORT，同样的，是因为协作者在崩溃之前把GLOBAL_ABORT的消息发送给了Q，但是还没来得及发送给P，所以，此时P应该决定ABORT。 Q状态为INIT，当协调者已经向所有的的参与者发送了VOTE_REQUEST消息，但是这个消息只到达P（然后它用VOTE_COMMIT消息作为应答），而没有到达Q时候，就是这种情况，换句话说，协调者在多播VOTE_REQUEST消息的时候崩溃了。在这种情况下，中止事务是安全的，P和Q都可以把状态转换为ABORT。 当Q处于READY状态时候，这个时候是最难判断的，特别的，如果所有的参与者都处于READY的状态，那么他们就无法做出决定。问题就是因为尽管所有的参与者都想要提交，但还是需要协调者的表决才能做出最后的决定。因此，这个协议在协调者恢复之前阻塞。 总结一下所有的Q的状态以及对应的解决办法如下： Q的状态 P采取的行为 COMMIT 转换到COMMIT ABORT 转换到ABORT INIT 转换到ABORT READY 与其他参与者联系 两阶段提交协议先写到这里，3PC之所以出现，也是因为2PC在上述表格中所有的参与者都处于READY的状态下，不知道如何进行事务；所以，才有了3PC。3PC的具体内容，以后有时间在聊。3PC在工业界用的不多。大都是2PC。 参考文献[1] http://www.sequoiadb.com/cn/[2]http://download.csdn.net/meeting/speech_preview/258[3]http://download.csdn.net/meeting/speech_preview/292]]></content>
+      <categories>
+        <category>分布式</category>
+      </categories>
+      <tags>
+        <tag>两阶段提交</tag>
+        <tag>two pc</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[NewSql 崛起]]></title>
+    <url>%2F2016%2F12%2F03%2FWhats-Really-New-with-NewSQL%2F</url>
+    <content type="text"><![CDATA[本文主要讲述数据库的发展历程，以及实现一个数据库需要考虑的内容。 数据库发展史1960年IBM出现了第一个DBMS，叫做IMS，原因就是当时人们觉得应用应该和数据分离，这样开发者就可以把重心放到如何读数据以及取数据，就不用去考虑数据库开发的事情。 在1980年到1990年期间，人们发现这样的关系型数据库编程方式跟面向对象的编程方式违背（impedance mismatch），所以，就出现了面向对象的DBMS。但是面向对象的DBMS并没有火起来，而是出现了一些像XML等语言，这跟后来的document-oriented NoSQL很像(mongodb),后面会介绍NOSql的类型。 随着2000年之后，互联网的兴起以及数据量的增大，用户的并发性增大，以及要求时时on-line，对以往的关系型数据库提出了挑战。为了应对上述挑战，有如下两个解决办法： 使用更好的机器，更大的硬盘和CPU等。这样带来的好处很小，而且把一个数据库系统移到另外一个数据库系统工作量很大，而且比较繁琐。 数据库中间件，把一个数据库分布在一些廉价的机器上面，中间件负责做查询转发调度（请参考此文 分布式MySQL集群方案的探索与思考）但是这种方式对于跨表的join等事物支持不好。 nosql的发展。一些公司开始慢慢的向数据库中间件开始转向分布式DBMS。动机主要有以下三点： 以往的数据库都支持ACID特性，但是牺牲了可用性以及性能。但是现在的一些互联网应用更加关注可用性以及性能，他们希望能够支持更多的并发度以及on-line all the time. 很多时候，现在的web应用并不需要以前DBMS的那么多的性能作为存储。 现在的应用仅仅是简单的读写查询请求，关系型模型以及SQL复杂的语句对于现在的应用来说，就是杀鸡用牛刀。所以，NoSql崛起。NoSql主要有以下几种类型。 到2000年末的时候，虽然一些应用已经可以很好的应用到NoSql系统中，但是还有很多的应用并不能应用Nosql（比如金融系统或是订单系统），因为这些系统需要很强的一致性。而大部分的Nosql系统都是弱一致性(eventual consistent)，所以NewSql出现了。所以简单的讲，NewSql就是结合了Nosql数据库的可扩展性，同时又满足了关系型数据库中的事物特性(ACID)。 NewSql的特性新的架构Transparent Sharding MiddlewareDatabase-as-a-Service设计一个数据库系统需要考虑的问题Main Memory StoragePartitioning / ShardingConcurrency Control 两阶段锁(twophase locking (2PL) schemes) timestamp ordering (TO) concurrency control Secondary IndexesReplication active-active replication：把一个请求发到所有的副本上 activepassive replication：只把请求发给主副本上，当主副本完成后，在进行其他副本的复制。 Crash Recovery参考文献 Pavlo A, Aslett M. What’s Really New with NewSQL?[J]. Acm Sigmod Record, 2016, 45(2):45-55. Borkar D, Mayuram R, Sangudi G, et al. Have Your Data and Query It Too: From Key-Value Caching to Big Data Management[C]// International Conference on Management of Data. ACM, 2016.]]></content>
+      <categories>
+        <category>database</category>
+      </categories>
+      <tags>
+        <tag>NewSql</tag>
+        <tag>big data</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[kafka中topic创建流程]]></title>
+    <url>%2F2016%2F07%2F01%2Fkafka-create-topic%2F</url>
+    <content type="text"><![CDATA[本文主要讲述kafka topic的创建流程，所有的代码基于kafka_2.10-0.8.2.1。 kafka topic 创建流程首先，kafka topic的创建是有两种方式的，关于具体的方式请参考博文Kafka Topic Partition Replica Assignment实现原理及资源隔离方案.当用户执行如下面的代码的时候1$ bin/kafka-topics.sh --create --zookeeper zookeeperip:2181 --replication-factor 2 --partitions 10 --topic testtopic 打开kafka-topics.sh文件，会发现如下图片说明，创建topic的时候，走的是kafka.admin.TopicCommand接口，在这个接口中，所有的入口都是如下所示的main函数然后根据解析的命令，走到createTopic(zkClient, opts)方法，下面是createTopic方法的代码 由上面的代码可以看出，此处可以有两种创建topic的方式，如博文Kafka Topic Partition Replica Assignment实现原理及资源隔离方案所讲。实际上，第二种创建topic的方式就是由按照系统分配算法，来决定关于这个topic的所有的partition的副本数具体落在哪些broker上面。所以，第二种创建方式最终都会走到AdminUtils中的createOrUpdateTopicPartitionAssignmentPathInZK方法。所以，这里着重讲述第二种创建topic方式走的流程。我们看到，在TopicCommand中的createTopic中，首先解析了命令行中的partition的数量以及replicas副本的参数，并把这些参数传给了AdminUtils中的createTopic方法，下图是AdminUtils中的createTopic方法。在AdminUtils中的createTopic方法中，系统主要做了3件事，1：从zookeeper中获取所有的集群中broker的列表。2：根据第一步获取到的broker列表，以及传过来的partitions和和replicationFactor，按照系统分配算法对每个partition进行分配。3：当前两步完成后，把所做的更改在zookeeper中修改，然后根据zookeeper的callback(回调)，kafka自身会进行数据的迁移等等工作。 下面分别看下这三步，第一步，从zookeeper获取集群中所有的broker列表。进入到kafka.utils.ZkUtils类中的getSortedBrokerList方法，然后getSortedBrokerList调用java包中的ZkClient中的getChildren方法，传进去的参数path=“/brokers/ids”。一句话概况就是从zookeeper中获取/brokers/ids节点下面的所有的brokers。 关于第二步，分配策略。上面提及的博文讲解非常详细，具体请参考此博文。 下面，我们来看看第三步到底干了什么事情，下面是第三步执行的代码：从代码中可以看出，主要做的工作就是最后面的两个方法，writeTopicConfig以及writeTopicPartitionAssignment。writeTopicConfig最终走到了ZkUtils中的updatePersistentPath方法。而writeTopicPartitionAssignment最终走到了ZkUtils中createPersistentPath的方法，最后，ZkUtils最终跟java包中的ZkClient交互，修改或是添加zookeeper中节点的信息。kafka就是利用了zookeeper中的回调函数的概念，当zookeeper中节点变化的时候，kafka会感知变化，然后对数据做出相应的变化。 下面时序图是对上面分析的一个总结 小结有了上面的这些基础，所以，kafka中集群的概念就变的微不足道了。我们可以根据自己的生成策略，对topic的任意分区，可以指定到任意的机器broker上面，这就使得用户client有了很大的自主权利，特别是对于那些异构集群来说，或是某些业务场景比较重要，某些业务场景比较次要。这就可以对特定业务进行隔离，使得当不得不kill掉某些业务的时候，可以不牵扯到比较重要的业务。]]></content>
+      <categories>
+        <category>Kafka</category>
+      </categories>
+      <tags>
+        <tag>big data</tag>
+        <tag>kafka</tag>
+      </tags>
+  </entry>
+</search>
