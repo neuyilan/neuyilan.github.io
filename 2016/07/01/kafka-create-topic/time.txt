@@ -1,0 +1,11 @@
+# Title And Author
+Sample Diagram @ v1.0 @ 20160705 @ neuyilan
+
+# Object And Messages
+TopicCommand-> AdminUtils:create topic
+AdminUtils: assign replicas to brokers
+AdminUtils: create topic in zook
+AdminUtils->ZkUtils: create persistent path
+
+
+	
