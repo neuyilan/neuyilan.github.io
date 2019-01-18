@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Java中的定时任务-ScheduledExecutorService的坑]]></title>
+    <url>%2F2019%2F01%2F17%2FJava%E4%B8%AD%E7%9A%84%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1-ScheduledExecutorService%E7%9A%84%E5%9D%91%2F</url>
+    <content type="text"><![CDATA[在做码农的日子里面，如果不跟线程打交道，那真的连入门都算不上了，如果你还仅仅是简单的new Thread，那么你就是跟我一样的小白了；怎么也得弄点高大上的线程池吧，用线程池肯定就少不了java concurrent包中的ExecutorService了；这里面的学问还是挺大的。以后有机会慢慢品读；在你的任务中，肯定也有定时任务的吧，如果你的定时还用Timer的化，那么你真的就跟我一样out了，具体原因请google下；说到Java的定时任务，肯定是非ScheduledExecutorService莫属了。这个用法是相当简单的。。。 12345678910111213141516171819202122package qhl.silver.ScheduledExecutorService;import java.util.concurrent.Executors;import java.util.concurrent.TimeUnit;public class BadAssTask implements Runnable &#123; public void run() &#123; System.out.println(&quot;开始做任务了，好开心。。。。&quot;); try &#123; Thread.sleep(100); &#125; catch (InterruptedException e) &#123; e.printStackTrace(); &#125; System.out.println(&quot;没有有bug(error/exception)出现，我可以很开心的继续执行了 &quot;); &#125; public static void main(String[] args) &#123; Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new BadAssTask(), 1, 1, TimeUnit.SECONDS); &#125;&#125; 上述任务会每秒钟定时执行，输出如下所示： 但是，假如你的任务有问题呢？有bug，有异常呢？请看如下测试代码1234567891011121314151617181920212223package qhl.silver.ScheduledExecutorService;import java.util.concurrent.Executors;import java.util.concurrent.TimeUnit;public class BadAssTask implements Runnable &#123; public void run() &#123; System.out.println(&quot;开始做任务了，好开心。。。。&quot;); try &#123; Thread.sleep(100); &#125; catch (InterruptedException e) &#123; e.printStackTrace(); &#125; System.out.println(&quot;如果有bug(error/exception)出现话，这个定时任务还能不能继续执行呢? &quot;); throw new RuntimeException(&quot;卧槽。。出现bug了，你竟然不catch！！！！!&quot;); &#125; public static void main(String[] args) &#123; Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(new BadAssTask(), 1, 1, TimeUnit.SECONDS); &#125;&#125; 以上测试代码就会出现如下输出，也就是仅仅运行了一次就挂了。这不符合预期啊！ 打开jdk的官方文档!, 可以看到如下解释以上标注内容翻译为人话就是：如果执行过程中遇到了问题（error/exception）,那么后面的定时任务也就不会继续执行了这显然不符合预期啊。这简直就是fuck egg的事情，哪有程序不会遇到点bug，遇到点异常呢？当时执行遇到异常，也许以后就好了呢？毕竟编程是一门神学，你不能因为一次异常，而放弃执行之后的定时任务啊！！！！]]></content>
+      <tags>
+        <tag>JAVA 线程池，定时任务</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[goland导入k8s源码]]></title>
     <url>%2F2018%2F10%2F15%2Fgoland%20%E5%AF%BC%E5%85%A5k8s%E6%BA%90%E7%A0%81%2F</url>
     <content type="text"><![CDATA[前言最近在调研 Google kubernetes 开源的容器编排平台，刚好也在学习 Go 语言，所以想看看 Google 这样的大厂是怎么撸 Go 语言的，本文简单介绍如何下载 k8s 源代码，导入 Idea GoLand（对，我是搞 Java的～），对于这么庞大的项目，没有 IDE 看起来还是很费劲的，当然牛人除外。 下载源代码这个不用说了，地球村的人应该都知道 1234mkdir -p /opt/kubernetes-src/src/k8s.iocd /opt/kubernetes-src/src/k8s.io/git clone https://github.com/kubernetes/kubernetes.gitgit checkout release-1.12（checkout 最新版本的分支即可） 因为等下在 GoLand 里面会配置 Project GOPATH（每个工程私有的 GOPATH）为 /opt/kubernetes-src，所以在 /opt/kubernetes-src 下建了 src/k8s.io 目录，至于为什么目录名叫 k8s.io，这个翻翻代码中的 import 就明白了，如果你不想导入代码后出现各种找不到导入包（符号）的化。 导入 GoLand在 GoLand 之前一直用的 Intellij + Go 插件，GoLand 出了之后立马下载下来体验，感觉还是不错的 打开 GoLand选择 New Project将目标文件夹指向 /opt/kubernetes-src确认之后会提示文件夹不为空，是否继续，点击确定就行慢慢等待 IDE 完成对源代码的索引。 注意：一定要设置导入源码的 Project GOPATH为当前路径/opt/kubernetes-src/src。路径为preferences-&gt;Go-&gt;GOPATH。 总结本文介绍了如何将 k8s 源码导入到 GoLand，为后续深入学习源码做好准备]]></content>
@@ -148,9 +156,9 @@
         <category>云存储</category>
       </categories>
       <tags>
+        <tag>HDFS</tag>
         <tag>对象存储</tag>
         <tag>S3</tag>
-        <tag>HDFS</tag>
         <tag>存储计算分离</tag>
       </tags>
   </entry>
