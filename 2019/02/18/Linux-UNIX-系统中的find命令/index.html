@@ -104,10 +104,12 @@
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="The Linux find command comes in handy when looking for files directly from the command line. The find command is given search criteria such as permissions, ownership, modification, size, time, and dat">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-18T10:47:05.834Z">
+<meta property="og:image" content="https://neuyilan.github.io/2019/02/18/Linux-UNIX-系统中的find命令/find-all-files-in-a-directory.png">
+<meta property="og:updated_time" content="2019-02-18T10:56:05.911Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Linux&#x2F;UNIX 系统中的find命令">
 <meta name="twitter:description" content="The Linux find command comes in handy when looking for files directly from the command line. The find command is given search criteria such as permissions, ownership, modification, size, time, and dat">
+<meta name="twitter:image" content="https://neuyilan.github.io/2019/02/18/Linux-UNIX-系统中的find命令/find-all-files-in-a-directory.png">
 
 
 
@@ -412,7 +414,7 @@
                 
               
 
-              <time title="Created: 2019-02-18 18:33:32 / Modified: 18:47:05" itemprop="dateCreated datePublished" datetime="2019-02-18T18:33:32+08:00">2019-02-18</time>
+              <time title="Created: 2019-02-18 18:33:32 / Modified: 18:56:05" itemprop="dateCreated datePublished" datetime="2019-02-18T18:33:32+08:00">2019-02-18</time>
             
 
             
@@ -464,11 +466,10 @@
 <p>The find command is available in all Linux distros by default, therefore, there’s no need of installing special packages to use it. Due to its significance, the find command is an essential command to learn if you want to know more about the command line navigations on any Linux distribution.</p>
 <p>We will highlight some of the find command examples and explain the various options that you can use.</p>
 <p><strong>Syntax&lt;</strong></p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span> find &lt;font color=#FF0000 &gt;location&lt;/font&gt;  comparison-criteria  search term</span><br></pre></td></tr></table></figure>
-<h1 id="Listing-files-in-the-current-directory"><a href="#Listing-files-in-the-current-directory" class="headerlink" title="Listing files in the current directory"></a>Listing files in the current directory</h1><p>To list all files in a directory including files inside folders, run the command below.</p>
-<p>$ find .<br>Sample output</p>
-<p>Find All Files In A Directory</p>
-<p>Searching files within a specified directory<br>If you want to search all files in a given directory, use the find command as follows</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ find location  comparison-criteria  search-term</span><br></pre></td></tr></table></figure>
+<h1 id="Listing-files-in-the-current-directory"><a href="#Listing-files-in-the-current-directory" class="headerlink" title="Listing files in the current directory"></a>Listing files in the current directory</h1><p>To list all files in a directory including files inside folders, run the command below.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ find .</span><br></pre></td></tr></table></figure></p>
+<p>Sample output<br><img src="find-all-files-in-a-directory.png" alt="find-all-files-in-a-directory"></p>
+<h1 id="Find-All-Files-In-A-Directory"><a href="#Find-All-Files-In-A-Directory" class="headerlink" title="Find All Files In A Directory"></a>Find All Files In A Directory</h1><p>Searching files within a specified directory<br>If you want to search all files in a given directory, use the find command as follows</p>
 <p>$ find directory_name<br>For example, to search for all files in /boot execute the command</p>
 <p>$ find /boot<br>Sample output</p>
 <p>Find Files In Specified Directory</p>
@@ -881,7 +882,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Listing-files-in-the-current-directory"><span class="nav-number">1.</span> <span class="nav-text">Listing files in the current directory</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Listing-files-in-the-current-directory"><span class="nav-number">1.</span> <span class="nav-text">Listing files in the current directory</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Find-All-Files-In-A-Directory"><span class="nav-number">2.</span> <span class="nav-text">Find All Files In A Directory</span></a></li></ol></div>
             
 
           </div>
