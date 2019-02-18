@@ -413,7 +413,7 @@
                 
               
 
-              <time title="Created: 2019-02-18 18:33:32 / Modified: 18:56:05" itemprop="dateCreated datePublished" datetime="2019-02-18T18:33:32+08:00">2019-02-18</time>
+              <time title="Created: 2019-02-18 18:33:32 / Modified: 19:03:07" itemprop="dateCreated datePublished" datetime="2019-02-18T18:33:32+08:00">2019-02-18</time>
             
 
             
@@ -462,70 +462,20 @@
 
       
         
-          
-            <p>The Linux find command comes in handy when looking for files directly from the command line. The find command is given search criteria such as permissions, ownership, modification, size, time, and date among others to locate the file or directory in question.</p>
+          <p>The Linux find command comes in handy when looking for files directly from the command line. The find command is given search criteria such as permissions, ownership, modification, size, time, and date among others to locate the file or directory in question.</p>
 <p>The find command is available in all Linux distros by default, therefore, there’s no need of installing special packages to use it. Due to its significance, the find command is an essential command to learn if you want to know more about the command line navigations on any Linux distribution.</p>
 <p>We will highlight some of the find command examples and explain the various options that you can use.</p>
-<p><strong>Syntax&lt;</strong></p>
+<p><strong>Syntax</strong></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ find location  comparison-criteria  search-term</span><br></pre></td></tr></table></figure>
-<h1 id="Listing-files-in-the-current-directory"><a href="#Listing-files-in-the-current-directory" class="headerlink" title="Listing files in the current directory"></a>Listing files in the current directory</h1><p>To list all files in a directory including files inside folders, run the command below.<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ find .</span><br></pre></td></tr></table></figure></p>
-<p>Sample output<br><img src="find-all-files-in-a-directory.png" alt="find-all-files-in-a-directory"></p>
-<h1 id="Find-All-Files-In-A-Directory"><a href="#Find-All-Files-In-A-Directory" class="headerlink" title="Find All Files In A Directory"></a>Find All Files In A Directory</h1><p>Searching files within a specified directory<br>If you want to search all files in a given directory, use the find command as follows</p>
-<p>$ find directory_name<br>For example, to search for all files in /boot execute the command</p>
-<p>$ find /boot<br>Sample output</p>
-<p>Find Files In Specified Directory</p>
-<p>Searching files using the filename within a specified directory<br>If you want to specify the search criteria using the name of the file in a directory, the syntax will be as follows</p>
-<p>$ find directory_name -name “file_name”<br>For example, to search for Apache2 files in /etc directory run</p>
-<p>$ find /etc -name “apache2”<br>Output</p>
-<p>Search Files Using Filename</p>
-<p>Recursively find all files with a specified file extension<br>If you want to search for particular files bearing a specific extension, in a given directory, the syntax will be as follows</p>
-<p>$ find directory_name  -name “*.extension”<br>For example, to search for all configuration files (.conf) in /etc directory, execute</p>
-<p>$ find /etc -name “*.conf”<br>Sample output</p>
-<p>Recursively Search For File Extensions</p>
-<p>Limiting depth of search<br>You can decide to limit the depth of your file search in directories. For example, if you want to limit your file search to the first level of the directory, the syntax will be</p>
-<p>$ find directory_name -maxdepth 1 -name “*.conf”<br>So, if you want to limit the file search to the first level directory in /etc for files with .conf extension execute:</p>
-<p>$ find /etc -maxdepth 1 -name “*.conf”<br>Sample output</p>
-<p>Find Depth Search Level 1</p>
-<p>As seen in the output above, the file search is limited to the /etc directory level. If you want to perform a more intensive search and go deeper within other directories within the /etc directory, increase the maxdepth value.</p>
-<p>For instance, to search for files with .conf extension up to the 3rd directory run</p>
-<p>$ find /etc -maxdepth 3 -name “*.conf”<br>Sample output</p>
-<p>Find Depth Search Level 3</p>
-<p>As seen from the above output, the search goes up to the 2nd and 3rd directories.</p>
-<p>Invert search results<br>You can also search for files that do not meet given criteria with the find command. This mode is helpful when you want to eliminate known files from the search pattern.</p>
-<p>To do this, use the -not -name attribute as shown</p>
-<p>$ find /etc -maxdepth 1 -not -name “*.conf”<br>Sample output</p>
-<p>Invert Search Results<br>The above output prints all the files that do not have the .conf fie extension.</p>
-<p>Using find with OR operator<br>You can choose to combine search results with find by using the OR operator which is symbolized by -o flag shown in the example below</p>
-<p>$ find /etc -maxdepth 3 -name “cron” -o -name “ssh”<br>Sample output</p>
-<p>Find With OR Operator</p>
-<p>The above command searches for files bearing the name ssh OR cron in the &lt;/etc directory</p>
-<p>Searching for files only or directories only<br>If you want to search for files only, use the - type f attribute as shown in the example below</p>
-<p>$ find /etc -type f -name “ssh”<br>Sample output</p>
-<p>Search For Files Only</p>
-<p>If you want to search for directories only, use the - type d attribute as shown in the example below.</p>
-<p>$ find /etc -type d -name “ssh”<br>Sample output</p>
-<p>Search Directories Only</p>
-<p>Searching for files owned by a particular user<br>To search for files owned by a particular user in a specific directory, use the syntax:</p>
-<p>$ find /path -user username<br>For instance, to find files owned by user james in /home directory run the command below</p>
-<p>$ find /home -user james<br>Sample output</p>
-<p>Find Path User</p>
-<p>Searching for files with certain file permissions<br>To search for files with specific file permissions, use the syntax below</p>
-<p>$ find /directory_name  -type f -perm value<br>For example, to search for files with permissions 755 in /etc directory, run:</p>
-<p>$ find /etc -type f -perm 755<br>Sample output</p>
-<p>Find Search With Certain Permisssions</p>
-<p>Searching for files with certain files sizes or a range of files<br>Linux find command also offers users a chance to search files according to their file sizes.</p>
-<p>Search files of N size<br>For example, to search for files which are 10kb run:</p>
-<p>$ find /etc -type f -size 10k<br>Sample output</p>
-<p>Find File Size Of 10kB</p>
-<p>To search files greater than 10kb run</p>
-<p> find /etc -type f -size +10k<br>Sample output</p>
-<p>Find Files Greater Than 10kb</p>
-<p>To search files less than 10kb run</p>
-<p> find /etc -type f -size -10k<br>Sample output</p>
-<p>Files Size Less Than 10kb</p>
-<p>Summary<br>That was a quick overview of the Linux find command examples. As already shown searching files and directories on the command line is very easy. Knowing how the command operates is an essential tool for all system administrators.<br>Feel free to try out the above find command examples and let us know how it went.</p>
-
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/02/18/Linux-UNIX-系统中的find命令/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
