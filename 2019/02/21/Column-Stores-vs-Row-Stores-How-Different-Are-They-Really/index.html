@@ -105,7 +105,13 @@
 <meta property="og:description" content="概述从论文的标题可以看出这篇论文不是陈述一种新的技术、架构，而更偏议论文一点，它主要的目的在于搞清楚对于分析类的查询为什么Column-Store比Row-Store好那么多？好在哪里？一般认为原因是: 分析类查询往往只查询一个表里面很少的几个字段，Column-Store只需要从磁盘读取用户查询的Column，而Row-Store读取每一条记录的时候你会把所有Column的数据读出来，在IO上C">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://neuyilan.github.io/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/row-cloum.jpg">
-<meta property="og:updated_time" content="2019-02-21T05:36:38.977Z">
+<meta property="og:image" content="https://neuyilan.github.io/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/Early%20Materialization.jpg">
+<meta property="og:image" content="https://neuyilan.github.io/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/later%20Materialization.jpg">
+<meta property="og:image" content="https://neuyilan.github.io/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/Star%20Schema.jpg">
+<meta property="og:image" content="https://neuyilan.github.io/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/Selectivity%20JOIN.jpg">
+<meta property="og:image" content="https://neuyilan.github.io/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/later%20Materialization%20join.jpg">
+<meta property="og:image" content="https://neuyilan.github.io/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/compare.jpg">
+<meta property="og:updated_time" content="2019-02-21T05:39:28.805Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Column-Stores vs. Row-Stores: How Different Are They Really">
 <meta name="twitter:description" content="概述从论文的标题可以看出这篇论文不是陈述一种新的技术、架构，而更偏议论文一点，它主要的目的在于搞清楚对于分析类的查询为什么Column-Store比Row-Store好那么多？好在哪里？一般认为原因是: 分析类查询往往只查询一个表里面很少的几个字段，Column-Store只需要从磁盘读取用户查询的Column，而Row-Store读取每一条记录的时候你会把所有Column的数据读出来，在IO上C">
@@ -414,7 +420,7 @@
                 
               
 
-              <time title="Created: 2019-02-21 13:26:13 / Modified: 13:36:38" itemprop="dateCreated datePublished" datetime="2019-02-21T13:26:13+08:00">2019-02-21</time>
+              <time title="Created: 2019-02-21 13:26:13 / Modified: 13:39:28" itemprop="dateCreated datePublished" datetime="2019-02-21T13:26:13+08:00">2019-02-21</time>
             
 
             
@@ -481,8 +487,9 @@
 <p>Run-Length的大概意思是这样的, 对于一个数字序列: 1 1 1 1 2 2 2, 它可以表达成 1x4, 2x3<br>这样不管进行 count (4 + 3), sum (1 x 4 + 2 x 3) 等等都可以不对数据进行解压直接计算，而且因为扫描的数据比未压缩的要少，从而可以进一步的提升性能。文中还提到对于Column-Store应用压缩这种优化最好的场景是当数据是经过排序的，道理很简单，因为如果没有经过排序，那么数据就没那么“有规律”，也就达不到最好的压缩比。</p>
 <h2 id="延迟物化"><a href="#延迟物化" class="headerlink" title="延迟物化"></a>延迟物化</h2><p>要理解延迟物化(Late Materialization), 首先解释一下什么是物化：为了能够把底层存储格式(面向Column的), 跟用户查询表达的意思(Row)对应上，在一个查询的生命周期的某个时间点，一定要把数据转换成Row的形式，这在Column-Store里面被称为物化(Materization)。<br><img src="row-cloum.jpg" alt="从列式存储到行式显示"></p>
 <p>理解了物化的概念之后，延迟物化就很好理解了，意思是把这个物化的时机尽量的拖延到整个查询生命周期的后期。延迟物化意味着在查询执行的前一段时间内，查询执行的模型不是关系代数，而是基于Column的(我也不知道怎么更好的表达这种“模型”，如果有知道的朋友欢迎告知)。下面看个例子, 比如下面的查询:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SELECT name</span><br><span class="line">FROM person</span><br><span class="line">WHERE id &gt; 10</span><br><span class="line">  and age &gt; 20</span><br></pre></td></tr></table></figure></p>
-<p>一般(Naive)的做法是从文件系统读出三列的数据，马上物化成一行行的person数据，然后应用两个过滤条件: id &gt; 10 和 age &gt; 20 , 过滤完了之后从数据里面抽出 name 字段，作为最后的结果，大致转换过程如下图:</p>
+<p>一般(Naive)的做法是从文件系统读出三列的数据，马上物化成一行行的person数据，然后应用两个过滤条件: id &gt; 10 和 age &gt; 20 , 过滤完了之后从数据里面抽出 name 字段，作为最后的结果，大致转换过程如下图:<br><img src="Early Materialization.jpg" alt="Early Materialization"></p>
 <p>而延迟物化的做法则会先不拼出行式数据，直接在Column数据上分别应用两个过滤条件，从而得到两个满足过滤条件的bitmap, 然后再把两个bitmap做位与(bitwise AND)的操作得到同时满足两个条件的所有的bitmap，因为最后用户需要的只是 name 字段而已，因此下一步我们拿着这些 position 对 name 字段的数据进行过滤就得到了最终的结果。如下图:</p>
+<p><img src="later Materialization.jpg" alt="later Materialization"></p>
 <p>发现没有？整个过程中我们压根没有进行物化操作，从而可以大大的提高效率。</p>
 <p>总结起来延迟物化有四个方面的好处:</p>
 <ul>
@@ -497,9 +504,12 @@
 </ul>
 <h2 id="Invisible-Join"><a href="#Invisible-Join" class="headerlink" title="Invisible Join"></a>Invisible Join</h2><p>最后本文提出了一个具有创新性的性能优化措施: Invisible Join。Invisible Join 针对的场景是数仓里面的星型模型(Star Schema), 如果用户查询符合下面的模式就可以应用Invisible Join:</p>
 <p>利用事实表的里面的外键跟维度表的主键进行JOIN的查询的, 最后select出一些column返回给用户。<br>所谓的星型模型指的是一个事实表(fact table), 周围通过外键关联一堆维度表(dimension table)的这么一种模型，</p>
+<p><img src="Star Schema.jpg" alt="Star Schema"></p>
 <p>为了介绍Invisible Join的思路，我们要先介绍一下两种传统的方案，通过对比我们才能看Invisible Join方案的优点。</p>
 <h3 id="传统方案一-按Selectivity依次JOIN"><a href="#传统方案一-按Selectivity依次JOIN" class="headerlink" title="传统方案一: 按Selectivity依次JOIN"></a>传统方案一: 按Selectivity依次JOIN</h3><p>传统方案一最简单，按照 Selectivity 从大到小对表进行JOIN:</p>
+<p><img src="Selectivity JOIN.jpg" alt="Selectivity JOIN"></p>
 <h3 id="传统方案二-延迟物化"><a href="#传统方案二-延迟物化" class="headerlink" title="传统方案二: 延迟物化"></a>传统方案二: 延迟物化</h3><p>方案二比较有意思, 它应用了延迟物化的策略，它先不进行JOIN，而是先在维度表上对数据进行过滤，拿到对应表的 POSITION, 然后把表的主键跟事实表的外键进行JOIN，这样我们就可以拿到两类POSITION: 事实表的POSITION和维度表的POSITION, 然后我们通过这些POSITION把数据提取出来就完成了一次JOIN, 重复以上的操作我们就可以完成整个查询。</p>
+<p><img src="later Materialization join.jpg" alt="later Materialization join"></p>
 <h3 id="Invisible-Join详解"><a href="#Invisible-Join详解" class="headerlink" title="Invisible Join详解"></a>Invisible Join详解</h3><p>上面两种方案都各有各的缺点:</p>
 <ul>
 <li>传统方案一因为一开始就做了JOIN，享受不了延迟物化的各种优化。</li>
@@ -514,7 +524,7 @@
 <li>根据第三步的事实表的bitmap以及第一步的符合条件的维度表的主键值，组装出最终的返回值。</li>
 </ul>
 <p>如果只是这样的话Invisible JOIN可能比上面的第二种方案好不了多少，论文认为在很多时间维度表里面符合过滤条件的数据往往是连续的，连续的好处在于，它能把lookup join变成一个值的范围检查，范围检查比lookup join要快，原因很简单，范围检查只需要所算数运算就好了，不需要做lookup，因此可能大幅度的提高性能。</p>
-<h1 id="性能对比"><a href="#性能对比" class="headerlink" title="性能对比"></a>性能对比</h1><p>从论文提供的性能对比数字来看，这几大优化策略里面延迟物化的效果最好，能够提升性能3倍以上；压缩的优化效果次之: 两倍以上；Invisible JOIN 再次之：50% 到 70%；块遍历则能性能 5% 到 50%。</p>
+<h1 id="性能对比"><a href="#性能对比" class="headerlink" title="性能对比"></a>性能对比</h1><p>从论文提供的性能对比数字来看，这几大优化策略里面延迟物化的效果最好，能够提升性能3倍以上；压缩的优化效果次之: 两倍以上；Invisible JOIN 再次之：50% 到 70%；块遍历则能性能 5% 到 50%。<br><img src="compare.jpg" alt="compare"></p>
 <p>而如果把这些优化手段都去掉，Column-Store的性能跟一个普通的Row-Store就没什么区别了。</p>
 <h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>读这篇论文最大的收获是首先知道了到底哪些因素促使Column-Store对分析类查询性能可以大幅优于Row-Store: 延迟物化、压缩、Invisible Join以及块遍历。</p>
 <p>特别佩服这篇论文的是很多人稍微想一下就会觉得Column-Store在分析类场景下性能优于Row-Store是天经地义的: 更少的IO，但是这篇论文详细的对各种场景进行了测试、论证，同时对Row-Store应用类似的性能优化的手段再进行测试、对比，掰开了揉碎了的分析。最终告诉我们:</p>
