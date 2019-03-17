@@ -368,6 +368,166 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/03/17/区块链-一些基本概念/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="伊蓝">
+      <meta itemprop="description" content="记录点滴">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yilan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/03/17/区块链-一些基本概念/" class="post-title-link" itemprop="url">区块链-一些基本概念</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-03-17 09:25:09 / Modified: 10:09:41" itemprop="dateCreated datePublished" datetime="2019-03-17T09:25:09+08:00">2019-03-17</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/17/区块链-一些基本概念/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/03/17/区块链-一些基本概念/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h1><p><strong>collision resistance（collision free）</strong>: 是说在密码学中，对于一个hash函数，很难找到两个不同的输入使得其hash之后的输出是一样的。Collision resistance is a property of cryptographic hash functions: a hash function H is collision resistant if it is hard to find two inputs that hash to the same output; that is, two inputs a and b such that H(a) = H(b), and a ≠ b.</p>
+<p><strong>hiding</strong>：hash函数的计算过程是单向的，是不可逆的。给定一个输入X，可以计算其hash值 H(X)，但是通过H(X)，很难知道其输出为X。当然蛮力求解也是一个办法。hiding性质的前提是：（1）输入空间较大；（2）输入的分布比较分散。</p>
+<p><strong>digital commitment（digital equivalent of a sealed envelope）</strong>：通过collision resistance和hiding的性质，就可以得到digital commitment这个性质。<br>请参考<a href="https://www.itprotoday.com/security/digital-envelopes-and-signatures" target="_blank" rel="noopener">Digital Envelopes and Signatures</a></p>
+<p><strong>puzzle friendly</strong>: 要想使得计算得到的hash值在某一个范围之内，则只能够一个一个的输入去尝试，很难直接找到某个值使得其hash值在某一个范围内。<strong>挖矿</strong> 也是就是这个意思。挖矿就是把区块中的一些信息+随机数进行hash，使得其结果前K位数为0，才能够满足要求。挖矿无捷径，只能够去大量的试。所以也就产生了 <strong>工作量证明（POW）</strong>。</p>
+<p><strong>工作量证明（POW)</strong> : 就是做了大量的尝试之后，才得到符合要求的结果，这个过程叫做工作量证明。</p>
+<h1 id="签名"><a href="#签名" class="headerlink" title="签名"></a>签名</h1><p>签名用的是私钥，验证签名使用的是公钥</p>
+<p>如何保证两个人的公钥，私钥都是不一样的？<br>理论上可以做到，但是实际上不可能，其概率比地球爆炸的概率还要低</p>
+<h1 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h1><p><strong>hash pointers</strong>：与普通的指针的区别：普通的指针指向所在内存的起始地址，但是hash 指针除了保存起始地址之外，还会保存指向内存的hash值，这样就可以很容易的验证这块内存（这个区块）是否被篡改。</p>
+<p><strong>tamper-evident log</strong> : 防篡改log，就是利用了区块链中后一个区块中会保存前一个区块中的hash值。<br><img src="数据结构-hash.png" alt="数据结构-hash"></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/03/07/jupyter安装一些坑/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -413,7 +573,7 @@
                 
               
 
-              <time title="Created: 2019-03-07 19:02:29 / Modified: 19:05:50" itemprop="dateCreated datePublished" datetime="2019-03-07T19:02:29+08:00">2019-03-07</time>
+              <time title="Created: 2019-03-07 19:02:29 / Modified: 19:06:26" itemprop="dateCreated datePublished" datetime="2019-03-07T19:02:29+08:00">2019-03-07</time>
             
 
             
@@ -464,6 +624,7 @@
         
           
             <p>mac 上的jupyter安装上之后，启动jupyter失败。报如下错误<br><img src="jupyter错误.png" alt="jupyter错误"><br>是因为语言编码的问题。于是尝试使用如下命令打开jupyter:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LANG=zn jupyter notebook</span><br></pre></td></tr></table></figure></p>
+<p>参考链接：<a href="https://www.jianshu.com/p/516eb2a57ee6" target="_blank" rel="noopener">Jupyter打开出错：’ascii’ codec can’t decode byte 0xe5 in position 4: ordinal not in range(128)</a></p>
 
           
         
@@ -1796,168 +1957,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/02/18/Linux-UNIX-系统中的find命令/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="伊蓝">
-      <meta itemprop="description" content="记录点滴">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="yilan">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/02/18/Linux-UNIX-系统中的find命令/" class="post-title-link" itemprop="url">Linux/UNIX 系统中的find命令</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2019-02-18 18:33:32 / Modified: 19:17:46" itemprop="dateCreated datePublished" datetime="2019-02-18T18:33:32+08:00">2019-02-18</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/02/18/Linux-UNIX-系统中的find命令/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/02/18/Linux-UNIX-系统中的find命令/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>The Linux find command comes in handy when looking for files directly from the command line. The find command is given search criteria such as permissions, ownership, modification, size, time, and date among others to locate the file or directory in question.</p>
-<p>The find command is available in all Linux distros by default, therefore, there’s no need of installing special packages to use it. Due to its significance, the find command is an essential command to learn if you want to know more about the command line navigations on any Linux distribution.</p>
-<p>We will highlight some of the find command examples and explain the various options that you can use.</p>
-<p><strong>Syntax</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ find location  comparison-criteria  search-term</span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/02/18/Linux-UNIX-系统中的find命令/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2007,7 +2006,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">47</span>
+                    <span class="site-state-item-count">48</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>

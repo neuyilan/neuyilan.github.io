@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[区块链-一些基本概念]]></title>
+    <url>%2F2019%2F03%2F17%2F%E5%8C%BA%E5%9D%97%E9%93%BE-%E4%B8%80%E4%BA%9B%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%2F</url>
+    <content type="text"><![CDATA[Hashcollision resistance（collision free）: 是说在密码学中，对于一个hash函数，很难找到两个不同的输入使得其hash之后的输出是一样的。Collision resistance is a property of cryptographic hash functions: a hash function H is collision resistant if it is hard to find two inputs that hash to the same output; that is, two inputs a and b such that H(a) = H(b), and a ≠ b. hiding：hash函数的计算过程是单向的，是不可逆的。给定一个输入X，可以计算其hash值 H(X)，但是通过H(X)，很难知道其输出为X。当然蛮力求解也是一个办法。hiding性质的前提是：（1）输入空间较大；（2）输入的分布比较分散。 digital commitment（digital equivalent of a sealed envelope）：通过collision resistance和hiding的性质，就可以得到digital commitment这个性质。请参考Digital Envelopes and Signatures puzzle friendly: 要想使得计算得到的hash值在某一个范围之内，则只能够一个一个的输入去尝试，很难直接找到某个值使得其hash值在某一个范围内。挖矿 也是就是这个意思。挖矿就是把区块中的一些信息+随机数进行hash，使得其结果前K位数为0，才能够满足要求。挖矿无捷径，只能够去大量的试。所以也就产生了 工作量证明（POW）。 工作量证明（POW) : 就是做了大量的尝试之后，才得到符合要求的结果，这个过程叫做工作量证明。 签名签名用的是私钥，验证签名使用的是公钥 如何保证两个人的公钥，私钥都是不一样的？理论上可以做到，但是实际上不可能，其概率比地球爆炸的概率还要低 数据结构hash pointers：与普通的指针的区别：普通的指针指向所在内存的起始地址，但是hash 指针除了保存起始地址之外，还会保存指向内存的hash值，这样就可以很容易的验证这块内存（这个区块）是否被篡改。 tamper-evident log : 防篡改log，就是利用了区块链中后一个区块中会保存前一个区块中的hash值。]]></content>
+  </entry>
+  <entry>
     <title><![CDATA[jupyter安装一些坑]]></title>
     <url>%2F2019%2F03%2F07%2Fjupyter%E5%AE%89%E8%A3%85%E4%B8%80%E4%BA%9B%E5%9D%91%2F</url>
-    <content type="text"><![CDATA[mac 上的jupyter安装上之后，启动jupyter失败。报如下错误是因为语言编码的问题。于是尝试使用如下命令打开jupyter:1LANG=zn jupyter notebook]]></content>
+    <content type="text"><![CDATA[mac 上的jupyter安装上之后，启动jupyter失败。报如下错误是因为语言编码的问题。于是尝试使用如下命令打开jupyter:1LANG=zn jupyter notebook 参考链接：Jupyter打开出错：’ascii’ codec can’t decode byte 0xe5 in position 4: ordinal not in range(128)]]></content>
       <tags>
         <tag>坑</tag>
       </tags>
