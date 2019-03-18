@@ -8,7 +8,7 @@
   <entry>
     <title><![CDATA[jupyter安装一些坑]]></title>
     <url>%2F2019%2F03%2F07%2Fjupyter%E5%AE%89%E8%A3%85%E4%B8%80%E4%BA%9B%E5%9D%91%2F</url>
-    <content type="text"><![CDATA[mac 上的jupyter安装上之后，启动jupyter失败。报如下错误是因为语言编码的问题。于是尝试使用如下命令打开jupyter:1LANG=zn jupyter notebook 参考链接：Jupyter打开出错：’ascii’ codec can’t decode byte 0xe5 in position 4: ordinal not in range(128)]]></content>
+    <content type="text"><![CDATA[mac 上的jupyter安装上之后，启动jupyter失败。报如下错误nicodeDecodeError: ‘ascii’ codec can’t decode byte 0xe5 in position 4: ordinal not in range(128)是因为语言编码的问题。于是尝试使用如下命令打开jupyter:1LANG=zn jupyter notebook 参考链接：Jupyter打开出错：’ascii’ codec can’t decode byte 0xe5 in position 4: ordinal not in range(128)]]></content>
       <tags>
         <tag>坑</tag>
       </tags>
