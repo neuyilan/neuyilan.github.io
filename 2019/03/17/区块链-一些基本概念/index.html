@@ -108,7 +108,7 @@
 <meta property="og:image" content="https://neuyilan.github.io/2019/03/17/区块链-一些基本概念/共识协议.png">
 <meta property="og:image" content="https://neuyilan.github.io/2019/03/17/区块链-一些基本概念/分叉攻击.png">
 <meta property="og:image" content="https://neuyilan.github.io/2019/03/17/区块链-一些基本概念/正常分叉.png">
-<meta property="og:updated_time" content="2019-03-17T04:48:56.199Z">
+<meta property="og:updated_time" content="2019-03-18T09:07:57.821Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="区块链-一些基本概念">
 <meta name="twitter:description" content="Hashcollision resistance（collision free）: 是说在密码学中，对于一个hash函数，很难找到两个不同的输入使得其hash之后的输出是一样的。Collision resistance is a property of cryptographic hash functions: a hash function H is collision resistant if">
@@ -417,12 +417,24 @@
                 
               
 
-              <time title="Created: 2019-03-17 09:25:09 / Modified: 12:48:56" itemprop="dateCreated datePublished" datetime="2019-03-17T09:25:09+08:00">2019-03-17</time>
+              <time title="Created: 2019-03-17 09:25:09" itemprop="dateCreated datePublished" datetime="2019-03-17T09:25:09+08:00">2019-03-17</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-03-18 17:07:57" itemprop="dateModified" datetime="2019-03-18T17:07:57+08:00">2019-03-18</time>
               
             
           </span>
@@ -467,6 +479,7 @@
       
         <h1 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h1><p><strong>collision resistance（collision free）</strong>: 是说在密码学中，对于一个hash函数，很难找到两个不同的输入使得其hash之后的输出是一样的。Collision resistance is a property of cryptographic hash functions: a hash function H is collision resistant if it is hard to find two inputs that hash to the same output; that is, two inputs a and b such that H(a) = H(b), and a ≠ b.</p>
 <p><strong>hiding</strong>：hash函数的计算过程是单向的，是不可逆的。给定一个输入X，可以计算其hash值 H(X)，但是通过H(X)，很难知道其输出为X。当然蛮力求解也是一个办法。hiding性质的前提是：（1）输入空间较大；（2）输入的分布比较分散。</p>
+<a id="more"></a>
 <p><strong>digital commitment（digital equivalent of a sealed envelope）</strong>：通过collision resistance和hiding的性质，就可以得到digital commitment这个性质。<br>请参考<a href="https://www.itprotoday.com/security/digital-envelopes-and-signatures" target="_blank" rel="noopener">Digital Envelopes and Signatures</a></p>
 <p><strong>puzzle friendly</strong>: 要想使得计算得到的hash值在某一个范围之内，则只能够一个一个的输入去尝试，很难直接找到某个值使得其hash值在某一个范围内。<strong>挖矿</strong> 也是就是这个意思。挖矿就是把区块中的一些信息+随机数进行hash，使得其结果前K位数为0，才能够满足要求。挖矿无捷径，只能够去大量的试。所以也就产生了 <strong>工作量证明（POW）</strong>。</p>
 <p><strong>工作量证明（POW)</strong> : 就是做了大量的尝试之后，才得到符合要求的结果，这个过程叫做工作量证明。</p>
