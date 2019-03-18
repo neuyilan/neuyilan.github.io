@@ -413,7 +413,7 @@
                 
               
 
-              <time title="Created: 2019-03-17 09:25:09 / Modified: 10:09:41" itemprop="dateCreated datePublished" datetime="2019-03-17T09:25:09+08:00">2019-03-17</time>
+              <time title="Created: 2019-03-17 09:25:09 / Modified: 12:48:56" itemprop="dateCreated datePublished" datetime="2019-03-17T09:25:09+08:00">2019-03-17</time>
             
 
             
@@ -471,7 +471,22 @@
 <h1 id="签名"><a href="#签名" class="headerlink" title="签名"></a>签名</h1><p>签名用的是私钥，验证签名使用的是公钥</p>
 <p>如何保证两个人的公钥，私钥都是不一样的？<br>理论上可以做到，但是实际上不可能，其概率比地球爆炸的概率还要低</p>
 <h1 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h1><p><strong>hash pointers</strong>：与普通的指针的区别：普通的指针指向所在内存的起始地址，但是hash 指针除了保存起始地址之外，还会保存指向内存的hash值，这样就可以很容易的验证这块内存（这个区块）是否被篡改。</p>
-<p><strong>tamper-evident log</strong> : 防篡改log，就是利用了区块链中后一个区块中会保存前一个区块中的hash值。<br><img src="数据结构-hash.png" alt="数据结构-hash"></p>
+<p><strong>tamper-evident log</strong> : 防篡改log，就是利用了区块链中后一个区块中会保存前一个区块中的hash值。牵一发动全身！<br><img src="数据结构-hash.png" alt="数据结构-hash"></p>
+<p><strong>Merkle tree</strong> ： 典型的属于以时间换空间。与链式的区块一样，其中root hash也能够检测出这个区块链是否被篡改。可以用logn的时间定位出那个区块被修改.<br><img src="merkel_tree.png" alt="Merkle tree"></p>
+<p><strong>全节点</strong>：包含真正交易数据的节点。</p>
+<p><strong>轻节点</strong>：只包含hash header的节点。</p>
+<p><strong>merkle proof </strong></p>
+<ul>
+<li><strong>（proof of membership）</strong> : 证明merkle tree中包含了某个交易。比如，某个全节点A向一个轻节点B转了一笔账，所以A需要向B发送一个merkel tree，然后B就可以来证明这个merkle tree是否是正确的。时间复杂度O（log n）</li>
+<li><strong>（proof of no membership）</strong> :遍历全部的区块，O(n)。但是，如果所有的区块是按照hash值排序的话（sorted merkle tree），那么就可以利用O（log n）的时间来验证某个交易是否在这个merkel tree中。</li>
+</ul>
+<p><strong>备注</strong>： hash 指针不能够有环。否则就会造成循环依赖，造成死锁了。</p>
+<h1 id="共识协议"><a href="#共识协议" class="headerlink" title="共识协议"></a>共识协议</h1><h2 id="双花攻击（double-spending-attack）"><a href="#双花攻击（double-spending-attack）" class="headerlink" title="双花攻击（double spending attack）"></a>双花攻击（double spending attack）</h2><p><img src="共识协议.png" alt="共识协议"><br>转账的时候，输入A要说明两个东西：（1）币的来源，来证明我有钱可以给你转账。（2）A的公钥 （3）A的公钥的hash，也就是之前币的来源的那个区块的输出的hash值。这样通过（2）和（3）来验证是否是真的A转账，还是某一个A’冒充A，像用A来进行转账骗钱。</p>
+<h2 id="分布式共识"><a href="#分布式共识" class="headerlink" title="分布式共识"></a>分布式共识</h2><h3 id="consensus-in-bitcoin"><a href="#consensus-in-bitcoin" class="headerlink" title="consensus in bitcoin"></a>consensus in bitcoin</h3><ul>
+<li><strong>sybil attack(女巫攻击)</strong>：某个超级计算机产生的账户个数超过了总数的一半。所以比特币的投票机制并不是利用账户的数目来投票，而是按照计算力来投票。</li>
+</ul>
+<h2 id="分叉攻击（forking-attack）"><a href="#分叉攻击（forking-attack）" class="headerlink" title="分叉攻击（forking attack）"></a>分叉攻击（forking attack）</h2><p><img src="分叉攻击.png" alt="分叉攻击"></p>
+<h2 id="正常分叉"><a href="#正常分叉" class="headerlink" title="正常分叉"></a>正常分叉</h2><p>两个机器同时挖到矿了，就有可能同时产生两个区块都连接在合法链的最后。<br><img src="正常分叉.png" alt="正常分叉"></p>
 
           
         
