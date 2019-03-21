@@ -96,28 +96,24 @@
 
 
 
-  <meta name="description" content="本章节主要覆盖如下内容：  影响表以及索引扫描性能的主要因素列表 随机/顺序读时间以及CPU成本 根据三个最重要的需求为查询语句的索引指定星级 三星索引的设计-最理想的索引设计 宽索引 为查询语句设计最好索引的算法 根据现存索引情况设计最使用的索引，将CPU时间、磁盘读时间和耗费时间(elapsed time)考虑在内 从维护开销来看，对现有索引进行所建议的改变可能产生的结果 响应时间、驱动负载和">
-<meta name="keywords" content="数据库,索引,三星索引">
+  <meta name="description" content="我们在散列表那节中讲过，散列表的插入、删除、查找操作的时间复杂度可以做到常量级的O(1)，非常高效。而二叉查找树在比较平衡的情况下，插入、删除、查找操作时间复杂度才是O(logn)，相对散列表，好像并没有什么优势，那我们为什么还要用二叉查找树呢？">
 <meta property="og:type" content="article">
-<meta property="og:title" content="索引优化与设计(4)-为SELECT语句创建理想的索引">
-<meta property="og:url" content="https://neuyilan.github.io/2017/02/12/index-4/index.html">
+<meta property="og:title" content="数据结构与算法-24 | 二叉树基础（下）：有了如此高效的散列表，为什么还需要二叉树?">
+<meta property="og:url" content="https://neuyilan.github.io/2019/03/21/数据结构与算法-24-二叉树基础（下）：有了如此高效的散列表，为什么还需要二叉树/index.html">
 <meta property="og:site_name" content="yilan">
-<meta property="og:description" content="本章节主要覆盖如下内容：  影响表以及索引扫描性能的主要因素列表 随机/顺序读时间以及CPU成本 根据三个最重要的需求为查询语句的索引指定星级 三星索引的设计-最理想的索引设计 宽索引 为查询语句设计最好索引的算法 根据现存索引情况设计最使用的索引，将CPU时间、磁盘读时间和耗费时间(elapsed time)考虑在内 从维护开销来看，对现有索引进行所建议的改变可能产生的结果 响应时间、驱动负载和">
+<meta property="og:description" content="我们在散列表那节中讲过，散列表的插入、删除、查找操作的时间复杂度可以做到常量级的O(1)，非常高效。而二叉查找树在比较平衡的情况下，插入、删除、查找操作时间复杂度才是O(logn)，相对散列表，好像并没有什么优势，那我们为什么还要用二叉查找树呢？">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://neuyilan.github.io/2017/02/12/index-4/disk-cpu-time.png">
-<meta property="og:image" content="https://neuyilan.github.io/2017/02/12/index-4/SQL4.1.png">
-<meta property="og:updated_time" content="2019-01-12T03:17:45.889Z">
+<meta property="og:updated_time" content="2019-03-21T01:29:41.846Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="索引优化与设计(4)-为SELECT语句创建理想的索引">
-<meta name="twitter:description" content="本章节主要覆盖如下内容：  影响表以及索引扫描性能的主要因素列表 随机/顺序读时间以及CPU成本 根据三个最重要的需求为查询语句的索引指定星级 三星索引的设计-最理想的索引设计 宽索引 为查询语句设计最好索引的算法 根据现存索引情况设计最使用的索引，将CPU时间、磁盘读时间和耗费时间(elapsed time)考虑在内 从维护开销来看，对现有索引进行所建议的改变可能产生的结果 响应时间、驱动负载和">
-<meta name="twitter:image" content="https://neuyilan.github.io/2017/02/12/index-4/disk-cpu-time.png">
+<meta name="twitter:title" content="数据结构与算法-24 | 二叉树基础（下）：有了如此高效的散列表，为什么还需要二叉树?">
+<meta name="twitter:description" content="我们在散列表那节中讲过，散列表的插入、删除、查找操作的时间复杂度可以做到常量级的O(1)，非常高效。而二叉查找树在比较平衡的情况下，插入、删除、查找操作时间复杂度才是O(logn)，相对散列表，好像并没有什么优势，那我们为什么还要用二叉查找树呢？">
 
 
 
 
 
 
-  <link rel="canonical" href="https://neuyilan.github.io/2017/02/12/index-4/">
+  <link rel="canonical" href="https://neuyilan.github.io/2019/03/21/数据结构与算法-24-二叉树基础（下）：有了如此高效的散列表，为什么还需要二叉树/">
 
 
 
@@ -127,7 +123,7 @@
   };
 </script>
 
-  <title>索引优化与设计(4)-为SELECT语句创建理想的索引 | yilan</title>
+  <title>数据结构与算法-24 | 二叉树基础（下）：有了如此高效的散列表，为什么还需要二叉树? | yilan</title>
   
 
 
@@ -372,7 +368,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2017/02/12/index-4/">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/03/21/数据结构与算法-24-二叉树基础（下）：有了如此高效的散列表，为什么还需要二叉树/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="伊蓝">
@@ -389,7 +385,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">索引优化与设计(4)-为SELECT语句创建理想的索引
+          <h1 class="post-title" itemprop="name headline">数据结构与算法-24 | 二叉树基础（下）：有了如此高效的散列表，为什么还需要二叉树?
 
               
             
@@ -415,46 +411,16 @@
                 
               
 
-              <time title="Created: 2017-02-12 09:56:48" itemprop="dateCreated datePublished" datetime="2017-02-12T09:56:48+08:00">2017-02-12</time>
+              <time title="Created: 2019-03-21 09:26:04 / Modified: 09:29:41" itemprop="dateCreated datePublished" datetime="2019-03-21T09:26:04+08:00">2019-03-21</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2019-01-12 11:17:45" itemprop="dateModified" datetime="2019-01-12T11:17:45+08:00">2019-01-12</time>
               
             
           </span>
 
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/索引优化与设计/" itemprop="url" rel="index"><span itemprop="name">索引优化与设计</span></a></span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -464,8 +430,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/02/12/index-4/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2017/02/12/index-4/" itemprop="commentCount"></span>
+                <a href="/2019/03/21/数据结构与算法-24-二叉树基础（下）：有了如此高效的散列表，为什么还需要二叉树/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/03/21/数据结构与算法-24-二叉树基础（下）：有了如此高效的散列表，为什么还需要二叉树/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -493,33 +459,14 @@
       
 
       
-        <p>本章节主要覆盖如下内容：</p>
-<ul>
-<li>影响表以及索引扫描性能的主要因素列表</li>
-<li>随机/顺序读时间以及CPU成本</li>
-<li>根据三个最重要的需求为查询语句的索引指定星级</li>
-<li>三星索引的设计-最理想的索引设计</li>
-<li>宽索引</li>
-<li>为查询语句设计最好索引的算法</li>
-<li>根据现存索引情况设计最使用的索引，将CPU时间、磁盘读时间和耗费时间(elapsed time)考虑在内</li>
-<li>从维护开销来看，对现有索引进行所建议的改变可能产生的结果</li>
-<li>响应时间、驱动负载和磁盘代价</li>
-<li>一些建议<a id="more"></a>
-</li>
-</ul>
-<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>在SQL查询中，当程序中的SQL使用了一个或者多个索引的时候，许多的DBA就会对此表示满意，但是，使用一个不合适的索引有可能会导致比全表扫描更差的性能。</p>
-<p>接下来，本章就会重点分析这其中的缘由，首先，给出我们接下来分析所依赖的前提。</p>
-<h1 id="磁盘以及CPU时间的基础假设"><a href="#磁盘以及CPU时间的基础假设" class="headerlink" title="磁盘以及CPU时间的基础假设"></a>磁盘以及CPU时间的基础假设</h1><p>下图是给出的磁盘和CPU的基础假设。<br><img src="disk-cpu-time.png" alt="disk and cpu time" title="磁盘及CPU时间的基础假设"></p>
-<p>评注：由于作者写作的时间是2005年，所以这些数据有的已经发生变化，磁盘顺序读可以达到100M/S。具体请参考<a href="http://wushank.blog.51cto.com/3489095/1708168" target="_blank" rel="noopener">磁盘性能指标–IOPS、吞吐量及测试</a>[1]。关于CPU time的定义，请参考<a href="https://www.techopedia.com/definition/2858/cpu-time" target="_blank" rel="noopener">此文章</a>[2]</p>
-<h1 id="不合适索引-inadequate-index"><a href="#不合适索引-inadequate-index" class="headerlink" title="不合适索引(inadequate index)"></a>不合适索引(inadequate index)</h1><p>此处给出了一个例子，就是说明，使用索引并不一定比全表扫描好。<br>假设有如下的一个查询语句，仅有两个合理的访问路径：<br>1、使用索引(LNAME)<br>2、全表扫描<br><img src="SQL4.1.png" alt="SQL 4.1" title="是进行全表扫描还是使用一个不合适的索引？"></p>
-<p>索引列是LNAME 和 FNAME,并且过滤因子是1%。在这个查询语句中，显然只能够使用索引列LNAME。</p>
-<p>对于第一种情况来说，DBMS会选择谓词条件LNAME=:LNAME扫描索引片。对于索引片中的每一个索引行，DBMS都必须回到表中校验CITY字段的值。由于表中的行是根据CNO字段而不是LNAME字段来聚簇的，所以这个校验操作需要做一次磁盘随机读[评注:即先读取了索引数据，然后再去表中进行随机读]。</p>
-<p>假设索引(LNAME,FNAME)的总大小是1000,000&times;100byte = 100M。包括数据以及分散的空闲时间，另外，在假设顺序读是40MB/s[评注：现在可以达到100MB/s].那么读取宽度为1%的索引片，即1MB，需要花费10ms+1MB/40MB/s=35ms。这显然没有问题，但是10,000次[评注：因为索引总条数为1000,000条，过滤因子为1%，所以结果条数为10,000.相应的，去表中随机读的次数就为10,000次]随机读将花费10,000*10ms=100s。所以，总的花费时间为100s+35ms。这种方式太慢了。</p>
-<p>对于第二种方式来说，只需要第一个页是随机读。如果表的大小为1000,000&times;600byte=600MB,包括分散的空闲时间，那么花费的IO时间将会是10ms+600MB/40MB/s=15s，虽然仍然比较慢，但是相比使用索引已经变得快多了。</p>
-<p>第二种方案的CPU时间将会比第一种方案的CPU时间长很多，因为DBMS必须对1000,000行而不是20,000行[评注：索引10,000行；数据表10,000行]，并且还需要对这些行进行排序[评注：因为SQL语句有ORDER BY]。从另一个角度来说，由于是顺序读，CPU时间可以与IO时间交叠。在这个场景下，全表扫描比在不合适的索引上扫描要快很多，但是这还不够快，仍然需要一个更好的索引。</p>
-<h1 id="三星索引-three-star-index-查询语句的理想索引"><a href="#三星索引-three-star-index-查询语句的理想索引" class="headerlink" title="三星索引(three-star index)-查询语句的理想索引"></a>三星索引(three-star index)-查询语句的理想索引</h1><p>前面讨论了一个非常不合适的索引，这一小节，我们来讨论</p>
-<p>#</p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1] <a href="http://wushank.blog.51cto.com/3489095/1708168" target="_blank" rel="noopener">http://wushank.blog.51cto.com/3489095/1708168</a><br>[2] <a href="https://www.techopedia.com/definition/2858/cpu-time" target="_blank" rel="noopener">https://www.techopedia.com/definition/2858/cpu-time</a></p>
+        <p>我们在散列表那节中讲过，散列表的插入、删除、查找操作的时间复杂度可以做到常量级的O(1)，非常高效。而二叉查找树在比较平衡的情况下，插入、删除、查找操作时间复杂度才是O(logn)，相对散列表，好像并没有什么优势，那我们为什么还要用二叉查找树呢？</p>
+<a id="more"></a>
+<p>第一，散列表中的数据是无序存储的，如果要输出有序的数据，需要先进行排序。而对于二叉查找树来说，我们只需要中序遍历，就可以在 O(n) 的时间复杂度内，输出有序的数据序列。</p>
+<p>第二，散列表扩容耗时很多，而且当遇到散列冲突时，性能不稳定，尽管二叉查找树的性能不稳定，但是在工程中，我们最常用的平衡二叉查找树的性能非常稳定，时间复杂度稳定在O(logn)。</p>
+<p>第三，笼统地来说，尽管散列表的查找等操作的时间复杂度是常量级的，但因为哈希冲突的存在，这个常量不一定比 logn 小，所以实际的查找速度可能不一定比 O(logn) 快。加上哈希函数的耗时，也不一定就比平衡二叉查找树的效率高</p>
+<p>第四，散列表的构造比二叉查找树要复杂，需要考虑的东西很多。比如散列函数的设计、冲突解决办法、扩容、缩容等。平衡二叉查找树只需要考虑平衡性这一个问题，而且这个问题的解决方案比较成熟、固定。</p>
+<p>最后，为了避免过多的散列冲突，散列表装载因子不能太大，特别是基于开放寻址法解决冲突的散列表，不然会浪费一定的存储空间</p>
+<p>综合这几点，平衡二叉查找树在某些方面还是优于散列表的，所以，这两者的存在并不冲突。我们在实际的开发过程中，需要结合具体的需求来选择使用哪一个。</p>
 
       
     </div>
@@ -541,16 +488,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/数据库/" rel="tag"># 数据库</a>
-          
-            <a href="/tags/索引/" rel="tag"># 索引</a>
-          
-            <a href="/tags/三星索引/" rel="tag"># 三星索引</a>
-          
-        </div>
-      
 
       
       
@@ -560,8 +497,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/02/11/index-3/" rel="next" title="索引优化与设计(3)-SQL处理过程">
-                <i class="fa fa-chevron-left"></i> 索引优化与设计(3)-SQL处理过程
+              <a href="/2019/03/17/区块链-一些基本概念/" rel="next" title="区块链-一些基本概念">
+                <i class="fa fa-chevron-left"></i> 区块链-一些基本概念
               </a>
             
           </div>
@@ -569,10 +506,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/02/15/鸡汤/" rel="prev" title="鸡汤-TED">
-                鸡汤-TED <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -621,17 +554,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
-          </li>
-        </ul>
-      
 
-      <div class="site-overview-wrap sidebar-panel">
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -900,23 +824,6 @@
         </div>
       </div>
 
-      
-      <!--noindex-->
-        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-            
-            
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#磁盘以及CPU时间的基础假设"><span class="nav-number">2.</span> <span class="nav-text">磁盘以及CPU时间的基础假设</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#不合适索引-inadequate-index"><span class="nav-number">3.</span> <span class="nav-text">不合适索引(inadequate index)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三星索引-three-star-index-查询语句的理想索引"><span class="nav-number">4.</span> <span class="nav-text">三星索引(three-star index)-查询语句的理想索引</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
-            
-
-          </div>
-        </div>
-      <!--/noindex-->
       
 
       
