@@ -108,7 +108,7 @@
 <meta property="og:image" content="https://neuyilan.github.io/2019/03/17/区块链-一些基本概念/共识协议.png">
 <meta property="og:image" content="https://neuyilan.github.io/2019/03/17/区块链-一些基本概念/分叉攻击.png">
 <meta property="og:image" content="https://neuyilan.github.io/2019/03/17/区块链-一些基本概念/正常分叉.png">
-<meta property="og:updated_time" content="2019-03-18T09:07:57.821Z">
+<meta property="og:updated_time" content="2019-03-23T02:13:53.903Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="区块链-一些基本概念">
 <meta name="twitter:description" content="Hashcollision resistance（collision free）: 是说在密码学中，对于一个hash函数，很难找到两个不同的输入使得其hash之后的输出是一样的。Collision resistance is a property of cryptographic hash functions: a hash function H is collision resistant if">
@@ -434,7 +434,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-03-18 17:07:57" itemprop="dateModified" datetime="2019-03-18T17:07:57+08:00">2019-03-18</time>
+                <time title="Modified: 2019-03-23 10:13:53" itemprop="dateModified" datetime="2019-03-23T10:13:53+08:00">2019-03-23</time>
               
             
           </span>
@@ -502,6 +502,10 @@
 </ul>
 <h2 id="分叉攻击（forking-attack）"><a href="#分叉攻击（forking-attack）" class="headerlink" title="分叉攻击（forking attack）"></a>分叉攻击（forking attack）</h2><p><img src="分叉攻击.png" alt="分叉攻击"></p>
 <h2 id="正常分叉"><a href="#正常分叉" class="headerlink" title="正常分叉"></a>正常分叉</h2><p>两个机器同时挖到矿了，就有可能同时产生两个区块都连接在合法链的最后。<br><img src="正常分叉.png" alt="正常分叉"></p>
+<h1 id="比特币-实现"><a href="#比特币-实现" class="headerlink" title="比特币-实现"></a>比特币-实现</h1><p>比特币：Transaction-based ledger<br>以太坊：account-based ledger</p>
+<h2 id="UTXO-Unspent-Transaction-Output"><a href="#UTXO-Unspent-Transaction-Output" class="headerlink" title="UTXO(Unspent Transaction Output)"></a>UTXO(Unspent Transaction Output)</h2><p>指的是那些收到的比特币，但是没有花出去的数据，全部保存在UTXO的数据结构中。目的：为了防止双花，用来校验双花的。也就说是UTXO保留了所有的那些没有花出去的比特币。</p>
+<h2 id="Transaction-Fee-交易费"><a href="#Transaction-Fee-交易费" class="headerlink" title="Transaction Fee (交易费)"></a>Transaction Fee (交易费)</h2><p>为什么大家都争抢着去拥有这个记账权呢？因为获得记账权的那个节点能够获得两方面的奖励（1）区块奖励，这个占据了大头（2）交易费</p>
+<h2 id="Bernoulli-trial"><a href="#Bernoulli-trial" class="headerlink" title="Bernoulli trial"></a>Bernoulli trial</h2><p>Bernoulli trial：a random experiment with binary outcome</p>
 
       
     </div>
@@ -620,7 +624,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">49</span>
+                    <span class="site-state-item-count">50</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -832,7 +836,15 @@
                     
                       
                     
-                    <span class="site-state-item-count">73</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">77</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
@@ -883,7 +895,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Hash"><span class="nav-number">1.</span> <span class="nav-text">Hash</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#签名"><span class="nav-number">2.</span> <span class="nav-text">签名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据结构"><span class="nav-number">3.</span> <span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#共识协议"><span class="nav-number">4.</span> <span class="nav-text">共识协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#双花攻击（double-spending-attack）"><span class="nav-number">4.1.</span> <span class="nav-text">双花攻击（double spending attack）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式共识"><span class="nav-number">4.2.</span> <span class="nav-text">分布式共识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#consensus-in-bitcoin"><span class="nav-number">4.2.1.</span> <span class="nav-text">consensus in bitcoin</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分叉攻击（forking-attack）"><span class="nav-number">4.3.</span> <span class="nav-text">分叉攻击（forking attack）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正常分叉"><span class="nav-number">4.4.</span> <span class="nav-text">正常分叉</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Hash"><span class="nav-number">1.</span> <span class="nav-text">Hash</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#签名"><span class="nav-number">2.</span> <span class="nav-text">签名</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#数据结构"><span class="nav-number">3.</span> <span class="nav-text">数据结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#共识协议"><span class="nav-number">4.</span> <span class="nav-text">共识协议</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#双花攻击（double-spending-attack）"><span class="nav-number">4.1.</span> <span class="nav-text">双花攻击（double spending attack）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分布式共识"><span class="nav-number">4.2.</span> <span class="nav-text">分布式共识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#consensus-in-bitcoin"><span class="nav-number">4.2.1.</span> <span class="nav-text">consensus in bitcoin</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分叉攻击（forking-attack）"><span class="nav-number">4.3.</span> <span class="nav-text">分叉攻击（forking attack）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#正常分叉"><span class="nav-number">4.4.</span> <span class="nav-text">正常分叉</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#比特币-实现"><span class="nav-number">5.</span> <span class="nav-text">比特币-实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#UTXO-Unspent-Transaction-Output"><span class="nav-number">5.1.</span> <span class="nav-text">UTXO(Unspent Transaction Output)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Transaction-Fee-交易费"><span class="nav-number">5.2.</span> <span class="nav-text">Transaction Fee (交易费)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bernoulli-trial"><span class="nav-number">5.3.</span> <span class="nav-text">Bernoulli trial</span></a></li></ol></li></ol></div>
             
 
           </div>
