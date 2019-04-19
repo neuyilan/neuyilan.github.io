@@ -105,7 +105,8 @@
 <meta property="og:description" content="多维度资源分配问题，在系统调度中是经常遇到的一个问题，比如，集群中有cpu，mem，ssd等资源，每个作业需要的每个维度的资源不一样，如何分配集群中的资源给哪些job才能够使得集群的资源利用率最大呢？这就是比较典型的资源分配问题。对于一些需要一定执行时间的job，这个问题的优化目标还会牵扯到最小化总的执行之间以及让各个job等待处理的时间尽量的平均，即公平性。下面主要介绍论文《Multi-dime">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://neuyilan.github.io/2019/04/16/多维度资源分配问题-如何提高集群的资源利用率？/S1.png">
-<meta property="og:updated_time" content="2019-04-18T13:10:12.997Z">
+<meta property="og:image" content="https://neuyilan.github.io/2019/04/16/多维度资源分配问题-如何提高集群的资源利用率？/S2.png">
+<meta property="og:updated_time" content="2019-04-18T13:17:13.413Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="多维度资源分配问题-如何提高集群的资源利用率？">
 <meta name="twitter:description" content="多维度资源分配问题，在系统调度中是经常遇到的一个问题，比如，集群中有cpu，mem，ssd等资源，每个作业需要的每个维度的资源不一样，如何分配集群中的资源给哪些job才能够使得集群的资源利用率最大呢？这就是比较典型的资源分配问题。对于一些需要一定执行时间的job，这个问题的优化目标还会牵扯到最小化总的执行之间以及让各个job等待处理的时间尽量的平均，即公平性。下面主要介绍论文《Multi-dime">
@@ -431,7 +432,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-04-18 21:10:12" itemprop="dateModified" datetime="2019-04-18T21:10:12+08:00">2019-04-18</time>
+                <time title="Modified: 2019-04-18 21:17:13" itemprop="dateModified" datetime="2019-04-18T21:17:13+08:00">2019-04-18</time>
               
             
           </span>
@@ -479,7 +480,8 @@
 <!--more-->
 <h1 id="问题引入"><a href="#问题引入" class="headerlink" title="问题引入"></a>问题引入</h1><p>假设一个机器拥有12 CPU core，12GB memory，12TB disk。我们写成&lt;12,12,12&gt;。现在有4个待分配的任务，每个任务对资源的需求分别描述为如下所示：app1=&lt;6,2,2&gt;， app2=&lt;5,4,8&gt;, app3=&lt;4,6,2&gt;, app4=&lt;2,2,6&gt;。那么如何安排这几个app到这个机器上面，能够使得这个机器的资源利用率最大呢？</p>
 <p>下面对比一下如下两种调度策略：</p>
-<p>S1:FIFO，显然只能够调度app1和app2，因为这两个app对cpu的资源需求都比较大。这样调度的话就会浪费mem和disk的资源。如下所示：<br><img src="S1.png" alt="s1" title="图1 FIFO调度策略"></p>
+<p>S1:FIFO，显然只能够调度app1和app2，因为这两个app对cpu的资源需求都比较大。这样调度的话就会浪费mem和disk的资源。如下所示：<br><img src="S1.png" alt="S1" title="图1 FIFO调度策略"></p>
+<p>S2:按照对资源的需求来调度，这就是作者的核心思想，实时计算哪种资源是稀缺的，哪种资源是比较充足的，根据此来调度。后面会详细讲述，但是假设我们调度app4，app3，app1的话，则资源利用率明显要高于S1。<br><img src="S2.png" alt="S2" title="图2 根据资源的利用率来程度"></p>
 
       
     </div>
