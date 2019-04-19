@@ -106,7 +106,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://neuyilan.github.io/2019/04/16/多维度资源分配问题-如何提高集群的资源利用率？/S1.png">
 <meta property="og:image" content="https://neuyilan.github.io/2019/04/16/多维度资源分配问题-如何提高集群的资源利用率？/S2.png">
-<meta property="og:updated_time" content="2019-04-19T02:41:16.218Z">
+<meta property="og:updated_time" content="2019-04-19T02:49:46.899Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="多维度资源分配问题-如何提高集群的资源利用率？">
 <meta name="twitter:description" content="多维度资源分配问题，在系统调度中是经常遇到的一个问题，比如，集群中有cpu，mem，ssd等资源，每个作业需要的每个维度的资源不一样，如何分配集群中的资源给哪些job才能够使得集群的资源利用率最大呢？这就是比较典型的资源分配问题。对于一些需要一定执行时间的job，这个问题的优化目标还会牵扯到最小化总的执行之间以及让各个job等待处理的时间尽量的平均，即公平性。下面主要介绍论文《Multi-dime">
@@ -432,7 +432,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-04-19 10:41:16" itemprop="dateModified" datetime="2019-04-19T10:41:16+08:00">2019-04-19</time>
+                <time title="Modified: 2019-04-19 10:49:46" itemprop="dateModified" datetime="2019-04-19T10:49:46+08:00">2019-04-19</time>
               
             
           </span>
@@ -482,8 +482,13 @@
 <p>下面对比一下如下两种调度策略：</p>
 <p>S1:FIFO，显然只能够调度app1和app2，因为这两个app对cpu的资源需求都比较大。这样调度的话就会浪费mem和disk的资源。如下所示：<br><img src="S1.png" alt="S1" title="图1 FIFO调度策略"></p>
 <p>S2:按照对资源的需求来调度，这就是作者的核心思想，实时计算哪种资源是稀缺的，哪种资源是比较充足的，根据此来调度。后面会详细讲述，但是假设我们调度app4，app3，app1的话，则资源利用率明显要高于S1。<br><img src="S2.png" alt="S2" title="图2 根据资源的利用率来程度"></p>
-<h1 id="建模"><a href="#建模" class="headerlink" title="建模"></a>建模</h1><p>R=&lt;r<sub>1</sub>,r<sub>1</sub>,r<sub>i</sub> … r<sub>m</sub>&gt;：设一个数据中心的资源为R，一共有m个维度的资源，比如cpu，mem，disk等等，第i个资源用资源r<sub>i</sub>来表述，则数据中心的资源R=&lt; r<sub>1</sub>,r<sub>1</sub>,r<sub>i</sub> … r<sub>m</sub> &gt;</p>
-<p>AP<sub>j</sub>：假设任务中共有n个应用任务，每个任务记为AP<sub>j</sub>。<br>w<sub>j</sub>：任务j对资源的需求，比如任务j对资源i的需求记为w<sub>ij</sub>， 则w<sub>j</sub>= &lt; w<sub>1j</sub>, w<sub>2j</sub>, w<sub>ij</sub> … w<sub>mj</sub> &gt;</p>
+<h1 id="建模"><a href="#建模" class="headerlink" title="建模"></a>建模</h1><ul>
+<li>R=&lt;r<sub>1</sub>,r<sub>1</sub>,r<sub>i</sub> … r<sub>m</sub>&gt;：设一个数据中心的资源为R，一共有m个维度的资源，比如cpu，mem，disk等等，第i个资源用资源r<sub>i</sub>来表述，则数据中心的资源R=&lt; r<sub>1</sub>,r<sub>1</sub>,r<sub>i</sub> … r<sub>m</sub> &gt;</li>
+<li>AP=&lt; AP<sub>1</sub>, AP<sub>2</sub>…AP<sub>N</sub> &gt; :AP<sub>j</sub>：假设任务中共有n个应用任务，每个任务记为AP<sub>j</sub>。</li>
+<li>w<sub>j</sub>：任务j对资源的需求，比如任务j对资源i的需求记为w<sub>ij</sub>， 则w<sub>j</sub>= &lt; w<sub>1j</sub>, w<sub>2j</sub>, w<sub>ij</sub> … w<sub>mj</sub> &gt;</li>
+<li>u<sub>j</sub>：任务AP<sub>j</sub>的个数。即有多少个待调度的AP<sub>j</sub>任务。</li>
+<li>A=&lt; x<sub>1</sub>, x<sub>2</sub> … x<sub>n</sub> &gt;：一种调度策略，调度了x<sub>j</sub>的AP<sub>j</sub>的任务。</li>
+</ul>
 
       
     </div>
