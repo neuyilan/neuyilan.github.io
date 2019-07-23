@@ -368,6 +368,197 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/07/22/linux-shell常用脚本命令/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="伊蓝">
+      <meta itemprop="description" content="记录点滴">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yilan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/07/22/linux-shell常用脚本命令/" class="post-title-link" itemprop="url">linux shell常用脚本命令</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-07-22 19:29:53" itemprop="dateCreated datePublished" datetime="2019-07-22T19:29:53+08:00">2019-07-22</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-07-23 13:22:47" itemprop="dateModified" datetime="2019-07-23T13:22:47+08:00">2019-07-23</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/常用命令/" itemprop="url" rel="index"><span itemprop="name">常用命令</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/07/22/linux-shell常用脚本命令/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/07/22/linux-shell常用脚本命令/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="sed用法"><a href="#sed用法" class="headerlink" title="sed用法"></a>sed用法</h1><ol>
+<li><p>打印第n行到最后一行的内容<br>sed -n ‘1673523, $p’ bs.gi.log &gt; /home/work/qhl/bs.gi.log</p>
+</li>
+<li><p>打印匹配abc的行到最后一行的内容。<br>sed -n ‘/abc/,$p’ file.txt<br>注意是单引号</p>
+</li>
+</ol>
+<h1 id="tar-用法"><a href="#tar-用法" class="headerlink" title="tar 用法"></a>tar 用法</h1><ol>
+<li>打包排除某些文件或文件夹<br>tar -zcvf test.tar.gz -X exclude.list test/<br>其中exclude.list里面包含了那些你不想要的文件或是文件夹<br><img src="tar排除某些文件或文件夹.png" alt="tar排除某些文件或文件夹"></li>
+</ol>
+<h1 id="字符串前面补0"><a href="#字符串前面补0" class="headerlink" title="字符串前面补0"></a>字符串前面补0</h1><p>start=<code>printf &quot;%02d&quot; &quot;$i&quot;</code></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/05/11/邮轮邮注意事项/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1835,164 +2026,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/02/28/数据结构与算法-04-复杂度分析（下）：浅析最好、最坏、平均、均摊时间复杂度/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="伊蓝">
-      <meta itemprop="description" content="记录点滴">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="yilan">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/02/28/数据结构与算法-04-复杂度分析（下）：浅析最好、最坏、平均、均摊时间复杂度/" class="post-title-link" itemprop="url">数据结构与算法-04-复杂度分析（下）：浅析最好、最坏、平均、均摊时间复杂度</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2019-02-28 09:47:47 / Modified: 10:15:10" itemprop="dateCreated datePublished" datetime="2019-02-28T09:47:47+08:00">2019-02-28</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/02/28/数据结构与算法-04-复杂度分析（下）：浅析最好、最坏、平均、均摊时间复杂度/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/02/28/数据结构与算法-04-复杂度分析（下）：浅析最好、最坏、平均、均摊时间复杂度/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>本小节主要讲解了分析时间复杂度的几个点：<strong>最好情况的时间复杂度(best case time complexity)</strong>，<strong>最坏情况的时间复杂度(worst case time complexity)</strong>，<strong>平均情况的时间复杂度(average case time complexity)</strong>，<strong>均摊时间复杂度(amortized time complexity)</strong>。</p>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/02/28/数据结构与算法-04-复杂度分析（下）：浅析最好、最坏、平均、均摊时间复杂度/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2042,7 +2075,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">51</span>
+                    <span class="site-state-item-count">52</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2264,7 +2297,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">78</span>
+                      
+                    
+                    <span class="site-state-item-count">79</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>

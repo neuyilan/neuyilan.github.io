@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[linux shell常用脚本命令]]></title>
+    <url>%2F2019%2F07%2F22%2Flinux-shell%E5%B8%B8%E7%94%A8%E8%84%9A%E6%9C%AC%E5%91%BD%E4%BB%A4%2F</url>
+    <content type="text"><![CDATA[sed用法 打印第n行到最后一行的内容sed -n ‘1673523, $p’ bs.gi.log &gt; /home/work/qhl/bs.gi.log 打印匹配abc的行到最后一行的内容。sed -n ‘/abc/,$p’ file.txt注意是单引号 tar 用法 打包排除某些文件或文件夹tar -zcvf test.tar.gz -X exclude.list test/其中exclude.list里面包含了那些你不想要的文件或是文件夹 字符串前面补0start=printf &quot;%02d&quot; &quot;$i&quot;]]></content>
+      <categories>
+        <category>常用命令</category>
+      </categories>
+      <tags>
+        <tag>linux</tag>
+        <tag>shell</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[邮轮邮注意事项]]></title>
     <url>%2F2019%2F05%2F11%2F%E9%82%AE%E8%BD%AE%E9%82%AE%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%2F</url>
     <content type="text"><![CDATA[邮轮游一些注意事项： 注意事项 轮船上没有信号，需要办理wifi，约140$ 登船过程可能会比较费时（3小时） 船上有自助餐厅免费，但是人多需要排队，可以去收费餐厅，不排队。 提前办理好各个国家的签证。旅行社也可以办理需要交钱。 日期：受限于邮轮出行的时间。 东南亚国家：新加坡、马来西亚、泰国5晚7天花费：1.船费：大约花费8000左右(仅船票，不同房间价格不一致。内舱房:7000,；海景房8000；阳台房：9000)2.小费3.吃，玩(收费项目)+购物 特色：（1）在船上玩(棋牌，游泳，看表演，看海)，吃。（2）靠岸观光城市特色出发：北京飞新加坡-&gt;邮轮-&gt;新加坡飞北京参考链接: https://cruise.ctrip.com/p/804301.html?departurecityid=1#departure=2019-06-16&amp;sellerid=35428_13177 日本：6天5晚长崎+福冈花费：船票6000左右， https://cruise.ctrip.com/c/9467.html#departure=2019-07-14&amp;sellerid=37117_24335]]></content>
@@ -257,7 +269,7 @@
   <entry>
     <title><![CDATA[常用命令]]></title>
     <url>%2F2017%2F12%2F13%2F%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%2F</url>
-    <content type="text"><![CDATA[这篇文章是记录一些常用命令的以便查找。 vncserver centos 7 修改屏幕分辨率 vncserver -geometry 1440x900 ubutun 修改屏幕分辨率 vncserver -geometry 1440x900 linux查看系统内存大小 free -m linux下将用户添加到sudoers中linux下将用户添加到sudoers中 root 账户键入visudo即可进入sudo配置，这个命令要比vim /etc/sudoers要好很多，因为使用visudo进行sudo配置，将会得到很多提示.键入visudo后, 在编辑器下键入 /root 寻找root，找到第三个root的那一行 1root ALL=(ALL) AL 按yyp键复制并在粘贴在下一行，在这一行的 root处输入cw将root替换为你所需要添加用户的账户名，比如blinux，结果就是 12root ALL=(ALL) ALLblinux ALL=(ALL) ALL 如果你希望之后执行sudo命令时不需要输入密码，那么可以形如 12root ALL=(ALL) ALLblinux ALL=(ALL) NOPASSWD:ALL 输入:wq保存即可。 查看端口被占用情况1netstat -tunpl | grep port 根据进程号查看进程的详细信息Linux在启动一个进程时，系统会在/proc下创建一个以PID命名的文件夹，在该文件夹下会有我们的进程的信息，其中包括一个名为exe的文件即记录了绝对路径，通过ll或ls –l命令即可查看。 1ll /proc/PID cwd符号链接的是进程运行目录； exe符号连接就是执行程序的绝对路径； cmdline就是程序运行时输入的命令行命令； environ记录了进程运行时的环境变量； fd目录下是进程打开或使用的文件的符号连接。 Linux下vim快捷键多行注释： 首先按esc进入命令行模式下，按下Ctrl + v，进入列（也叫区块）模式; 在行首使用上下键选择需要注释的多行; 按下键盘（大写）“I”键，进入插入模式； 然后输入注释符（“//”、“#”等）; 最后按下“Esc”键。注意：在按下esc键后，会稍等一会才会出现注释，不要着急~~时间很短的 删除多行注释： 首先按esc进入命令行模式下，按下Ctrl + v, 进入列模式; 选定要取消注释的多行; 按下“x”或者“d”.注意：如果是“//”注释，那需要执行两次该操作，如果是“#”注释，一次即可 vim多行文本删除 首先在命令模式下，输入“：set nu”显示行号； 通过行号确定你要删除的行； 命令输入“：32,65d”,回车键，32-65行就被删除了，很快捷吧注意：如果无意中删除错了，可以使用‘u’键恢复（命令模式下） vim行内跳转 （mac 下） w：跳转到下一个单词的开始 e：跳到单词的结束 b：向后跳 CTRL+E：向下一行 CTRL+Y：向上一行 ^：行首 $：行尾 shell行内跳转 CTRL+a：行首 CTRL+e：行尾 CTRL+b：往回（左）移动一个字符 CTRL+f：往后（右）移动一个字符 ALT+b：往回（左）移动一个单词 ALT+F：往后（右）移动一个单词 vim中json格式化:%!python -m json.tool grep 快捷键 grep -C 5 foo file 显示file文件中匹配foo字串那行以及上下5行 grep -B 5 foo file 显示foo及前5行 grep -A 5 foo file 显示foo及后5行 mac 下快捷键]]></content>
+    <content type="text"><![CDATA[这篇文章是记录一些常用命令的以便查找。 vncserver centos 7 修改屏幕分辨率 vncserver -geometry 1440x900 ubutun 修改屏幕分辨率 vncserver -geometry 1440x900 linux查看系统内存大小 free -m linux下将用户添加到sudoers中linux下将用户添加到sudoers中 root 账户键入visudo即可进入sudo配置，这个命令要比vim /etc/sudoers要好很多，因为使用visudo进行sudo配置，将会得到很多提示.键入visudo后, 在编辑器下键入 /root 寻找root，找到第三个root的那一行 1root ALL=(ALL) AL 按yyp键复制并在粘贴在下一行，在这一行的 root处输入cw将root替换为你所需要添加用户的账户名，比如blinux，结果就是 12root ALL=(ALL) ALLblinux ALL=(ALL) ALL 如果你希望之后执行sudo命令时不需要输入密码，那么可以形如 12root ALL=(ALL) ALLblinux ALL=(ALL) NOPASSWD:ALL 输入:wq保存即可。 查看端口被占用情况1netstat -tunpl | grep port 根据进程号查看进程的详细信息Linux在启动一个进程时，系统会在/proc下创建一个以PID命名的文件夹，在该文件夹下会有我们的进程的信息，其中包括一个名为exe的文件即记录了绝对路径，通过ll或ls –l命令即可查看。 1ll /proc/PID cwd符号链接的是进程运行目录； exe符号连接就是执行程序的绝对路径； cmdline就是程序运行时输入的命令行命令； environ记录了进程运行时的环境变量； fd目录下是进程打开或使用的文件的符号连接。 Linux下vim快捷键多行注释： 首先按esc进入命令行模式下，按下Ctrl + v，进入列（也叫区块）模式; 在行首使用上下键选择需要注释的多行; 按下键盘（大写）“I”键，进入插入模式； 然后输入注释符（“//”、“#”等）; 最后按下“Esc”键。注意：在按下esc键后，会稍等一会才会出现注释，不要着急~~时间很短的 删除多行注释： 首先按esc进入命令行模式下，按下Ctrl + v, 进入列模式; 选定要取消注释的多行; 按下“x”或者“d”.注意：如果是“//”注释，那需要执行两次该操作，如果是“#”注释，一次即可 vim多行文本删除 首先在命令模式下，输入“：set nu”显示行号； 通过行号确定你要删除的行； 命令输入“：32,65d”,回车键，32-65行就被删除了，很快捷吧注意：如果无意中删除错了，可以使用‘u’键恢复（命令模式下） vim行内跳转 （mac 下） w：跳转到下一个单词的开始 e：跳到单词的结束 b：向后跳 CTRL+E：向下一行 CTRL+Y：向上一行 ^：行首 $：行尾 shell行内跳转 CTRL+a：行首 CTRL+e：行尾 CTRL+b：往回（左）移动一个字符 CTRL+f：往后（右）移动一个字符 ALT+b：往回（左）移动一个单词 ALT+F：往后（右）移动一个单词 vim中json格式化:%!python -m json.tool grep 快捷键 grep -C 5 foo file 显示file文件中匹配foo字串那行以及上下5行 grep -B 5 foo file 显示foo及前5行 grep -A 5 foo file 显示foo及后5行 linux ls 命令linux ls 按文件大小排序 ls -Sl 其是按照由大到小排序 ls -Slr 按照由小到大排序 再者，如果想要输入是按照“便于人类阅读的方式”，那么就再加一个-h，表示”–human-readable” 这样单位就是k或者M ，比较容易看清楚结果。 mac 下快捷键]]></content>
       <categories>
         <category>常用命令</category>
       </categories>
