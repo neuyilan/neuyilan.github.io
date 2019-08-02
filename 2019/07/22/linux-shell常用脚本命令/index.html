@@ -96,19 +96,19 @@
 
 
 
-  <meta name="description" content="sed用法 打印第n行到最后一行的内容sed -n ‘1673523, $p’ bs.gi.log &amp;gt; /home/work/qhl/bs.gi.log  打印匹配abc的行到最后一行的内容。sed -n ‘/abc/,$p’ file.txt注意是单引号">
+  <meta name="description" content="sed用法 打印第n行到最后一行的内容sed -n ‘1673523, $p’ bs.gi.log &amp;gt; /home/work/qhl/bs.gi.log  打印匹配abc的行到最后一行的内容。sed -n ‘/abc/,$p’ file.txt注意是单引号  匹配特定字符串1echo $line | sed &amp;apos;s/pattern//g&amp;apos;   eg:ß1echo &amp;apos">
 <meta name="keywords" content="linux,shell">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux shell常用脚本命令">
 <meta property="og:url" content="https://neuyilan.github.io/2019/07/22/linux-shell常用脚本命令/index.html">
 <meta property="og:site_name" content="yilan">
-<meta property="og:description" content="sed用法 打印第n行到最后一行的内容sed -n ‘1673523, $p’ bs.gi.log &amp;gt; /home/work/qhl/bs.gi.log  打印匹配abc的行到最后一行的内容。sed -n ‘/abc/,$p’ file.txt注意是单引号">
+<meta property="og:description" content="sed用法 打印第n行到最后一行的内容sed -n ‘1673523, $p’ bs.gi.log &amp;gt; /home/work/qhl/bs.gi.log  打印匹配abc的行到最后一行的内容。sed -n ‘/abc/,$p’ file.txt注意是单引号  匹配特定字符串1echo $line | sed &amp;apos;s/pattern//g&amp;apos;   eg:ß1echo &amp;apos">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://neuyilan.github.io/2019/07/22/linux-shell常用脚本命令/tar排除某些文件或文件夹.png">
-<meta property="og:updated_time" content="2019-07-24T14:17:31.895Z">
+<meta property="og:updated_time" content="2019-08-01T05:20:25.130Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux shell常用脚本命令">
-<meta name="twitter:description" content="sed用法 打印第n行到最后一行的内容sed -n ‘1673523, $p’ bs.gi.log &amp;gt; /home/work/qhl/bs.gi.log  打印匹配abc的行到最后一行的内容。sed -n ‘/abc/,$p’ file.txt注意是单引号">
+<meta name="twitter:description" content="sed用法 打印第n行到最后一行的内容sed -n ‘1673523, $p’ bs.gi.log &amp;gt; /home/work/qhl/bs.gi.log  打印匹配abc的行到最后一行的内容。sed -n ‘/abc/,$p’ file.txt注意是单引号  匹配特定字符串1echo $line | sed &amp;apos;s/pattern//g&amp;apos;   eg:ß1echo &amp;apos">
 <meta name="twitter:image" content="https://neuyilan.github.io/2019/07/22/linux-shell常用脚本命令/tar排除某些文件或文件夹.png">
 
 
@@ -431,7 +431,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-07-24 22:17:31" itemprop="dateModified" datetime="2019-07-24T22:17:31+08:00">2019-07-24</time>
+                <time title="Modified: 2019-08-01 13:20:25" itemprop="dateModified" datetime="2019-08-01T13:20:25+08:00">2019-08-01</time>
               
             
           </span>
@@ -496,14 +496,18 @@
 <li><p>打印第n行到最后一行的内容<br>sed -n ‘1673523, $p’ bs.gi.log &gt; /home/work/qhl/bs.gi.log</p>
 </li>
 <li><p>打印匹配abc的行到最后一行的内容。<br>sed -n ‘/abc/,$p’ file.txt<br>注意是单引号</p>
-<a id="more"></a>
+</li>
+<li>匹配特定字符串<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo $line | sed &apos;s/pattern//g&apos;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
+<p>eg:ß<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &apos;DB_TYPE_ARR1: rts-weibo:0.80, dnews-weibo:0.80&apos; |grep DB_TYPE_ARR | sed &apos;s/DB_TYPE_ARR//&apos; | sed &apos;s/:[0-9].[0-9]\+//g&apos;</span><br></pre></td></tr></table></figure></p>
+<p>注意，g是全部替换的意思<br><a id="more"></a></p>
 <h1 id="tar-用法"><a href="#tar-用法" class="headerlink" title="tar 用法"></a>tar 用法</h1><ol>
 <li>打包排除某些文件或文件夹<br>tar -zcvf test.tar.gz -X exclude.list test/<br>其中exclude.list里面包含了那些你不想要的文件或是文件夹<br><img src="tar排除某些文件或文件夹.png" alt="tar排除某些文件或文件夹"></li>
 </ol>
 <h1 id="字符串前面补0"><a href="#字符串前面补0" class="headerlink" title="字符串前面补0"></a>字符串前面补0</h1><p>start=<code>printf &quot;%02d&quot; &quot;$i&quot;</code></p>
 <h1 id="shell-for循环"><a href="#shell-for循环" class="headerlink" title="shell for循环"></a>shell for循环</h1><p>for ((i=0; i&lt;60; i++));<br>do<br>  echo $i;<br>done</p>
+<h1 id="vim配置"><a href="#vim配置" class="headerlink" title="vim配置"></a>vim配置</h1><p>vim配置显示中文<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">syntax on</span><br><span class="line">filetype indent plugin on</span><br><span class="line">set modeline</span><br><span class="line">set tabstop=4</span><br><span class="line">set expandtab</span><br><span class="line">set softtabstop=4</span><br><span class="line">set shiftwidth=4</span><br><span class="line">set nonumber</span><br><span class="line">set cmdheight=1</span><br><span class="line">set laststatus=2</span><br><span class="line">set fileencodings=utf-8,gb2312,gb18030,gbk,ucs-bom,cp936,latin1</span><br><span class="line">set enc=utf8</span><br><span class="line">set fencs=utf8,gbk,gb2312,gb18030</span><br><span class="line">map &lt;F4&gt; &lt;Esc&gt;:%!python -m json.tool&lt;CR&gt;</span><br><span class="line">set number</span><br><span class="line">set expandtab ts=4 sw=4 sts=4 tw=100</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -630,7 +634,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">53</span>
+                    <span class="site-state-item-count">54</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -856,7 +860,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">80</span>
+                      
+                    
+                    <span class="site-state-item-count">81</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
@@ -907,7 +913,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#sed用法"><span class="nav-number">1.</span> <span class="nav-text">sed用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tar-用法"><span class="nav-number">2.</span> <span class="nav-text">tar 用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串前面补0"><span class="nav-number">3.</span> <span class="nav-text">字符串前面补0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shell-for循环"><span class="nav-number">4.</span> <span class="nav-text">shell for循环</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#sed用法"><span class="nav-number">1.</span> <span class="nav-text">sed用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tar-用法"><span class="nav-number">2.</span> <span class="nav-text">tar 用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串前面补0"><span class="nav-number">3.</span> <span class="nav-text">字符串前面补0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shell-for循环"><span class="nav-number">4.</span> <span class="nav-text">shell for循环</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vim配置"><span class="nav-number">5.</span> <span class="nav-text">vim配置</span></a></li></ol></div>
             
 
           </div>

@@ -368,6 +368,186 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/08/01/python常用工具大全/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="伊蓝">
+      <meta itemprop="description" content="记录点滴">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yilan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/08/01/python常用工具大全/" class="post-title-link" itemprop="url">python常用工具大全</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-08-01 11:58:27" itemprop="dateCreated datePublished" datetime="2019-08-01T11:58:27+08:00">2019-08-01</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-08-02 13:43:12" itemprop="dateModified" datetime="2019-08-02T13:43:12+08:00">2019-08-02</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/08/01/python常用工具大全/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/08/01/python常用工具大全/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="文件操作"><a href="#文件操作" class="headerlink" title="文件操作"></a>文件操作</h1><h2 id="读文件"><a href="#读文件" class="headerlink" title="读文件"></a>读文件</h2><h3 id="按行读取文件"><a href="#按行读取文件" class="headerlink" title="按行读取文件"></a>按行读取文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">f = open(file_name, &apos;r&apos;)</span><br><span class="line">for line in f:</span><br><span class="line">    // do something with line</span><br><span class="line">f.close()</span><br></pre></td></tr></table></figure>
+<h3 id="读取文件最后一行"><a href="#读取文件最后一行" class="headerlink" title="读取文件最后一行"></a>读取文件最后一行</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">f = open(file_name, &apos;r&apos;)</span><br><span class="line">last_line = f.readlines()[-1]</span><br></pre></td></tr></table></figure>
+<h1 id="list-操作"><a href="#list-操作" class="headerlink" title="list 操作"></a>list 操作</h1><h2 id="把list形状的字符串转化为list"><a href="#把list形状的字符串转化为list" class="headerlink" title="把list形状的字符串转化为list"></a>把list形状的字符串转化为list</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import ast</span><br><span class="line">line_str = &apos;[12569, 399470, 387182]&apos;</span><br><span class="line">line_list = ast.literal_eval(line_str)</span><br></pre></td></tr></table></figure>
+<h2 id="两个list数组相加"><a href="#两个list数组相加" class="headerlink" title="两个list数组相加"></a>两个list数组相加</h2><ul>
+<li><p>方法1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">import numpy</span><br><span class="line">first = [1, 2, 3, 4, 5]</span><br><span class="line">second = [6, 7, 8, 9, 10]</span><br><span class="line">a = numpy.array(first)</span><br><span class="line">b = numpy.array(second)</span><br><span class="line">c= a+b</span><br><span class="line">print c</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>方法2</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">first = [1, 2, 3, 4, 5]</span><br><span class="line">second = [6, 7, 8, 9, 10]</span><br><span class="line">result = [x + y for x, y in zip(first, second)]</span><br><span class="line">print result</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="lists中list相加"><a href="#lists中list相加" class="headerlink" title="lists中list相加"></a>lists中list相加</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">lists_of_lists = [[1, 2, 3], [4, 5, 6]]</span><br><span class="line">result = [sum(x) for x in zip(*lists_of_lists)]</span><br><span class="line">print result</span><br></pre></td></tr></table></figure>
+<h1 id="数字类型相关操作"><a href="#数字类型相关操作" class="headerlink" title="数字类型相关操作"></a>数字类型相关操作</h1><h2 id="float"><a href="#float" class="headerlink" title="float"></a>float</h2><ol>
+<li>float 保留两位小数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">f_num = 3.1415926</span><br><span class="line">round(f_num, 2)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h1 id="格式化输出"><a href="#格式化输出" class="headerlink" title="格式化输出"></a>格式化输出</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">msg = &quot;&#123;&#125;\t&#123;&#125;\t&#123;&#125;&quot;.format(&quot;hello&quot;, &quot;world&quot;, &quot;!&quot;)</span><br><span class="line">print(msg)</span><br></pre></td></tr></table></figure>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/07/24/c-常用知识/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -588,7 +768,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-07-24 22:17:31" itemprop="dateModified" datetime="2019-07-24T22:17:31+08:00">2019-07-24</time>
+                <time title="Modified: 2019-08-01 13:20:25" itemprop="dateModified" datetime="2019-08-01T13:20:25+08:00">2019-08-01</time>
               
             
           </span>
@@ -654,6 +834,12 @@
 <li><p>打印第n行到最后一行的内容<br>sed -n ‘1673523, $p’ bs.gi.log &gt; /home/work/qhl/bs.gi.log</p>
 </li>
 <li><p>打印匹配abc的行到最后一行的内容。<br>sed -n ‘/abc/,$p’ file.txt<br>注意是单引号</p>
+</li>
+<li>匹配特定字符串<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo $line | sed &apos;s/pattern//g&apos;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>eg:ß<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &apos;DB_TYPE_ARR1: rts-weibo:0.80, dnews-weibo:0.80&apos; |grep DB_TYPE_ARR | sed &apos;s/DB_TYPE_ARR//&apos; | sed &apos;s/:[0-9].[0-9]\+//g&apos;</span><br></pre></td></tr></table></figure></p>
+<p>注意，g是全部替换的意思<br>
           <!--noindex-->
           
             <div class="post-button text-center">
@@ -665,7 +851,7 @@
           <!--/noindex-->
         
       
-    </li></ol></div>
+    </p></div>
 
     
 
@@ -1861,164 +2047,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/03/05/数据结构与算法-06-链表（上）：如何实现LRU缓存淘汰算法/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="伊蓝">
-      <meta itemprop="description" content="记录点滴">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="yilan">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/03/05/数据结构与算法-06-链表（上）：如何实现LRU缓存淘汰算法/" class="post-title-link" itemprop="url">数据结构与算法-06 | 链表（上）：如何实现LRU缓存淘汰算法?</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2019-03-05 09:10:39 / Modified: 09:54:47" itemprop="dateCreated datePublished" datetime="2019-03-05T09:10:39+08:00">2019-03-05</time>
-            
-
-            
-              
-
-              
-            
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/03/05/数据结构与算法-06-链表（上）：如何实现LRU缓存淘汰算法/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/03/05/数据结构与算法-06-链表（上）：如何实现LRU缓存淘汰算法/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>缓存、链表形式的缓存、数组形式的缓存、回文的判定<br>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/03/05/数据结构与算法-06-链表（上）：如何实现LRU缓存淘汰算法/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </p></div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2068,7 +2096,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">53</span>
+                    <span class="site-state-item-count">54</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2294,7 +2322,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">80</span>
+                      
+                    
+                    <span class="site-state-item-count">81</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
