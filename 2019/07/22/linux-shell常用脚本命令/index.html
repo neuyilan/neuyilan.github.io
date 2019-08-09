@@ -96,19 +96,19 @@
 
 
 
-  <meta name="description" content="sed用法 打印第n行到最后一行的内容sed -n ‘1673523, $p’ bs.gi.log &amp;gt; /home/work/qhl/bs.gi.log  打印匹配abc的行到最后一行的内容。sed -n ‘/abc/,$p’ file.txt注意是单引号  匹配特定字符串1echo $line | sed &amp;apos;s/pattern//g&amp;apos;   eg:ß1echo &amp;apos">
+  <meta name="description" content="sed用法 打印第n行到最后一行的内容sed -n ‘1673523, $p’ bs.gi.log &amp;gt; /home/work/qhl/bs.gi.log  打印匹配abc的行到最后一行的内容。sed -n ‘/abc/,$p’ file.txt注意是单引号  匹配特定字符串1echo $line | sed &amp;apos;s/pattern//g&amp;apos;   eg1echo &amp;apos;D">
 <meta name="keywords" content="linux,shell">
 <meta property="og:type" content="article">
 <meta property="og:title" content="linux shell常用脚本命令">
 <meta property="og:url" content="https://neuyilan.github.io/2019/07/22/linux-shell常用脚本命令/index.html">
 <meta property="og:site_name" content="yilan">
-<meta property="og:description" content="sed用法 打印第n行到最后一行的内容sed -n ‘1673523, $p’ bs.gi.log &amp;gt; /home/work/qhl/bs.gi.log  打印匹配abc的行到最后一行的内容。sed -n ‘/abc/,$p’ file.txt注意是单引号  匹配特定字符串1echo $line | sed &amp;apos;s/pattern//g&amp;apos;   eg:ß1echo &amp;apos">
+<meta property="og:description" content="sed用法 打印第n行到最后一行的内容sed -n ‘1673523, $p’ bs.gi.log &amp;gt; /home/work/qhl/bs.gi.log  打印匹配abc的行到最后一行的内容。sed -n ‘/abc/,$p’ file.txt注意是单引号  匹配特定字符串1echo $line | sed &amp;apos;s/pattern//g&amp;apos;   eg1echo &amp;apos;D">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://neuyilan.github.io/2019/07/22/linux-shell常用脚本命令/tar排除某些文件或文件夹.png">
-<meta property="og:updated_time" content="2019-08-01T05:20:25.130Z">
+<meta property="og:updated_time" content="2019-08-09T07:33:49.449Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux shell常用脚本命令">
-<meta name="twitter:description" content="sed用法 打印第n行到最后一行的内容sed -n ‘1673523, $p’ bs.gi.log &amp;gt; /home/work/qhl/bs.gi.log  打印匹配abc的行到最后一行的内容。sed -n ‘/abc/,$p’ file.txt注意是单引号  匹配特定字符串1echo $line | sed &amp;apos;s/pattern//g&amp;apos;   eg:ß1echo &amp;apos">
+<meta name="twitter:description" content="sed用法 打印第n行到最后一行的内容sed -n ‘1673523, $p’ bs.gi.log &amp;gt; /home/work/qhl/bs.gi.log  打印匹配abc的行到最后一行的内容。sed -n ‘/abc/,$p’ file.txt注意是单引号  匹配特定字符串1echo $line | sed &amp;apos;s/pattern//g&amp;apos;   eg1echo &amp;apos;D">
 <meta name="twitter:image" content="https://neuyilan.github.io/2019/07/22/linux-shell常用脚本命令/tar排除某些文件或文件夹.png">
 
 
@@ -431,7 +431,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-08-01 13:20:25" itemprop="dateModified" datetime="2019-08-01T13:20:25+08:00">2019-08-01</time>
+                <time title="Modified: 2019-08-09 15:33:49" itemprop="dateModified" datetime="2019-08-09T15:33:49+08:00">2019-08-09</time>
               
             
           </span>
@@ -500,8 +500,10 @@
 <li>匹配特定字符串<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo $line | sed &apos;s/pattern//g&apos;</span><br></pre></td></tr></table></figure>
 </li>
 </ol>
-<p>eg:ß<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &apos;DB_TYPE_ARR1: rts-weibo:0.80, dnews-weibo:0.80&apos; |grep DB_TYPE_ARR | sed &apos;s/DB_TYPE_ARR//&apos; | sed &apos;s/:[0-9].[0-9]\+//g&apos;</span><br></pre></td></tr></table></figure></p>
-<p>注意，g是全部替换的意思<br><a id="more"></a></p>
+<p>eg<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &apos;DB_TYPE_ARR1: rts-weibo:0.80, dnews-weibo:0.80&apos; |grep DB_TYPE_ARR | sed &apos;s/DB_TYPE_ARR//&apos; | sed &apos;s/:[0-9].[0-9]\+//g&apos;</span><br></pre></td></tr></table></figure></p>
+<p>注意，g是全部替换的意思</p>
+<a id="more"></a>
+<h1 id="shell-10进制转16进制"><a href="#shell-10进制转16进制" class="headerlink" title="shell 10进制转16进制"></a>shell 10进制转16进制</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo 10 | awk &apos;&#123;printf (&quot;%x\n&quot;, $0)&#125;&apos;</span><br></pre></td></tr></table></figure>
 <h1 id="tar-用法"><a href="#tar-用法" class="headerlink" title="tar 用法"></a>tar 用法</h1><ol>
 <li>打包排除某些文件或文件夹<br>tar -zcvf test.tar.gz -X exclude.list test/<br>其中exclude.list里面包含了那些你不想要的文件或是文件夹<br><img src="tar排除某些文件或文件夹.png" alt="tar排除某些文件或文件夹"></li>
 </ol>
@@ -913,7 +915,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#sed用法"><span class="nav-number">1.</span> <span class="nav-text">sed用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tar-用法"><span class="nav-number">2.</span> <span class="nav-text">tar 用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串前面补0"><span class="nav-number">3.</span> <span class="nav-text">字符串前面补0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shell-for循环"><span class="nav-number">4.</span> <span class="nav-text">shell for循环</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vim配置"><span class="nav-number">5.</span> <span class="nav-text">vim配置</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#sed用法"><span class="nav-number">1.</span> <span class="nav-text">sed用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shell-10进制转16进制"><span class="nav-number">2.</span> <span class="nav-text">shell 10进制转16进制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tar-用法"><span class="nav-number">3.</span> <span class="nav-text">tar 用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串前面补0"><span class="nav-number">4.</span> <span class="nav-text">字符串前面补0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shell-for循环"><span class="nav-number">5.</span> <span class="nav-text">shell for循环</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vim配置"><span class="nav-number">6.</span> <span class="nav-text">vim配置</span></a></li></ol></div>
             
 
           </div>
