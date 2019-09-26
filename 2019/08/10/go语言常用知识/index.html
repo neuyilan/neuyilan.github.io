@@ -104,7 +104,7 @@
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="main函数接收参数1234567891011121314import (	&amp;quot;flag&amp;quot;)func main() &amp;#123;	showHelp := flag.Bool(&amp;quot;h&amp;quot;, false, &amp;quot;show help&amp;quot;)	name := flag.String(&amp;quot;n&amp;quot;, &amp;quot;everyone&amp;quot;, &amp;q">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-25T06:35:04.704Z">
+<meta property="og:updated_time" content="2019-09-25T06:57:00.073Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="go语言常用知识">
 <meta name="twitter:description" content="main函数接收参数1234567891011121314import (	&amp;quot;flag&amp;quot;)func main() &amp;#123;	showHelp := flag.Bool(&amp;quot;h&amp;quot;, false, &amp;quot;show help&amp;quot;)	name := flag.String(&amp;quot;n&amp;quot;, &amp;quot;everyone&amp;quot;, &amp;q">
@@ -429,7 +429,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-09-25 14:35:04" itemprop="dateModified" datetime="2019-09-25T14:35:04+08:00">2019-09-25</time>
+                <time title="Modified: 2019-09-25 14:57:00" itemprop="dateModified" datetime="2019-09-25T14:57:00+08:00">2019-09-25</time>
               
             
           </span>
@@ -533,6 +533,8 @@
 <li><a href="https://www.jianshu.com/p/162f44022eb7" target="_blank" rel="noopener">https://www.jianshu.com/p/162f44022eb7</a></li>
 <li><a href="http://blog.sina.com.cn/s/blog_48c95a190102xtse.html" target="_blank" rel="noopener">http://blog.sina.com.cn/s/blog_48c95a190102xtse.html</a></li>
 </ul>
+<h1 id="判断某个时间是否在某个时间区间之内"><a href="#判断某个时间是否在某个时间区间之内" class="headerlink" title="判断某个时间是否在某个时间区间之内"></a>判断某个时间是否在某个时间区间之内</h1><p>注意判断边界条件，比如： “2019-09-25 15:40:45” 并不在 “2019-09-25 15:40:45” 与 “2019-09-25 15:40:46”之间。</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"> package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	checkTimeFormat string = &quot;%04d-%02d-%02d %02d:%02d:%02d&quot;</span><br><span class="line">	timeFormat             = &quot;2006-01-02 15:04:05&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func testTimeDuration() &#123;</span><br><span class="line">	startHour := 15</span><br><span class="line">	startMin := 40</span><br><span class="line">	endHour := 16</span><br><span class="line">	endMin := 59</span><br><span class="line"></span><br><span class="line">	startTimeStr := fmt.Sprintf(checkTimeFormat, time.Now().Year(), time.Now().Month(), time.Now().Day(),</span><br><span class="line">		startHour, startMin, 0)</span><br><span class="line">	endTimeStr := fmt.Sprintf(checkTimeFormat, time.Now().Year(), time.Now().Month(), time.Now().Day(),</span><br><span class="line">		endHour, endMin, 0)</span><br><span class="line">	nowTimeStr := time.Now().Format(timeFormat)</span><br><span class="line"></span><br><span class="line">	startTime, err := time.Parse(timeFormat, startTimeStr)</span><br><span class="line">	endTime, err := time.Parse(timeFormat, endTimeStr)</span><br><span class="line">	nowTime, err := time.Parse(timeFormat, nowTimeStr)</span><br><span class="line">	fmt.Println(&quot;start:&quot;, startTime)</span><br><span class="line">	fmt.Println(&quot;now:&quot;, nowTime)</span><br><span class="line">	fmt.Println(&quot;end:&quot;, endTime)</span><br><span class="line"></span><br><span class="line">	if err == nil &amp;&amp; nowTime.After(startTime) &amp;&amp; nowTime.Before(endTime) &#123;</span><br><span class="line">		fmt.Println(&quot;yes&quot;)</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		fmt.Println(&quot;no&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	testTimeDuration()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -657,7 +659,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">56</span>
+                    <span class="site-state-item-count">57</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -889,7 +891,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">83</span>
+                      
+                    
+                    <span class="site-state-item-count">84</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
@@ -940,7 +944,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#main函数接收参数"><span class="nav-number">1.</span> <span class="nav-text">main函数接收参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#golang-profile的使用方法"><span class="nav-number">2.</span> <span class="nav-text">golang profile的使用方法</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#main函数接收参数"><span class="nav-number">1.</span> <span class="nav-text">main函数接收参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#golang-profile的使用方法"><span class="nav-number">2.</span> <span class="nav-text">golang profile的使用方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#判断某个时间是否在某个时间区间之内"><span class="nav-number">3.</span> <span class="nav-text">判断某个时间是否在某个时间区间之内</span></a></li></ol></div>
             
 
           </div>
