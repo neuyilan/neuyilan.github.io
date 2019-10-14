@@ -105,7 +105,7 @@
 <meta property="og:description" content="sed用法 打印第n行到最后一行的内容sed -n ‘1673523, $p’ bs.gi.log &amp;gt; /home/work/qhl/bs.gi.log  打印匹配abc的行到最后一行的内容。sed -n ‘/abc/,$p’ file.txt注意是单引号  匹配特定字符串1echo $line | sed &amp;apos;s/pattern//g&amp;apos;   eg1echo &amp;apos;D">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://neuyilan.github.io/2019/07/22/linux-shell常用脚本命令/tar排除某些文件或文件夹.png">
-<meta property="og:updated_time" content="2019-09-25T12:19:18.564Z">
+<meta property="og:updated_time" content="2019-10-14T11:11:43.822Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="linux shell常用脚本命令">
 <meta name="twitter:description" content="sed用法 打印第n行到最后一行的内容sed -n ‘1673523, $p’ bs.gi.log &amp;gt; /home/work/qhl/bs.gi.log  打印匹配abc的行到最后一行的内容。sed -n ‘/abc/,$p’ file.txt注意是单引号  匹配特定字符串1echo $line | sed &amp;apos;s/pattern//g&amp;apos;   eg1echo &amp;apos;D">
@@ -431,7 +431,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-09-25 20:19:18" itemprop="dateModified" datetime="2019-09-25T20:19:18+08:00">2019-09-25</time>
+                <time title="Modified: 2019-10-14 19:11:43" itemprop="dateModified" datetime="2019-10-14T19:11:43+08:00">2019-10-14</time>
               
             
           </span>
@@ -516,6 +516,17 @@
 <h1 id="vim配置"><a href="#vim配置" class="headerlink" title="vim配置"></a>vim配置</h1><p>vim配置显示中文<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">syntax on</span><br><span class="line">filetype indent plugin on</span><br><span class="line">set modeline</span><br><span class="line">set tabstop=4</span><br><span class="line">set expandtab</span><br><span class="line">set softtabstop=4</span><br><span class="line">set shiftwidth=4</span><br><span class="line">set nonumber</span><br><span class="line">set cmdheight=1</span><br><span class="line">set laststatus=2</span><br><span class="line">set fileencodings=utf-8,gb2312,gb18030,gbk,ucs-bom,cp936,latin1</span><br><span class="line">set enc=utf8</span><br><span class="line">set fencs=utf8,gbk,gb2312,gb18030</span><br><span class="line">map &lt;F4&gt; &lt;Esc&gt;:%!python -m json.tool&lt;CR&gt;</span><br><span class="line">set number</span><br><span class="line">set expandtab ts=4 sw=4 sts=4 tw=100</span><br></pre></td></tr></table></figure></p>
 <h1 id="copy文件"><a href="#copy文件" class="headerlink" title="copy文件"></a>copy文件</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsync -avnL twemproxy --exclude=twemproxy/log work@host.com:/home/work/scp_tmp</span><br></pre></td></tr></table></figure>
 <p>-avnL: 显示哪些要被copy，但是实际上并未执行copy，-avL是真的copy</p>
+<h1 id="随机数生成"><a href="#随机数生成" class="headerlink" title="随机数生成"></a>随机数生成</h1><h2 id="使用系统的-RANDOM-变量"><a href="#使用系统的-RANDOM-变量" class="headerlink" title="使用系统的 $RANDOM 变量"></a>使用系统的 $RANDOM 变量</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo $RANDOM</span><br></pre></td></tr></table></figure>
+<p>$RANDOM 的范围是 [0, 32767]</p>
+<ul>
+<li>想生成2~10范围之间的随机数<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo $(($RANDOM%9+2))</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="获取函数的返回值"><a href="#获取函数的返回值" class="headerlink" title="获取函数的返回值"></a>获取函数的返回值</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line">function test() &#123;</span><br><span class="line">    RET_VALUE=15</span><br><span class="line">    res=17</span><br><span class="line">    return 1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function test1() &#123;</span><br><span class="line">    test</span><br><span class="line">    echo $&#123;RET_VALUE&#125;</span><br><span class="line">    echo $&#123;res&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">test1</span><br></pre></td></tr></table></figure>
+<p>如上代码会输出 15，17. 即通过全局变量的方式来获取函数的返回值</p>
+<h1 id="好的参考资料"><a href="#好的参考资料" class="headerlink" title="好的参考资料"></a>好的参考资料</h1><ul>
+<li>Shell脚本IF条件判断和判断条件总结 <a href="https://www.jb51.net/article/56553.htm" target="_blank" rel="noopener">Shell脚本IF条件判断和判断条件总结</a></li>
+</ul>
 
       
     </div>
@@ -933,7 +944,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#sed用法"><span class="nav-number">1.</span> <span class="nav-text">sed用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shell-10进制转16进制"><span class="nav-number">2.</span> <span class="nav-text">shell 10进制转16进制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tar-用法"><span class="nav-number">3.</span> <span class="nav-text">tar 用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串前面补0"><span class="nav-number">4.</span> <span class="nav-text">字符串前面补0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shell-for循环"><span class="nav-number">5.</span> <span class="nav-text">shell for循环</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vim配置"><span class="nav-number">6.</span> <span class="nav-text">vim配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#copy文件"><span class="nav-number">7.</span> <span class="nav-text">copy文件</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#sed用法"><span class="nav-number">1.</span> <span class="nav-text">sed用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shell-10进制转16进制"><span class="nav-number">2.</span> <span class="nav-text">shell 10进制转16进制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tar-用法"><span class="nav-number">3.</span> <span class="nav-text">tar 用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#字符串前面补0"><span class="nav-number">4.</span> <span class="nav-text">字符串前面补0</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shell-for循环"><span class="nav-number">5.</span> <span class="nav-text">shell for循环</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#vim配置"><span class="nav-number">6.</span> <span class="nav-text">vim配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#copy文件"><span class="nav-number">7.</span> <span class="nav-text">copy文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#随机数生成"><span class="nav-number">8.</span> <span class="nav-text">随机数生成</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用系统的-RANDOM-变量"><span class="nav-number">8.1.</span> <span class="nav-text">使用系统的 $RANDOM 变量</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#获取函数的返回值"><span class="nav-number">9.</span> <span class="nav-text">获取函数的返回值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#好的参考资料"><span class="nav-number">10.</span> <span class="nav-text">好的参考资料</span></a></li></ol></div>
             
 
           </div>
