@@ -368,6 +368,168 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/11/19/redis常见技巧/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="伊蓝">
+      <meta itemprop="description" content="记录点滴">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yilan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/11/19/redis常见技巧/" class="post-title-link" itemprop="url">redis常见技巧</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-11-19 11:42:53 / Modified: 11:47:35" itemprop="dateCreated datePublished" datetime="2019-11-19T11:42:53+08:00">2019-11-19</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/11/19/redis常见技巧/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/11/19/redis常见技巧/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="redis-命令行相关"><a href="#redis-命令行相关" class="headerlink" title="redis 命令行相关"></a>redis 命令行相关</h1><p>当搭建好一个redis 或是twemproxy之后，可以直接采用如下命令来操作redis集群<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 连接上redis server</span><br><span class="line">redis-cli -p port</span><br></pre></td></tr></table></figure></p>
+<p>剩下的就是操作redis的命令了<br>命令参考 <a href="https://redis.io/commands" target="_blank" rel="noopener">https://redis.io/commands</a></p>
+<h1 id="Error-Protocol-error-got-“-“-as-reply-type-byte"><a href="#Error-Protocol-error-got-“-“-as-reply-type-byte" class="headerlink" title="Error: Protocol error, got “{“ as reply type byte"></a>Error: Protocol error, got “{“ as reply type byte</h1><p>It is because twemproxy will listen on two ports when it starts, one of them is port 22222(by default, you can set it with ‘-s’), it is used for monitoring, if you connect to it, the error occurs</p>
+<p>So, connect to another port</p>
+<p>参考：<a href="https://stackoverflow.com/questions/27688394/twemproxynutcracker-error-protocol-error-got-as-reply-type-byte" target="_blank" rel="noopener">https://stackoverflow.com/questions/27688394/twemproxynutcracker-error-protocol-error-got-as-reply-type-byte</a></p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/11/19/redis常见技巧/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/11/08/raft-相关资料/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -413,7 +575,7 @@
                 
               
 
-              <time title="Created: 2019-11-08 17:16:25 / Modified: 17:28:50" itemprop="dateCreated datePublished" datetime="2019-11-08T17:16:25+08:00">2019-11-08</time>
+              <time title="Created: 2019-11-08 17:16:25 / Modified: 17:28:53" itemprop="dateCreated datePublished" datetime="2019-11-08T17:16:25+08:00">2019-11-08</time>
             
 
             
@@ -1772,7 +1934,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-10-24 14:09:39" itemprop="dateModified" datetime="2019-10-24T14:09:39+08:00">2019-10-24</time>
+                <time title="Modified: 2019-11-13 14:15:32" itemprop="dateModified" datetime="2019-11-13T14:15:32+08:00">2019-11-13</time>
               
             
           </span>
@@ -1821,203 +1983,6 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/07/24/c-常用知识/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </p></div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/07/22/linux-shell常用脚本命令/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="伊蓝">
-      <meta itemprop="description" content="记录点滴">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="yilan">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/22/linux-shell常用脚本命令/" class="post-title-link" itemprop="url">linux shell常用脚本命令</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2019-07-22 19:29:53" itemprop="dateCreated datePublished" datetime="2019-07-22T19:29:53+08:00">2019-07-22</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2019-10-21 17:15:47" itemprop="dateModified" datetime="2019-10-21T17:15:47+08:00">2019-10-21</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/常用命令/" itemprop="url" rel="index"><span itemprop="name">常用命令</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/07/22/linux-shell常用脚本命令/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/07/22/linux-shell常用脚本命令/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="sed用法"><a href="#sed用法" class="headerlink" title="sed用法"></a>sed用法</h1><ol>
-<li><p>打印第n行到最后一行的内容<br>sed -n ‘1673523, $p’ bs.gi.log &gt; /home/work/qhl/bs.gi.log</p>
-</li>
-<li><p>打印匹配abc的行到最后一行的内容。<br>sed -n ‘/abc/,$p’ file.txt<br>注意是单引号</p>
-</li>
-<li>匹配特定字符串<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo $line | sed &apos;s/pattern//g&apos;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>eg<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &apos;DB_TYPE_ARR1: rts-weibo:0.80, dnews-weibo:0.80&apos; |grep DB_TYPE_ARR | sed &apos;s/DB_TYPE_ARR//&apos; | sed &apos;s/:[0-9].[0-9]\+//g&apos;</span><br></pre></td></tr></table></figure></p>
-<p>注意，g是全部替换的意思<br>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/07/22/linux-shell常用脚本命令/#more" rel="contents">
                 Read more &raquo;
               </a>
             </div>
@@ -2111,7 +2076,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">61</span>
+                    <span class="site-state-item-count">62</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2359,7 +2324,13 @@
                     
                       
                     
-                    <span class="site-state-item-count">91</span>
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">94</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
