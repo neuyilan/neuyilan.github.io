@@ -96,25 +96,25 @@
 
 
 
-  <meta name="description" content="main函数接收参数1234567891011121314import (	&amp;quot;flag&amp;quot;)func main() &amp;#123;	showHelp := flag.Bool(&amp;quot;h&amp;quot;, false, &amp;quot;show help&amp;quot;)	name := flag.String(&amp;quot;n&amp;quot;, &amp;quot;everyone&amp;quot;, &amp;q">
-<meta name="keywords" content="go">
+  <meta name="description" content="golang slice到底是值传递还是引用传递？答案：值传递">
+<meta name="keywords" content="golang,slice">
 <meta property="og:type" content="article">
-<meta property="og:title" content="go语言常用知识">
-<meta property="og:url" content="https://neuyilan.github.io/2019/08/10/go语言常用知识/index.html">
+<meta property="og:title" content="go slice 解析">
+<meta property="og:url" content="https://neuyilan.github.io/2019/10/16/Golang-go-slice-解析/index.html">
 <meta property="og:site_name" content="yilan">
-<meta property="og:description" content="main函数接收参数1234567891011121314import (	&amp;quot;flag&amp;quot;)func main() &amp;#123;	showHelp := flag.Bool(&amp;quot;h&amp;quot;, false, &amp;quot;show help&amp;quot;)	name := flag.String(&amp;quot;n&amp;quot;, &amp;quot;everyone&amp;quot;, &amp;q">
+<meta property="og:description" content="golang slice到底是值传递还是引用传递？答案：值传递">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-10-21T08:59:55.917Z">
+<meta property="og:updated_time" content="2019-10-16T02:09:27.895Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="go语言常用知识">
-<meta name="twitter:description" content="main函数接收参数1234567891011121314import (	&amp;quot;flag&amp;quot;)func main() &amp;#123;	showHelp := flag.Bool(&amp;quot;h&amp;quot;, false, &amp;quot;show help&amp;quot;)	name := flag.String(&amp;quot;n&amp;quot;, &amp;quot;everyone&amp;quot;, &amp;q">
+<meta name="twitter:title" content="go slice 解析">
+<meta name="twitter:description" content="golang slice到底是值传递还是引用传递？答案：值传递">
 
 
 
 
 
 
-  <link rel="canonical" href="https://neuyilan.github.io/2019/08/10/go语言常用知识/">
+  <link rel="canonical" href="https://neuyilan.github.io/2019/10/16/Golang-go-slice-解析/">
 
 
 
@@ -124,7 +124,7 @@
   };
 </script>
 
-  <title>go语言常用知识 | yilan</title>
+  <title>go slice 解析 | yilan</title>
   
 
 
@@ -369,7 +369,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/08/10/go语言常用知识/">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/10/16/Golang-go-slice-解析/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="伊蓝">
@@ -386,7 +386,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">go语言常用知识
+          <h1 class="post-title" itemprop="name headline">go slice 解析
 
               
             
@@ -412,24 +412,12 @@
                 
               
 
-              <time title="Created: 2019-08-10 16:06:44" itemprop="dateCreated datePublished" datetime="2019-08-10T16:06:44+08:00">2019-08-10</time>
+              <time title="Created: 2019-10-16 09:59:26 / Modified: 10:09:27" itemprop="dateCreated datePublished" datetime="2019-10-16T09:59:26+08:00">2019-10-16</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2019-10-21 16:59:55" itemprop="dateModified" datetime="2019-10-21T16:59:55+08:00">2019-10-21</time>
               
             
           </span>
@@ -443,8 +431,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/08/10/go语言常用知识/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/08/10/go语言常用知识/" itemprop="commentCount"></span>
+                <a href="/2019/10/16/Golang-go-slice-解析/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/10/16/Golang-go-slice-解析/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -472,73 +460,13 @@
       
 
       
-        <h1 id="main函数接收参数"><a href="#main函数接收参数" class="headerlink" title="main函数接收参数"></a>main函数接收参数</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">import (</span><br><span class="line">	&quot;flag&quot;</span><br><span class="line">)</span><br><span class="line">func main() &#123;</span><br><span class="line">	showHelp := flag.Bool(&quot;h&quot;, false, &quot;show help&quot;)</span><br><span class="line">	name := flag.String(&quot;n&quot;, &quot;everyone&quot;, &quot;The greeting object&quot;)</span><br><span class="line">	flag.Parse()</span><br><span class="line"></span><br><span class="line">	if *showHelp &#123;</span><br><span class="line">		flag.PrintDefaults()</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(&quot;hello &quot;, *name)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-<h1 id="golang-profile的使用方法"><a href="#golang-profile的使用方法" class="headerlink" title="golang profile的使用方法"></a>golang profile的使用方法</h1><ol>
-<li><p>代码中添加如下代码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">import (</span><br><span class="line">    _ &quot;net/http/pprof&quot; //采集 HTTP Server 的运行时数据进行分析</span><br><span class="line">)</span><br><span class="line">func main() &#123;</span><br><span class="line">    go func() &#123;</span><br><span class="line">        addr := fmt.Sprintf(&quot;:%d&quot;, 8090)</span><br><span class="line">        http.ListenAndServe(addr, nil)</span><br><span class="line">    &#125;()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>编译pprof</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/google/pprof.git</span><br><span class="line">go build</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>编译命令请参考 <a href="https://github.com/google/pprof/blob/master/appveyor.yml" target="_blank" rel="noopener">https://github.com/google/pprof/blob/master/appveyor.yml</a></p>
-<ol start="3">
-<li><p>编译go-torch</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/uber-archive/go-torch</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>火焰图生成命令：</p>
-</li>
-</ol>
-<ul>
-<li><p>cpu 使用火焰图：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go-torch -u http://127.0.0.1:4500</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>mem 火焰图：<br>– –inuse_space 分析常驻内存：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go-torch -inuse_space http://127.0.0.1:4500/debug/pprof/heap --colors=mem</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>– –alloc_space 分析程序启动以来所有分配的内存<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go-torch -alloc_space http://127.0.0.1:4500/debug/pprof/heap --colors=mem</span><br></pre></td></tr></table></figure></p>
-<ol start="5">
-<li>不用火焰图，分析cpu、mem使用</li>
-</ol>
-<ul>
-<li><p>–inuse_space 分析常驻内存：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go tool pprof -inuse_space http://127.0.0.1:4500/debug/pprof/heap</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>–alloc_space 分析程序启动以来分配的所有内存：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go tool pprof -alloc_space http://127.0.0.1:4500/debug/pprof/heap</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>分析cpu 热点代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">go tool pprof http://127.0.0.1:4500/debug/pprof/profile</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<ol start="6">
-<li>一些显示项的含义</li>
-</ol>
-<ul>
-<li>flat代表的是该函数自身代码的执行时长;</li>
-<li>cum代表的是该函数自身代码+所有调用的函数的执行时长;</li>
-<li>flat%和cum%指的就是flat耗时和cum耗时占总耗时的百分比;</li>
-<li>sum%指的就是每一行的flat%与上面所有行的flat%总和，代表从上到下的累计值;</li>
-</ul>
-<ol start="7">
-<li>参考链接:</li>
-</ol>
-<ul>
-<li><a href="https://golang.org/pkg/net/http/pprof/" target="_blank" rel="noopener">https://golang.org/pkg/net/http/pprof/</a></li>
-<li><a href="https://golang.org/doc/diagnostics.html?h=flamegraph" target="_blank" rel="noopener">https://golang.org/doc/diagnostics.html?h=flamegraph</a></li>
-<li><a href="https://github.com/google/pprof" target="_blank" rel="noopener">https://github.com/google/pprof</a></li>
-<li><a href="http://io.upyun.com/2018/01/21/debug-golang-application-with-pprof-and-flame-graph/" target="_blank" rel="noopener">http://io.upyun.com/2018/01/21/debug-golang-application-with-pprof-and-flame-graph/</a></li>
-<li><a href="https://www.jianshu.com/p/162f44022eb7" target="_blank" rel="noopener">https://www.jianshu.com/p/162f44022eb7</a></li>
-<li><a href="http://blog.sina.com.cn/s/blog_48c95a190102xtse.html" target="_blank" rel="noopener">http://blog.sina.com.cn/s/blog_48c95a190102xtse.html</a></li>
-</ul>
-<h1 id="判断某个时间是否在某个时间区间之内"><a href="#判断某个时间是否在某个时间区间之内" class="headerlink" title="判断某个时间是否在某个时间区间之内"></a>判断某个时间是否在某个时间区间之内</h1><p>注意判断边界条件，比如： “2019-09-25 15:40:45” 并不在 “2019-09-25 15:40:45” 与 “2019-09-25 15:40:46”之间。</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"> package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">const (</span><br><span class="line">	checkTimeFormat string = &quot;%04d-%02d-%02d %02d:%02d:%02d&quot;</span><br><span class="line">	timeFormat             = &quot;2006-01-02 15:04:05&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func testTimeDuration() &#123;</span><br><span class="line">	startHour := 15</span><br><span class="line">	startMin := 40</span><br><span class="line">	endHour := 16</span><br><span class="line">	endMin := 59</span><br><span class="line"></span><br><span class="line">	startTimeStr := fmt.Sprintf(checkTimeFormat, time.Now().Year(), time.Now().Month(), time.Now().Day(),</span><br><span class="line">		startHour, startMin, 0)</span><br><span class="line">	endTimeStr := fmt.Sprintf(checkTimeFormat, time.Now().Year(), time.Now().Month(), time.Now().Day(),</span><br><span class="line">		endHour, endMin, 0)</span><br><span class="line">	nowTimeStr := time.Now().Format(timeFormat)</span><br><span class="line"></span><br><span class="line">	startTime, err := time.Parse(timeFormat, startTimeStr)</span><br><span class="line">	endTime, err := time.Parse(timeFormat, endTimeStr)</span><br><span class="line">	nowTime, err := time.Parse(timeFormat, nowTimeStr)</span><br><span class="line">	fmt.Println(&quot;start:&quot;, startTime)</span><br><span class="line">	fmt.Println(&quot;now:&quot;, nowTime)</span><br><span class="line">	fmt.Println(&quot;end:&quot;, endTime)</span><br><span class="line"></span><br><span class="line">	if err == nil &amp;&amp; nowTime.After(startTime) &amp;&amp; nowTime.Before(endTime) &#123;</span><br><span class="line">		fmt.Println(&quot;yes&quot;)</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">		fmt.Println(&quot;no&quot;)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	testTimeDuration()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="Golang通过GOTRACEBACK生成程序崩溃后core文件"><a href="#Golang通过GOTRACEBACK生成程序崩溃后core文件" class="headerlink" title="Golang通过GOTRACEBACK生成程序崩溃后core文件"></a>Golang通过GOTRACEBACK生成程序崩溃后core文件</h1><p>方法1：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export GOTRACEBACK=crash</span><br></pre></td></tr></table></figure></p>
-<p>eg:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export GOTRACEBACK=crash</span><br><span class="line">nohup $&#123;LIMIT&#125; $&#123;BIN_DIR&#125;/proxy $&#123;CONFIG_PARAM&#125; -log $&#123;LOG_DIR&#125;/$&#123;PROXY_LOG&#125; 1&gt;&gt;$&#123;LOG_DIR&#125;/$&#123;PROXY_LOG&#125; 2&gt;&amp;1 &lt;/dev/null &amp;</span><br></pre></td></tr></table></figure></p>
-<p>方法2：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nohup env GOTRACEBACK=crash</span><br></pre></td></tr></table></figure></p>
-<p>eg:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/bin/nohup env GOTRACEBACK=crash /home/work/goworkpace/bin/main &gt;&gt; /home/work/goworkpace/log/crash.log</span><br></pre></td></tr></table></figure></p>
+        <p>golang slice到底是值传递还是引用传递？<br>答案：值传递<br><a id="more"></a><br>下面通过几个例子分析一下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">slice := []int&#123;1, 2, 3&#125;</span><br><span class="line">newSlice := slice[0:2] //这个地方是关键</span><br><span class="line">fmt.Printf(&quot;before the origin slice address=%p \n&quot;, slice)</span><br><span class="line">fmt.Printf(&quot;before the new slice address=%p \n&quot;, slice)</span><br><span class="line">fmt.Println(&quot;before the origin slice data = &quot;, slice)</span><br><span class="line">fmt.Println(&quot;before the new slice data = &quot;, newSlice)</span><br><span class="line">newSlice = append(newSlice, 4)</span><br><span class="line">fmt.Println(&quot;after append the new slice data = &quot;, newSlice)</span><br><span class="line">// 并不会改变原来数组的值</span><br><span class="line">for _, v := range newSlice &#123;</span><br><span class="line">	v += 10</span><br><span class="line">&#125;</span><br><span class="line">fmt.Println(&quot;after first change the new slice data = &quot;, newSlice)</span><br><span class="line"></span><br><span class="line">// 会改变slice和newSlice的值</span><br><span class="line">for i := range newSlice &#123;</span><br><span class="line">	newSlice[i] += 10</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fmt.Printf(&quot;after the origin slice address=%p \n&quot;, slice)</span><br><span class="line">fmt.Printf(&quot;after the new slice address=%p \n&quot;, newSlice)</span><br><span class="line">fmt.Println(&quot;after second change the new slice data = &quot;, newSlice)</span><br><span class="line">fmt.Println(&quot;after second change the origin slice data = &quot;, slice)</span><br></pre></td></tr></table></figure>
+<p>如上代码会有如下输出，可以看到subSlice改变了原来slice的值，那么是不是slice就是指针传递呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">before the origin slice address=0xc000090000</span><br><span class="line">before the new slice address=0xc000090000</span><br><span class="line">before the origin slice data =  [1 2 3]</span><br><span class="line">before the new slice data =  [1 2]</span><br><span class="line">after append the new slice data =  [1 2 4]</span><br><span class="line">after first change the new slice data =  [1 2 4]</span><br><span class="line">after the origin slice address=0xc000090000</span><br><span class="line">after the new slice address=0xc000090000</span><br><span class="line">after second change the new slice data =  [11 12 14]</span><br><span class="line">after second change the origin slice data =  [11 12 14]</span><br></pre></td></tr></table></figure></p>
+<p>请看上述代码的简单修改版：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">slice := []int&#123;1, 2, 3&#125;</span><br><span class="line">newSlice := slice[1:] // 相比上一个代码，把slice[0:2]修改了slice[1:]</span><br><span class="line">fmt.Printf(&quot;before the origin slice address=%p \n&quot;, slice)</span><br><span class="line">fmt.Printf(&quot;before the new slice address=%p \n&quot;, slice)</span><br><span class="line">fmt.Println(&quot;before the origin slice data = &quot;, slice)</span><br><span class="line">fmt.Println(&quot;before the new slice data = &quot;, newSlice)</span><br><span class="line">newSlice = append(newSlice, 4)</span><br><span class="line">fmt.Println(&quot;after append the new slice data = &quot;, newSlice)</span><br><span class="line">// 并不会改变原来数组的值</span><br><span class="line">for _, v := range newSlice &#123;</span><br><span class="line">	v += 10</span><br><span class="line">&#125;</span><br><span class="line">fmt.Println(&quot;after first change the new slice data = &quot;, newSlice)</span><br><span class="line"></span><br><span class="line">// 会改变slice和newSlice的值</span><br><span class="line">for i := range newSlice &#123;</span><br><span class="line">	newSlice[i] += 10</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fmt.Printf(&quot;after the origin slice address=%p \n&quot;, slice)</span><br><span class="line">fmt.Printf(&quot;after the new slice address=%p \n&quot;, newSlice)</span><br><span class="line">fmt.Println(&quot;after second change the new slice data = &quot;, newSlice)</span><br><span class="line">fmt.Println(&quot;after second change the origin slice data = &quot;, slice)</span><br></pre></td></tr></table></figure></p>
+<p>会发现有如下输出：可以发现，subSlice并未改变slice的值，并且他们的地址也发生了变化。这个问题的本质原因是什么呢？<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">before the origin slice address=0xc00008a000</span><br><span class="line">before the new slice address=0xc00008a000</span><br><span class="line">before the origin slice data =  [1 2 3]</span><br><span class="line">before the new slice data =  [2 3]</span><br><span class="line">after append the new slice data =  [2 3 4]</span><br><span class="line">after first change the new slice data =  [2 3 4]</span><br><span class="line">after the origin slice address=0xc00008a000</span><br><span class="line">after the new slice address=0xc00008a040</span><br><span class="line">after second change the new slice data =  [12 13 14]</span><br><span class="line">after second change the origin slice data =  [1 2 3]</span><br></pre></td></tr></table></figure></p>
+<p>本质原因：第一个代码subSlice在做修改的时候，并未超过slice的容量，所以所有的修改都会反映到slice的底层数组上。<br>但是第二个代码在做append的时候，已经超过了subSlice的容量，底层数组已经放不下了，所以需要扩容，当扩容的时候，newSlice的地址就与之前的地址不一致了。<br>所以对他的改变就不会体现到原有slice上，所以slice本质上还是值传递。</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a href="https://goquiz.github.io/#subslice-grow" target="_blank" rel="noopener">Subslice 例子</a><br><a href="https://blog.csdn.net/u010853261/article/details/99608199" target="_blank" rel="noopener">golang slice实践以及底层实现</a></p>
 
       
     </div>
@@ -562,7 +490,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/go/" rel="tag"># go</a>
+            <a href="/tags/golang/" rel="tag"># golang</a>
+          
+            <a href="/tags/slice/" rel="tag"># slice</a>
           
         </div>
       
@@ -575,8 +505,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/01/python常用工具大全/" rel="next" title="python常用工具大全">
-                <i class="fa fa-chevron-left"></i> python常用工具大全
+              <a href="/2019/10/08/Golang-go-redigo-源码分析之连接池/" rel="next" title="Golang-redigo 源码分析之连接池 ">
+                <i class="fa fa-chevron-left"></i> Golang-redigo 源码分析之连接池 
               </a>
             
           </div>
@@ -585,8 +515,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/08/16/正则表达式常用知识/" rel="prev" title="正则表达式常用知识">
-                正则表达式常用知识 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/10/24/c-mmap读写示例/" rel="prev" title="c++ mmap读写示例">
+                c++ mmap读写示例 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -972,7 +902,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#main函数接收参数"><span class="nav-number">1.</span> <span class="nav-text">main函数接收参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#golang-profile的使用方法"><span class="nav-number">2.</span> <span class="nav-text">golang profile的使用方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#判断某个时间是否在某个时间区间之内"><span class="nav-number">3.</span> <span class="nav-text">判断某个时间是否在某个时间区间之内</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Golang通过GOTRACEBACK生成程序崩溃后core文件"><span class="nav-number">4.</span> <span class="nav-text">Golang通过GOTRACEBACK生成程序崩溃后core文件</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#参考链接"><span class="nav-number">1.</span> <span class="nav-text">参考链接</span></a></li></ol></div>
             
 
           </div>

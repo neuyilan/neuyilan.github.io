@@ -99,24 +99,24 @@
   <meta name="description" content="连接池一直是系统设计中很重要的一个话题，其主要的作用是复用系统中已经创建好的连接，避免重复创建连接加重系统负荷，下面看一下golang中redigo中连接池的使用和原理。">
 <meta name="keywords" content="redigo,pool,连接池">
 <meta property="og:type" content="article">
-<meta property="og:title" content="go redigo 源码分析之连接池 ">
-<meta property="og:url" content="https://neuyilan.github.io/2019/10/08/go-redigo-源码分析之连接池/index.html">
+<meta property="og:title" content="Golang-redigo 源码分析之连接池 ">
+<meta property="og:url" content="https://neuyilan.github.io/2019/10/08/Golang-go-redigo-源码分析之连接池/index.html">
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="连接池一直是系统设计中很重要的一个话题，其主要的作用是复用系统中已经创建好的连接，避免重复创建连接加重系统负荷，下面看一下golang中redigo中连接池的使用和原理。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://neuyilan.github.io/2019/10/08/go-redigo-源码分析之连接池/flow.png">
-<meta property="og:updated_time" content="2019-10-09T04:59:09.434Z">
+<meta property="og:image" content="https://neuyilan.github.io/2019/10/08/Golang-go-redigo-源码分析之连接池/flow.png">
+<meta property="og:updated_time" content="2019-11-28T13:13:46.687Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="go redigo 源码分析之连接池 ">
+<meta name="twitter:title" content="Golang-redigo 源码分析之连接池 ">
 <meta name="twitter:description" content="连接池一直是系统设计中很重要的一个话题，其主要的作用是复用系统中已经创建好的连接，避免重复创建连接加重系统负荷，下面看一下golang中redigo中连接池的使用和原理。">
-<meta name="twitter:image" content="https://neuyilan.github.io/2019/10/08/go-redigo-源码分析之连接池/flow.png">
+<meta name="twitter:image" content="https://neuyilan.github.io/2019/10/08/Golang-go-redigo-源码分析之连接池/flow.png">
 
 
 
 
 
 
-  <link rel="canonical" href="https://neuyilan.github.io/2019/10/08/go-redigo-源码分析之连接池/">
+  <link rel="canonical" href="https://neuyilan.github.io/2019/10/08/Golang-go-redigo-源码分析之连接池/">
 
 
 
@@ -126,7 +126,7 @@
   };
 </script>
 
-  <title>go redigo 源码分析之连接池  | yilan</title>
+  <title>Golang-redigo 源码分析之连接池  | yilan</title>
   
 
 
@@ -371,7 +371,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/10/08/go-redigo-源码分析之连接池/">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/10/08/Golang-go-redigo-源码分析之连接池/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="伊蓝">
@@ -388,7 +388,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">go redigo 源码分析之连接池 
+          <h1 class="post-title" itemprop="name headline">Golang-redigo 源码分析之连接池 
 
               
             
@@ -431,7 +431,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-10-09 12:59:09" itemprop="dateModified" datetime="2019-10-09T12:59:09+08:00">2019-10-09</time>
+                <time title="Modified: 2019-11-28 21:13:46" itemprop="dateModified" datetime="2019-11-28T21:13:46+08:00">2019-11-28</time>
               
             
           </span>
@@ -445,8 +445,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/10/08/go-redigo-源码分析之连接池/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/10/08/go-redigo-源码分析之连接池/" itemprop="commentCount"></span>
+                <a href="/2019/10/08/Golang-go-redigo-源码分析之连接池/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/10/08/Golang-go-redigo-源码分析之连接池/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -545,7 +545,7 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/10/16/go-slice-解析/" rel="prev" title="go slice 解析">
+              <a href="/2019/10/16/Golang-go-slice-解析/" rel="prev" title="go slice 解析">
                 go slice 解析 <i class="fa fa-chevron-right"></i>
               </a>
             
