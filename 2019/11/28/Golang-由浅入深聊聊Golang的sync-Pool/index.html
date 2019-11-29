@@ -97,7 +97,7 @@
 
 
   <meta name="description" content="前言今天在思考优化GC的套路，看到了sync.Pool，那就来总结下，希望可以有个了断。用最通俗的话，讲明白知识。以下知识点10s后即将到来。  pool是什么？ 为什么需要sync.Pool？ 如何使用sync.Pool？ 走一波源码 源码关键点解析  正文1.sync.Pool是什么？Golang在 1.3 版本的时候，在sync包中加入一个新特性：Pool。简单的说：就是一个临时对象池。 2">
-<meta name="keywords" content="Golang,sync.Pool">
+<meta name="keywords" content="golang,sync.Pool">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Golang-由浅入深聊聊Golang的sync.Pool">
 <meta property="og:url" content="https://neuyilan.github.io/2019/11/28/Golang-由浅入深聊聊Golang的sync-Pool/index.html">
@@ -105,10 +105,11 @@
 <meta property="og:description" content="前言今天在思考优化GC的套路，看到了sync.Pool，那就来总结下，希望可以有个了断。用最通俗的话，讲明白知识。以下知识点10s后即将到来。  pool是什么？ 为什么需要sync.Pool？ 如何使用sync.Pool？ 走一波源码 源码关键点解析  正文1.sync.Pool是什么？Golang在 1.3 版本的时候，在sync包中加入一个新特性：Pool。简单的说：就是一个临时对象池。 2">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://neuyilan.github.io/2019/11/28/Golang-由浅入深聊聊Golang的sync-Pool/qianyan.png">
+<meta property="og:image" content="https://neuyilan.github.io/2019/11/28/Golang-由浅入深聊聊Golang的sync-Pool/flow.png">
 <meta property="og:image" content="https://neuyilan.github.io/2019/11/28/Golang-由浅入深聊聊Golang的sync-Pool/global_data_struct.png">
 <meta property="og:image" content="https://neuyilan.github.io/2019/11/28/Golang-由浅入深聊聊Golang的sync-Pool/false_sharing.png">
-<meta property="og:image" content="https://neuyilan.github.io/2019/11/28/Golang-由浅入深聊聊Golang的sync-Pool/no_press.png">
-<meta property="og:updated_time" content="2019-11-29T01:39:59.116Z">
+<meta property="og:image" content="https://neuyilan.github.io/2019/11/28/Golang-由浅入深聊聊Golang的sync-Pool/!no_press.png">
+<meta property="og:updated_time" content="2019-11-29T01:45:17.966Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Golang-由浅入深聊聊Golang的sync.Pool">
 <meta name="twitter:description" content="前言今天在思考优化GC的套路，看到了sync.Pool，那就来总结下，希望可以有个了断。用最通俗的话，讲明白知识。以下知识点10s后即将到来。  pool是什么？ 为什么需要sync.Pool？ 如何使用sync.Pool？ 走一波源码 源码关键点解析  正文1.sync.Pool是什么？Golang在 1.3 版本的时候，在sync包中加入一个新特性：Pool。简单的说：就是一个临时对象池。 2">
@@ -434,7 +435,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-11-29 09:39:59" itemprop="dateModified" datetime="2019-11-29T09:39:59+08:00">2019-11-29</time>
+                <time title="Modified: 2019-11-29 09:45:17" itemprop="dateModified" datetime="2019-11-29T09:45:17+08:00">2019-11-29</time>
               
             
           </span>
@@ -486,7 +487,7 @@
 <li>源码关键点解析</li>
 </ol>
 <h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><h2 id="1-sync-Pool是什么？"><a href="#1-sync-Pool是什么？" class="headerlink" title="1.sync.Pool是什么？"></a>1.sync.Pool是什么？</h2><p>Golang在 1.3 版本的时候，在sync包中加入一个新特性：Pool。<br>简单的说：就是一个临时对象池。</p>
-<h2 id="2-为什么需要sync-Pool？"><a href="#2-为什么需要sync-Pool？" class="headerlink" title="2.为什么需要sync.Pool？"></a>2.为什么需要sync.Pool？</h2><p>保存和复用临时对象，减少内存分配，降低GC压力。<br>（对象越多GC越慢，因为Golang进行三色标记回收的时候，要标记的也越多，自然就慢了）<br><a id="more"></a><br><img src="qianyan.png" alt="前言"></p>
+<h2 id="2-为什么需要sync-Pool？"><a href="#2-为什么需要sync-Pool？" class="headerlink" title="2.为什么需要sync.Pool？"></a>2.为什么需要sync.Pool？</h2><p>保存和复用临时对象，减少内存分配，降低GC压力。<br>（对象越多GC越慢，因为Golang进行三色标记回收的时候，要标记的也越多，自然就慢了）<br><img src="qianyan.png" alt="前言"><br><img src="flow.png" alt="流程图"><br><a id="more"></a></p>
 <h2 id="3-如何使用sync-Pool？"><a href="#3-如何使用sync-Pool？" class="headerlink" title="3.如何使用sync.Pool？"></a>3.如何使用sync.Pool？</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">func main() &#123;</span><br><span class="line">	// 初始化一个pool</span><br><span class="line">	pool := &amp;sync.Pool&#123;</span><br><span class="line">		// 默认的返回值设置，不写这个参数，默认是nil</span><br><span class="line">		New: func() interface&#123;&#125; &#123;</span><br><span class="line">			return 0</span><br><span class="line">		&#125;,</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// 看一下初始的值，这里是返回0，如果不设置New函数，默认返回nil</span><br><span class="line">	init := pool.Get()</span><br><span class="line">	fmt.Println(init)</span><br><span class="line"></span><br><span class="line">	// 设置一个参数1</span><br><span class="line">	pool.Put(1)</span><br><span class="line"></span><br><span class="line">	// 获取查看结果</span><br><span class="line">	num := pool.Get()</span><br><span class="line">	fmt.Println(num)</span><br><span class="line"></span><br><span class="line">	// 再次获取，会发现，已经是空的了，只能返回默认的值。</span><br><span class="line">	num = pool.Get()</span><br><span class="line">	fmt.Println(num)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>使用较为简单。<br>总的思路就是：搞一个池子，预先放入临时产生的对象，然后取出使用。<br>可能有同学问了，这个玩意儿官方出的，那他自己有在用吗？<br>答案是有的，其实你也一直在用。<br>就是fmt包啦，由于fmt总是需要很多[]byte对象，索性就直接建了一个[]byte对象的池子，来走一波代码。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">type buffer []byte</span><br><span class="line">// printer状态的结构体（）</span><br><span class="line">type pp struct &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// pp的对象池， 《====这里用到了。</span><br><span class="line">var ppFree = sync.Pool&#123;</span><br><span class="line">    New: func() interface&#123;&#125; &#123; return new(pp) &#125;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 每次需要pp结构体的时候，都过sync.Pool进行获取。</span><br><span class="line">func newPrinter() *pp &#123;</span><br><span class="line">    p := ppFree.Get().(*pp)</span><br><span class="line">    p.panicking = false</span><br><span class="line">    p.erroring = false</span><br><span class="line">    p.fmt.init(&amp;p.buf)</span><br><span class="line">    return p</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <h2 id="4-走一波源码"><a href="#4-走一波源码" class="headerlink" title="4.走一波源码"></a>4.走一波源码</h2><h3 id="4-1-基础数据结构"><a href="#4-1-基础数据结构" class="headerlink" title="4.1 基础数据结构"></a>4.1 基础数据结构</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">type Pool struct &#123;</span><br><span class="line">	// noCopy，防止当前类型被copy，是一个有意思的字段，后文详说。</span><br><span class="line">	noCopy noCopy</span><br><span class="line"></span><br><span class="line">    // [P]poolLocal 数组指针</span><br><span class="line">	local     unsafe.Pointer</span><br><span class="line">	// 数组大小</span><br><span class="line">	localSize uintptr        </span><br><span class="line"></span><br><span class="line">	// 选填的自定义函数，缓冲池无数据的时候会调用，不设置默认返回nil</span><br><span class="line">	New func() interface&#123;&#125; //新建对象函数</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type poolLocalInternal struct &#123;</span><br><span class="line">    // 私有缓存区</span><br><span class="line">	private interface&#123;&#125;   </span><br><span class="line">	// 公共缓存区</span><br><span class="line">	shared  []interface&#123;&#125;</span><br><span class="line">	// 锁</span><br><span class="line">	Mutex               </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type poolLocal struct &#123;</span><br><span class="line">	// 每个P对应的pool</span><br><span class="line">	poolLocalInternal</span><br><span class="line"></span><br><span class="line">	// 这个字段很有意思，是为了防止“false sharing/伪共享”，后文详讲。</span><br><span class="line">	pad [128 - unsafe.Sizeof(poolLocalInternal&#123;&#125;)%128]byte</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -528,7 +529,7 @@ M------P----- poolLocal
 <p>如何防止？</p>
 <p>补齐缓存行，让每个数据都是独立的缓存行就不会出现false sharding了。</p>
 <h3 id="5-5-怎么确定我的数据应该存储在LocalPool数组的哪个单元？"><a href="#5-5-怎么确定我的数据应该存储在LocalPool数组的哪个单元？" class="headerlink" title="5.5 怎么确定我的数据应该存储在LocalPool数组的哪个单元？"></a>5.5 怎么确定我的数据应该存储在LocalPool数组的哪个单元？</h3><p>根据数据结构的大小来计算指针的偏移量，进而算出是LocalPool数组的哪个。</p>
-<h3 id="5-6-sync-Pool的设计哲学？"><a href="#5-6-sync-Pool的设计哲学？" class="headerlink" title="5.6 sync.Pool的设计哲学？"></a>5.6 sync.Pool的设计哲学？</h3><p>Goroutine能同一时刻在并行的数量有限，是由runtime.GOMAXPROCS(0)设置的，这里的Pool将数据与P进行绑定了，分散在了各个真正并行的线程中，每个线程优先从自己的poolLocal中获取数据，很大程度上降低了锁竞争。<br><img src="no_press.png" alt="no press"></p>
+<h3 id="5-6-sync-Pool的设计哲学？"><a href="#5-6-sync-Pool的设计哲学？" class="headerlink" title="5.6 sync.Pool的设计哲学？"></a>5.6 sync.Pool的设计哲学？</h3><p>Goroutine能同一时刻在并行的数量有限，是由runtime.GOMAXPROCS(0)设置的，这里的Pool将数据与P进行绑定了，分散在了各个真正并行的线程中，每个线程优先从自己的poolLocal中获取数据，很大程度上降低了锁竞争。<br><img src="!no_press.png" alt="no press"></p>
 <p>作者：咖啡色的羊驼<br>链接：<a href="https://juejin.im/post/5d4087276fb9a06adb7fbe4a" target="_blank" rel="noopener">https://juejin.im/post/5d4087276fb9a06adb7fbe4a</a><br>来源：掘金<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
 
       
@@ -553,7 +554,7 @@ M------P----- poolLocal
       
         <div class="post-tags">
           
-            <a href="/tags/Golang/" rel="tag"># Golang</a>
+            <a href="/tags/golang/" rel="tag"># golang</a>
           
             <a href="/tags/sync-Pool/" rel="tag"># sync.Pool</a>
           
@@ -910,7 +911,7 @@ M------P----- poolLocal
                     
                       
                     
-                    <span class="site-state-item-count">96</span>
+                    <span class="site-state-item-count">94</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
