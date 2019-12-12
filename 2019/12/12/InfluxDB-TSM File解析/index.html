@@ -96,22 +96,22 @@
 
 
 
-  <meta name="description" content="代码路径influxdb/tsdb/engine/">
+  <meta name="description" content="本文主要讲解influxdb数据的组织形式，分为内存中的形式和磁盘中的形式。代码路径influxdb/tsdb/engine/，内存Cache结构在influxdb/tsdb/engine/tsm1/cache下面，">
 <meta name="keywords" content="InfluxDB,TSM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="InfluxDB-TSM File解析">
 <meta property="og:url" content="https://neuyilan.github.io/2019/12/12/InfluxDB-TSM File解析/index.html">
 <meta property="og:site_name" content="yilan">
-<meta property="og:description" content="代码路径influxdb/tsdb/engine/">
+<meta property="og:description" content="本文主要讲解influxdb数据的组织形式，分为内存中的形式和磁盘中的形式。代码路径influxdb/tsdb/engine/，内存Cache结构在influxdb/tsdb/engine/tsm1/cache下面，">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-TSM%20File解析/数据在内存存储的结构图.png">
 <meta property="og:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-TSM%20File解析/tsm%20in%20memory%20structure.png">
 <meta property="og:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-TSM%20File解析/tsm%20file%20structure.png">
 <meta property="og:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-TSM%20File解析/tsm%20数据结构.png">
-<meta property="og:updated_time" content="2019-12-12T16:21:48.342Z">
+<meta property="og:updated_time" content="2019-12-12T16:30:38.532Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="InfluxDB-TSM File解析">
-<meta name="twitter:description" content="代码路径influxdb/tsdb/engine/">
+<meta name="twitter:description" content="本文主要讲解influxdb数据的组织形式，分为内存中的形式和磁盘中的形式。代码路径influxdb/tsdb/engine/，内存Cache结构在influxdb/tsdb/engine/tsm1/cache下面，">
 <meta name="twitter:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-TSM%20File解析/数据在内存存储的结构图.png">
 
 
@@ -434,7 +434,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-12-13 00:21:48" itemprop="dateModified" datetime="2019-12-13T00:21:48+08:00">2019-12-13</time>
+                <time title="Modified: 2019-12-13 00:30:38" itemprop="dateModified" datetime="2019-12-13T00:30:38+08:00">2019-12-13</time>
               
             
           </span>
@@ -477,13 +477,13 @@
       
 
       
-        <p>代码路径influxdb/tsdb/engine/<br><a id="more"></a></p>
+        <p>本文主要讲解influxdb数据的组织形式，分为内存中的形式和磁盘中的形式。<br>代码路径influxdb/tsdb/engine/，内存Cache结构在influxdb/tsdb/engine/tsm1/cache下面，<br><a id="more"></a></p>
 <h1 id="内存中组织形式"><a href="#内存中组织形式" class="headerlink" title="内存中组织形式"></a>内存中组织形式</h1><h2 id="结构说明"><a href="#结构说明" class="headerlink" title="结构说明"></a>结构说明</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">type Cache struct &#123;</span><br><span class="line">	// Due to a bug in atomic  size needs to be the first word in the struct, as</span><br><span class="line">	// that&apos;s the only place where you&apos;re guaranteed to be 64-bit aligned on a</span><br><span class="line">	// 32 bit system. See: https://golang.org/pkg/sync/atomic/#pkg-note-BUG</span><br><span class="line">	size         uint64</span><br><span class="line">	snapshotSize uint64</span><br><span class="line"></span><br><span class="line">	mu      sync.RWMutex</span><br><span class="line">	store   storer</span><br><span class="line">	maxSize uint64</span><br><span class="line"></span><br><span class="line">	// snapshots are the cache objects that are currently being written to tsm files</span><br><span class="line">	// they&apos;re kept in memory while flushing so they can be queried along with the cache.</span><br><span class="line">	// they are read only and should never be modified</span><br><span class="line">	snapshot     *Cache</span><br><span class="line">	snapshotting bool</span><br><span class="line"></span><br><span class="line">	// This number is the number of pending or failed WriteSnaphot attempts since the last successful one.</span><br><span class="line">	snapshotAttempts int</span><br><span class="line"></span><br><span class="line">	stats         *CacheStatistics</span><br><span class="line">	lastSnapshot  time.Time</span><br><span class="line">	lastWriteTime time.Time</span><br><span class="line"></span><br><span class="line">	// A one time synchronization used to initial the cache with a store.  Since the store can allocate a</span><br><span class="line">	// a large amount memory across shards, we lazily create it.</span><br><span class="line">	initialize       atomic.Value</span><br><span class="line">	initializedCount uint32</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>Cache里面有一个store，数据就是存在这个store里面。Cache里面还有一个snapshot， 定时把store里的数据复制到snapshot.store里，然后store清空。然后再把snapshot.store里的内容写入文件。</p>
 <p>那这个store里到底是什么结构呢？store被初始化成一个含有16个partitions(节点)的ring。这个ring我称之为伪一致性哈希，因为它并没有成环。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">func (c *Cache) init() &#123;</span><br><span class="line">	if !atomic.CompareAndSwapUint32(&amp;c.initializedCount, 0, 1) &#123;</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	c.mu.Lock()</span><br><span class="line">	c.store, _ = newring(ringShards) // ringShards = 16</span><br><span class="line">	c.mu.Unlock()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>每一个partition都初始化成一个map，key是string, value是一个数组<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">func newring(n int) (*ring, error) &#123;</span><br><span class="line">	if n &lt;= 0 || n &gt; partitions &#123;</span><br><span class="line">		return nil, fmt.Errorf(&quot;invalid number of paritions: %d&quot;, n)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	r := ring&#123;</span><br><span class="line">		partitions: make([]*partition, n), // maximum number of partitions.</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	// The trick here is to map N partitions to all points on the continuum,</span><br><span class="line">	// such that the first eight bits of a given hash will map directly to one</span><br><span class="line">	// of the N partitions.</span><br><span class="line">	for i := 0; i &lt; len(r.partitions); i++ &#123;</span><br><span class="line">		r.partitions[i] = &amp;partition&#123;        </span><br><span class="line">			store: make(map[string]*entry),</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return &amp;r, nil</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>通过跟踪发现，这个map的key就是和TSM文件结构里面的key一致：<br>$\color{red}{measurement,tags#!~#field}$；而这个entry呢，是一组data，$\color{red}{每个data由timestamp和value 两个部分构成}$。</p>
+<p>通过跟踪发现，这个map的key就是和TSM文件结构里面的key一致(代码路径在influxdb/tsdb/engine/tsm1/engine下面)：<font color="red"> measurement,tags#!~#field </font><br>$\color{red}{measurement,tags#!~#field}$；而这个entry呢，是一组data，<font color="red">每个data由timestamp和value 两个部分构成 </font> 。</p>
 <p>那key是怎么映射到具体某个partition的呢?<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// getPartition retrieves the hash ring partition associated with the provided</span><br><span class="line">// key.</span><br><span class="line">func (r *ring) getPartition(key []byte) *partition &#123;</span><br><span class="line">	return r.partitions[int(xxhash.Sum64(key)%partitions)]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>xxhash.sum64，再与partition的数量（16）求余，得到下标，找到partition. 具体xxhash.sum64这个哈希值怎么计算的呢，以后在研究。</p>
 <h2 id="结构图"><a href="#结构图" class="headerlink" title="结构图"></a>结构图</h2><p>现在已经知道了Cache中数据的存储方式了，来张表更清楚一点<br><img src="数据在内存存储的结构图.png" alt="数据在内存存储的结构图"><br>每次写入同一个key的数据，那就找到其Entries, 把新的数据直接append到后面。</p>
