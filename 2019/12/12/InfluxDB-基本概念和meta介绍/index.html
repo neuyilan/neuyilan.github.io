@@ -107,7 +107,8 @@
 <meta property="og:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-基本概念和meta介绍/data%20model.png">
 <meta property="og:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-基本概念和meta介绍/influxdb%20meta%20data.png">
 <meta property="og:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-基本概念和meta介绍/influx%20db系统架构.png">
-<meta property="og:updated_time" content="2019-12-12T12:08:38.590Z">
+<meta property="og:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-基本概念和meta介绍/Retention%20Policy’s%20DURATION.png">
+<meta property="og:updated_time" content="2019-12-12T12:33:39.261Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="InfluxDB-基本概念和meta介绍">
 <meta name="twitter:description" content="本篇文章主要介绍InfluxDB的基本概念以及Meta信息的组成，代码基于1.7版本。">
@@ -416,7 +417,7 @@
                 
               
 
-              <time title="Created: 2019-12-12 19:22:15 / Modified: 20:08:38" itemprop="dateCreated datePublished" datetime="2019-12-12T19:22:15+08:00">2019-12-12</time>
+              <time title="Created: 2019-12-12 19:22:15 / Modified: 20:33:39" itemprop="dateCreated datePublished" datetime="2019-12-12T19:22:15+08:00">2019-12-12</time>
             
 
             
@@ -464,7 +465,8 @@
       
 
       
-        <p>本篇文章主要介绍InfluxDB的基本概念以及Meta信息的组成，代码基于1.7版本。<br><a id="more"></a><br>首先看一下InfluxDB的一些基本概念。<br><img src="data model.png" alt="数据模型图"></p>
+        <p>本篇文章主要介绍InfluxDB的基本概念以及Meta信息的组成，代码基于1.7版本。<br><a id="more"></a></p>
+<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h1><p>首先看一下InfluxDB的一些基本概念。<br><img src="data model.png" alt="数据模型图"></p>
 <p>InfluxDB主要有以上图中的几个概念：Point，Measurement，Tags，Fields，Timestamp，Series，下面依次简单介绍下每个概念的含义。</p>
 <ul>
 <li>Database：InfluxDB可以创建数据库，一个数据库可以包含多个user、保存策略等，schemaless ，支持随时灵活创建mersurement；</li>
@@ -475,7 +477,7 @@
 <li>Timestamp：既然InfluxDB被称之为时序数据库，少了时间是不可能的，每条记录必须要有一个时间戳；</li>
 <li>Series：是由Measurement+Tags组成的</li>
 </ul>
-<p>那么这些基本概念在InfluxDB代码中是怎么体现的呢？首先上图，一图胜千言。<br><img src="influxdb meta data.png" alt="元数据组成"><br>可以看到，meta主要包含一些元信息，主要包含如下几个部分：</p>
+<h1 id="Meta信息"><a href="#Meta信息" class="headerlink" title="Meta信息"></a>Meta信息</h1><p>那么这些基本概念在InfluxDB代码中是怎么体现的呢？首先上图，一图胜千言。<br><img src="influxdb meta data.png" alt="元数据组成"><br>可以看到，meta主要包含一些元信息，主要包含如下几个部分：</p>
 <ol>
 <li>database信息：meta信息中包含了一个database的数组，包括了所有的database信息。<ul>
 <li>RetentionPolicy：数据过期策略。包含数据过期时间，副本数（单机无用），shardGroup Duration；<ul>
@@ -497,7 +499,8 @@
 </ul>
 </li>
 </ol>
-<p>其关系可以用下面这张图展示：<br><img src="influx db系统架构.png" alt="元数据组成"></p>
+<p>其关系可以用下面这张图展示：<br><img src="influx db系统架构.png" alt="数据模型"></p>
+<h2 id="数据过期删除策略"><a href="#数据过期删除策略" class="headerlink" title="数据过期删除策略"></a>数据过期删除策略</h2><p>Shard Group是InfluxDB中一个重要的逻辑概念，从字面意思来看Shard Group会包含多个Shard，每个Shard Group只存储指定时间段的数据，不同Shard Group对应的时间段不会重合。比如2017年9月份的数据落在Shard Group0上，2017年10月份的数据落在Shard Group1上。<br>过期策略，过期是直接整个shardGroup删除，一个shard对应多个TSM Files。<br>当shardGroup的end+过期时间小于当前时间，就会shardGroup就会被当成过期的并被清理掉。<br>每个Shard Group对应多长时间是通过Retention Policy中字段”SHARD DURATION”指定的，如果没有指定，也可以通过Retention Duration（数据过期时间）计算出来，两者的对应关系为：<br><img src="Retention Policy’s DURATION.png" alt="Shard Group过期时间与数据过期时间关系"></p>
 
       
     </div>
@@ -591,8 +594,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -905,6 +917,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本概念"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Meta信息"><span class="nav-number">2.</span> <span class="nav-text">Meta信息</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据过期删除策略"><span class="nav-number">2.1.</span> <span class="nav-text">数据过期删除策略</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
