@@ -96,27 +96,29 @@
 
 
 
-  <meta name="description" content="本篇文章主要介绍influxdb的模型以及元数据组成的代码分析，代码基于1.7版本。">
+  <meta name="description" content="本篇文章主要介绍InfluxDB的基本概念以及Meta信息的组成，代码基于1.7版本。">
 <meta name="keywords" content="InfluxDB">
 <meta property="og:type" content="article">
-<meta property="og:title" content="InfluxDB 模型介绍">
-<meta property="og:url" content="https://neuyilan.github.io/2019/12/12/InfluxDB-模型介绍/index.html">
+<meta property="og:title" content="InfluxDB-基本概念和meta介绍">
+<meta property="og:url" content="https://neuyilan.github.io/2019/12/12/InfluxDB-基本概念和meta介绍/index.html">
 <meta property="og:site_name" content="yilan">
-<meta property="og:description" content="本篇文章主要介绍influxdb的模型以及元数据组成的代码分析，代码基于1.7版本。">
+<meta property="og:description" content="本篇文章主要介绍InfluxDB的基本概念以及Meta信息的组成，代码基于1.7版本。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-模型介绍/influxdb%20meta%20data.png">
-<meta property="og:updated_time" content="2019-12-12T11:26:35.957Z">
+<meta property="og:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-基本概念和meta介绍/data%20model.png">
+<meta property="og:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-基本概念和meta介绍/influxdb%20meta%20data.png">
+<meta property="og:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-基本概念和meta介绍/influx%20db系统架构.png">
+<meta property="og:updated_time" content="2019-12-12T12:08:38.590Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="InfluxDB 模型介绍">
-<meta name="twitter:description" content="本篇文章主要介绍influxdb的模型以及元数据组成的代码分析，代码基于1.7版本。">
-<meta name="twitter:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-模型介绍/influxdb%20meta%20data.png">
+<meta name="twitter:title" content="InfluxDB-基本概念和meta介绍">
+<meta name="twitter:description" content="本篇文章主要介绍InfluxDB的基本概念以及Meta信息的组成，代码基于1.7版本。">
+<meta name="twitter:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-基本概念和meta介绍/data%20model.png">
 
 
 
 
 
 
-  <link rel="canonical" href="https://neuyilan.github.io/2019/12/12/InfluxDB-模型介绍/">
+  <link rel="canonical" href="https://neuyilan.github.io/2019/12/12/InfluxDB-基本概念和meta介绍/">
 
 
 
@@ -126,7 +128,7 @@
   };
 </script>
 
-  <title>InfluxDB 模型介绍 | yilan</title>
+  <title>InfluxDB-基本概念和meta介绍 | yilan</title>
   
 
 
@@ -371,7 +373,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/12/12/InfluxDB-模型介绍/">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/12/12/InfluxDB-基本概念和meta介绍/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="伊蓝">
@@ -388,7 +390,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">InfluxDB 模型介绍
+          <h1 class="post-title" itemprop="name headline">InfluxDB-基本概念和meta介绍
 
               
             
@@ -414,7 +416,7 @@
                 
               
 
-              <time title="Created: 2019-12-12 19:22:15 / Modified: 19:26:35" itemprop="dateCreated datePublished" datetime="2019-12-12T19:22:15+08:00">2019-12-12</time>
+              <time title="Created: 2019-12-12 19:22:15 / Modified: 20:08:38" itemprop="dateCreated datePublished" datetime="2019-12-12T19:22:15+08:00">2019-12-12</time>
             
 
             
@@ -433,8 +435,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2019/12/12/InfluxDB-模型介绍/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/12/12/InfluxDB-模型介绍/" itemprop="commentCount"></span>
+                <a href="/2019/12/12/InfluxDB-基本概念和meta介绍/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/12/12/InfluxDB-基本概念和meta介绍/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -462,7 +464,40 @@
       
 
       
-        <p>本篇文章主要介绍influxdb的模型以及元数据组成的代码分析，代码基于1.7版本。<br><a id="more"></a><br>首先上图，一图胜千言<br><img src="influxdb meta data.png" alt="元数据组成"></p>
+        <p>本篇文章主要介绍InfluxDB的基本概念以及Meta信息的组成，代码基于1.7版本。<br><a id="more"></a><br>首先看一下InfluxDB的一些基本概念。<br><img src="data model.png" alt="数据模型图"></p>
+<p>InfluxDB主要有以上图中的几个概念：Point，Measurement，Tags，Fields，Timestamp，Series，下面依次简单介绍下每个概念的含义。</p>
+<ul>
+<li>Database：InfluxDB可以创建数据库，一个数据库可以包含多个user、保存策略等，schemaless ，支持随时灵活创建mersurement；</li>
+<li>Measurement：相当于表的概念；</li>
+<li>Tags：是一些kv的结构，标签会被用来建立索引；</li>
+<li>Fields：是保存真实数据的结构，也是kv结构，但是不会被用来建立索引；</li>
+<li>Point： 代表了一条记录，可以理解为关系型数据库中的一条记录；</li>
+<li>Timestamp：既然InfluxDB被称之为时序数据库，少了时间是不可能的，每条记录必须要有一个时间戳；</li>
+<li>Series：是由Measurement+Tags组成的</li>
+</ul>
+<p>那么这些基本概念在InfluxDB代码中是怎么体现的呢？首先上图，一图胜千言。<br><img src="influxdb meta data.png" alt="元数据组成"><br>可以看到，meta主要包含一些元信息，主要包含如下几个部分：</p>
+<ol>
+<li>database信息：meta信息中包含了一个database的数组，包括了所有的database信息。<ul>
+<li>RetentionPolicy：数据过期策略。包含数据过期时间，副本数（单机无用），shardGroup Duration；<ul>
+<li>ShardGroupInfo：分片组。包含时间范围[start, end)，删除时间，截断时间；<ul>
+<li>ShardInfo：分片。owners，所属节点，单机无用；</li>
+<li>ShardGroupDuration：决定了一个ShardGroup内部数据时间的最大差；</li>
+<li>Duration：决定了这个RetentionPolic的数据的过期时间；</li>
+</ul>
+</li>
+<li>ContinuousQuery：持续的query，有点类似预处理。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>user信息：包含用户名，密码的hash，是否为管理员，以及授予的权限</li>
+<li>raft协议同步所需信息：(暂不展开)<ul>
+<li>Term</li>
+<li>Index</li>
+</ul>
+</li>
+</ol>
+<p>其关系可以用下面这张图展示：<br><img src="influx db系统架构.png" alt="元数据组成"></p>
 
       
     </div>
