@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[InfluxDB-TSM File解析]]></title>
+    <url>%2F2019%2F12%2F12%2FInfluxDB-TSM%20File%E8%A7%A3%E6%9E%90%2F</url>
+    <content type="text"><![CDATA[代码路径influxdb/tsdb/engine/ 内存中的结构如下，即seriesKey+field到timeValues的映射： TSM file的结构如下: 从TSM file读取数据的流程如下： 首先读取footer，获取SeriesIndexSection的offset，可以只加载seriesIndexBlock。 根据Key（即SeriesKey+field）二分查找匹配的SeriesIndexBlock。 根据时间二分查找在SeriesIndexBlock中找到对应的IndexEntry。 根据IndexEntry加载并解压SeriesDataBlock。 参考文献In-memory indexing and the Time-Structured Merge Tree (TSM)Influxdb中TSM文件结构解析之读写TSM时序数据库技术体系 – InfluxDB TSM存储引擎之TSMFile]]></content>
+      <tags>
+        <tag>InfluxDB</tag>
+        <tag>TSM</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[InfluxDB-存储引擎(store engine)模型介绍]]></title>
     <url>%2F2019%2F12%2F12%2FInfluxDB-%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E(store%20engine)%E6%A8%A1%E5%9E%8B%E4%BB%8B%E7%BB%8D%2F</url>
     <content type="text"><![CDATA[InfluxDB的存储引擎主要由内存中的索引(In-Memory Index)、WAL、Cache以及FileStore中的TSM Files组成。代码关系如下图所示： 后面会分几个专题进行简单的介绍。 参考文献In-memory indexing and the Time-Structured Merge Tree (TSM)]]></content>
