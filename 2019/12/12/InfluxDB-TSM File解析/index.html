@@ -96,21 +96,21 @@
 
 
 
-  <meta name="description" content="代码路径influxdb/tsdb/engine/ 内存中的结构如下，即seriesKey+field到timeValues的映射： TSM file的结构如下: 从TSM file读取数据的流程如下：  首先读取footer，获取SeriesIndexSection的offset，可以只加载seriesIndexBlock。 根据Key（即SeriesKey+field）二分查找匹配的Serie">
+  <meta name="description" content="代码路径influxdb/tsdb/engine/">
 <meta name="keywords" content="InfluxDB,TSM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="InfluxDB-TSM File解析">
 <meta property="og:url" content="https://neuyilan.github.io/2019/12/12/InfluxDB-TSM File解析/index.html">
 <meta property="og:site_name" content="yilan">
-<meta property="og:description" content="代码路径influxdb/tsdb/engine/ 内存中的结构如下，即seriesKey+field到timeValues的映射： TSM file的结构如下: 从TSM file读取数据的流程如下：  首先读取footer，获取SeriesIndexSection的offset，可以只加载seriesIndexBlock。 根据Key（即SeriesKey+field）二分查找匹配的Serie">
+<meta property="og:description" content="代码路径influxdb/tsdb/engine/">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-TSM%20File解析/tsm%20in%20memory%20structure.png">
 <meta property="og:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-TSM%20File解析/tsm%20file%20structure.png">
 <meta property="og:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-TSM%20File解析/tsm.pdf">
-<meta property="og:updated_time" content="2019-12-12T13:18:52.348Z">
+<meta property="og:updated_time" content="2019-12-12T13:20:36.508Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="InfluxDB-TSM File解析">
-<meta name="twitter:description" content="代码路径influxdb/tsdb/engine/ 内存中的结构如下，即seriesKey+field到timeValues的映射： TSM file的结构如下: 从TSM file读取数据的流程如下：  首先读取footer，获取SeriesIndexSection的offset，可以只加载seriesIndexBlock。 根据Key（即SeriesKey+field）二分查找匹配的Serie">
+<meta name="twitter:description" content="代码路径influxdb/tsdb/engine/">
 <meta name="twitter:image" content="https://neuyilan.github.io/2019/12/12/InfluxDB-TSM%20File解析/tsm%20in%20memory%20structure.png">
 
 
@@ -416,7 +416,7 @@
                 
               
 
-              <time title="Created: 2019-12-12 20:53:04 / Modified: 21:18:52" itemprop="dateCreated datePublished" datetime="2019-12-12T20:53:04+08:00">2019-12-12</time>
+              <time title="Created: 2019-12-12 20:53:04 / Modified: 21:20:36" itemprop="dateCreated datePublished" datetime="2019-12-12T20:53:04+08:00">2019-12-12</time>
             
 
             
@@ -464,7 +464,7 @@
       
 
       
-        <p>代码路径influxdb/tsdb/engine/</p>
+        <p>代码路径influxdb/tsdb/engine/<br><a id="more"></a></p>
 <p>内存中的结构如下，即seriesKey+field到timeValues的映射：<br><img src="tsm in memory structure.png" alt="TSM内存中结构"></p>
 <p>TSM file的结构如下:<br><img src="tsm file structure.png" alt="TSM file结构"></p>
 <p>从TSM file读取数据的流程如下：</p>

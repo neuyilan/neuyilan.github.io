@@ -413,7 +413,7 @@
                 
               
 
-              <time title="Created: 2019-12-12 20:53:04 / Modified: 21:18:52" itemprop="dateCreated datePublished" datetime="2019-12-12T20:53:04+08:00">2019-12-12</time>
+              <time title="Created: 2019-12-12 20:53:04 / Modified: 21:20:36" itemprop="dateCreated datePublished" datetime="2019-12-12T20:53:04+08:00">2019-12-12</time>
             
 
             
@@ -462,24 +462,19 @@
 
       
         
+          <p>代码路径influxdb/tsdb/engine/<br>
+          <!--noindex-->
           
-            <p>代码路径influxdb/tsdb/engine/</p>
-<p>内存中的结构如下，即seriesKey+field到timeValues的映射：<br><img src="tsm in memory structure.png" alt="TSM内存中结构"></p>
-<p>TSM file的结构如下:<br><img src="tsm file structure.png" alt="TSM file结构"></p>
-<p>从TSM file读取数据的流程如下：</p>
-<ol>
-<li>首先读取footer，获取SeriesIndexSection的offset，可以只加载seriesIndexBlock。</li>
-<li>根据Key（即SeriesKey+field）二分查找匹配的SeriesIndexBlock。</li>
-<li>根据时间二分查找在SeriesIndexBlock中找到对应的IndexEntry。</li>
-<li>根据IndexEntry加载并解压SeriesDataBlock。</li>
-</ol>
-<p><img src="tsm.pdf" alt="TSM file结构"></p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p><a href="https://docs.influxdata.com/influxdb/v1.7/concepts/storage_engine/" target="_blank" rel="noopener">In-memory indexing and the Time-Structured Merge Tree (TSM)</a><br><a href="https://www.jianshu.com/p/f6be57926b84" target="_blank" rel="noopener">Influxdb中TSM文件结构解析之读写TSM</a><br><a href="http://hbasefly.com/2018/01/13/timeseries-database-4/" target="_blank" rel="noopener">时序数据库技术体系 – InfluxDB TSM存储引擎之TSMFile</a></p>
-
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/12/12/InfluxDB-TSM File解析/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
           
+          <!--/noindex-->
         
       
-    </div>
+    </p></div>
 
     
 
