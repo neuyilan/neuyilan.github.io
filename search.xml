@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[InfluxDB cluster 高可用方案]]></title>
+    <url>%2F2019%2F12%2F15%2FInfluxDB-cluster-%E9%AB%98%E5%8F%AF%E7%94%A8%E6%96%B9%E6%A1%88%2F</url>
+    <content type="text"></content>
+  </entry>
+  <entry>
     <title><![CDATA[InfluxDB-倒排索引之Index文件]]></title>
     <url>%2F2019%2F12%2F13%2FInfluxDB-%E5%80%92%E6%8E%92%E7%B4%A2%E5%BC%95%E4%B9%8BIndex%E6%96%87%E4%BB%B6%2F</url>
-    <content type="text"><![CDATA[本文主要讲解InfluxDB中的倒排索引，InfluxDB和传统的LSM-tree(hbase使用的模型)不一样的地方是其内部中多了一个倒排索引，这也是让InfluxDB查询较快的秘诀。在1.7的代码版本中，InfluxDB提供了两种类型的倒排索引，内存和磁盘的，之前只有内存版本的，但是随着数据的增多，内存倒排索引可能导致OOM，所以引入了基于磁盘的倒排索引。下面会基于此进行简单的分析。 内存中的倒排索引一句话总结，内存中的倒排索引主要由如下两个map组成的： map&lt;SeriesID, SeriesKey&gt;的映射。用于查询seriesId所对应的SeriesKey。 map&lt;tagKey, map&lt;tagValue, List&gt;&gt;。第一层的key是tag key，value也是一个map；第二层的key是tag value，value是SeriesID的集合。查询时如果有多个tag条件，则分别拿出对应的series做交集。 下面是详细代码分析，首先看一下代码的结构图，代码路径在influxdb/tsdb/index/inmem下面： 磁盘中的倒排索引参考资料]]></content>
+    <content type="text"><![CDATA[本文主要讲解InfluxDB中的倒排索引，InfluxDB和传统的LSM-tree(hbase使用的模型)不一样的地方是其内部中多了一个倒排索引，这也是让InfluxDB查询较快的秘诀。 在1.7的代码版本中，InfluxDB提供了两种类型的倒排索引，内存和磁盘的，之前只有内存版本的，但是随着数据的增多，内存倒排索引可能导致OOM，所以引入了基于磁盘的倒排索引。下面会基于此进行简单的分析。 内存中的倒排索引一句话总结，内存中的倒排索引主要由如下两个map组成的： map&lt;SeriesID, SeriesKey&gt;的映射。用于查询seriesId所对应的SeriesKey。 map&lt;tagKey, map&lt;tagValue, List&gt;&gt;。第一层的key是tag key，value也是一个map；第二层的key是tag value，value是SeriesID的集合。查询时如果有多个tag条件，则分别拿出对应的series做交集。 下面是详细代码分析，首先看一下代码的结构图，代码路径在influxdb/tsdb/index/inmem下面： 磁盘中的倒排索引参考资料Influxdb中基于磁盘的倒排索引文件TSI结构解析]]></content>
       <tags>
         <tag>InfluxDB</tag>
         <tag>Index</tag>

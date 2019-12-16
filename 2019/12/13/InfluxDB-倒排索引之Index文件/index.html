@@ -96,19 +96,19 @@
 
 
 
-  <meta name="description" content="本文主要讲解InfluxDB中的倒排索引，InfluxDB和传统的LSM-tree(hbase使用的模型)不一样的地方是其内部中多了一个倒排索引，这也是让InfluxDB查询较快的秘诀。在1.7的代码版本中，InfluxDB提供了两种类型的倒排索引，内存和磁盘的，之前只有内存版本的，但是随着数据的增多，内存倒排索引可能导致OOM，所以引入了基于磁盘的倒排索引。下面会基于此进行简单的分析。">
+  <meta name="description" content="本文主要讲解InfluxDB中的倒排索引，InfluxDB和传统的LSM-tree(hbase使用的模型)不一样的地方是其内部中多了一个倒排索引，这也是让InfluxDB查询较快的秘诀。 在1.7的代码版本中，InfluxDB提供了两种类型的倒排索引，内存和磁盘的，之前只有内存版本的，但是随着数据的增多，内存倒排索引可能导致OOM，所以引入了基于磁盘的倒排索引。下面会基于此进行简单的分析。">
 <meta name="keywords" content="InfluxDB,Index,倒排索引">
 <meta property="og:type" content="article">
 <meta property="og:title" content="InfluxDB-倒排索引之Index文件">
 <meta property="og:url" content="https://neuyilan.github.io/2019/12/13/InfluxDB-倒排索引之Index文件/index.html">
 <meta property="og:site_name" content="yilan">
-<meta property="og:description" content="本文主要讲解InfluxDB中的倒排索引，InfluxDB和传统的LSM-tree(hbase使用的模型)不一样的地方是其内部中多了一个倒排索引，这也是让InfluxDB查询较快的秘诀。在1.7的代码版本中，InfluxDB提供了两种类型的倒排索引，内存和磁盘的，之前只有内存版本的，但是随着数据的增多，内存倒排索引可能导致OOM，所以引入了基于磁盘的倒排索引。下面会基于此进行简单的分析。">
+<meta property="og:description" content="本文主要讲解InfluxDB中的倒排索引，InfluxDB和传统的LSM-tree(hbase使用的模型)不一样的地方是其内部中多了一个倒排索引，这也是让InfluxDB查询较快的秘诀。 在1.7的代码版本中，InfluxDB提供了两种类型的倒排索引，内存和磁盘的，之前只有内存版本的，但是随着数据的增多，内存倒排索引可能导致OOM，所以引入了基于磁盘的倒排索引。下面会基于此进行简单的分析。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://neuyilan.github.io/2019/12/13/InfluxDB-倒排索引之Index文件/influxdb%20倒排索引.png">
-<meta property="og:updated_time" content="2019-12-13T03:15:28.897Z">
+<meta property="og:updated_time" content="2019-12-15T06:18:50.745Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="InfluxDB-倒排索引之Index文件">
-<meta name="twitter:description" content="本文主要讲解InfluxDB中的倒排索引，InfluxDB和传统的LSM-tree(hbase使用的模型)不一样的地方是其内部中多了一个倒排索引，这也是让InfluxDB查询较快的秘诀。在1.7的代码版本中，InfluxDB提供了两种类型的倒排索引，内存和磁盘的，之前只有内存版本的，但是随着数据的增多，内存倒排索引可能导致OOM，所以引入了基于磁盘的倒排索引。下面会基于此进行简单的分析。">
+<meta name="twitter:description" content="本文主要讲解InfluxDB中的倒排索引，InfluxDB和传统的LSM-tree(hbase使用的模型)不一样的地方是其内部中多了一个倒排索引，这也是让InfluxDB查询较快的秘诀。 在1.7的代码版本中，InfluxDB提供了两种类型的倒排索引，内存和磁盘的，之前只有内存版本的，但是随着数据的增多，内存倒排索引可能导致OOM，所以引入了基于磁盘的倒排索引。下面会基于此进行简单的分析。">
 <meta name="twitter:image" content="https://neuyilan.github.io/2019/12/13/InfluxDB-倒排索引之Index文件/influxdb%20倒排索引.png">
 
 
@@ -414,12 +414,24 @@
                 
               
 
-              <time title="Created: 2019-12-13 10:50:07 / Modified: 11:15:28" itemprop="dateCreated datePublished" datetime="2019-12-13T10:50:07+08:00">2019-12-13</time>
+              <time title="Created: 2019-12-13 10:50:07" itemprop="dateCreated datePublished" datetime="2019-12-13T10:50:07+08:00">2019-12-13</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-12-15 14:18:50" itemprop="dateModified" datetime="2019-12-15T14:18:50+08:00">2019-12-15</time>
               
             
           </span>
@@ -462,14 +474,16 @@
       
 
       
-        <p>本文主要讲解InfluxDB中的倒排索引，InfluxDB和传统的LSM-tree(hbase使用的模型)不一样的地方是其内部中多了一个倒排索引，这也是让InfluxDB查询较快的秘诀。<br>在1.7的代码版本中，InfluxDB提供了两种类型的倒排索引，内存和磁盘的，之前只有内存版本的，但是随着数据的增多，内存倒排索引可能导致OOM，所以引入了基于磁盘的倒排索引。<br>下面会基于此进行简单的分析。<br><a id="more"></a></p>
+        <p>本文主要讲解InfluxDB中的倒排索引，InfluxDB和传统的LSM-tree(hbase使用的模型)不一样的地方是其内部中多了一个倒排索引，这也是让InfluxDB查询较快的秘诀。</p>
+<p>在1.7的代码版本中，InfluxDB提供了两种类型的倒排索引，内存和磁盘的，之前只有内存版本的，但是随着数据的增多，内存倒排索引可能导致OOM，所以引入了基于磁盘的倒排索引。下面会基于此进行简单的分析。<br><a id="more"></a></p>
 <h1 id="内存中的倒排索引"><a href="#内存中的倒排索引" class="headerlink" title="内存中的倒排索引"></a>内存中的倒排索引</h1><p>一句话总结，内存中的倒排索引主要由如下两个map组成的：</p>
 <ul>
 <li>map&lt;SeriesID, SeriesKey&gt;的映射。用于查询seriesId所对应的SeriesKey。</li>
 <li>map&lt;tagKey, map&lt;tagValue, List<seriesid>&gt;&gt;。第一层的key是tag key，value也是一个map；第二层的key是tag value，value是SeriesID的集合。查询时如果有多个tag条件，则分别拿出对应的series做交集。</seriesid></li>
 </ul>
 <p>下面是详细代码分析，首先看一下代码的结构图，代码路径在influxdb/tsdb/index/inmem下面：<br><img src="influxdb 倒排索引.png" alt="influxdb 倒排索引"></p>
-<h1 id="磁盘中的倒排索引"><a href="#磁盘中的倒排索引" class="headerlink" title="磁盘中的倒排索引"></a>磁盘中的倒排索引</h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1>
+<h1 id="磁盘中的倒排索引"><a href="#磁盘中的倒排索引" class="headerlink" title="磁盘中的倒排索引"></a>磁盘中的倒排索引</h1><h1 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h1><p><a href="https://www.jianshu.com/p/7a881dbc61de" target="_blank" rel="noopener">Influxdb中基于磁盘的倒排索引文件TSI结构解析</a></p>
+
       
     </div>
 
@@ -518,6 +532,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/15/InfluxDB-cluster-高可用方案/" rel="prev" title="InfluxDB cluster 高可用方案">
+                InfluxDB cluster 高可用方案 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -593,7 +611,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">67</span>
+                    <span class="site-state-item-count">68</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
