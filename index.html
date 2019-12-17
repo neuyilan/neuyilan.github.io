@@ -417,6 +417,22 @@
             
 
             
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-12-17 19:44:38" itemprop="dateModified" datetime="2019-12-17T19:44:38+08:00">2019-12-17</time>
+              
+            
           </span>
 
           
@@ -458,12 +474,27 @@
 
       
         
+          <p>本文基于InfluxDB之前开源的cluster版本(v0.11)来分析一下其cluster方案，主要分析如下问题：</p>
+<ul>
+<li>InfluxDB cluster方案提供了哪些模块？</li>
+<li>InfluxDB cluster方案中meta node元数据都有哪些？</li>
+<li>InfluxDB cluster方案提供的与集群交互的client客户端是什么方式？协议(数据格式，response，request)是什么样的？</li>
+<li>InfluxDB cluster方案中 meta node 一致性怎么保证的？</li>
+<li>InfluxDB cluster方案提供的hintedoff具体是怎么工作的？</li>
+</ul>
+<p>下面就会针对每个问题进行分析<br>
+          <!--noindex-->
           
-            
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/12/15/InfluxDB-cluster-高可用方案/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
           
+          <!--/noindex-->
         
       
-    </div>
+    </p></div>
 
     
 
@@ -2337,7 +2368,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">99</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">101</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
