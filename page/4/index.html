@@ -368,6 +368,173 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="伊蓝">
+      <meta itemprop="description" content="记录点滴">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yilan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/" class="post-title-link" itemprop="url">Column-Stores vs. Row-Stores: How Different Are They Really</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-02-21 13:26:13 / Modified: 13:39:28" itemprop="dateCreated datePublished" datetime="2019-02-21T13:26:13+08:00">2019-02-21</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>从论文的标题可以看出这篇论文不是陈述一种新的技术、架构，而更偏议论文一点，它主要的目的在于搞清楚对于分析类的查询为什么Column-Store比Row-Store好那么多？好在哪里？一般认为原因是:</p>
+<p><strong>分析类查询往往只查询一个表里面很少的几个字段，Column-Store只需要从磁盘读取用户查询的Column，而Row-Store读取每一条记录的时候你会把所有Column的数据读出来，在IO上Column-Store比Row-Store效率高很多，因此性能更好。</strong></p>
+<p>而本文的目的是要告诉你Column-Store在存储格式优势只是一方面，如果没有查询引擎上其它几个优化措施的配合，性能也不会太好的，这篇论文认为Column-Store在查询引擎层有以下几种大的优化手段:</p>
+<ul>
+<li>块遍历(Block Iteration)</li>
+<li>压缩(Compression)</li>
+<li>延迟物化(Late Materialization)</li>
+<li>Invisible Join</li>
+</ul>
+<p>其中前三点是前人就已经总结过的、在现有Column-Store上实现过了的，而最后一点是本论文的创新。下面我们一一看一下这几种优化手段的细节，最后再看看它们优化效果的对比。<br>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </p></div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/02/18/Linux-UNIX-系统中的find命令/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1941,202 +2108,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2018/04/20/git-命令相关/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="伊蓝">
-      <meta itemprop="description" content="记录点滴">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="yilan">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2018/04/20/git-命令相关/" class="post-title-link" itemprop="url">git 命令相关</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2018-04-20 10:11:14" itemprop="dateCreated datePublished" datetime="2018-04-20T10:11:14+08:00">2018-04-20</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2019-01-12 10:13:35" itemprop="dateModified" datetime="2019-01-12T10:13:35+08:00">2019-01-12</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/常用命令/" itemprop="url" rel="index"><span itemprop="name">常用命令</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2018/04/20/git-命令相关/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2018/04/20/git-命令相关/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="一般的github协作流程："><a href="#一般的github协作流程：" class="headerlink" title="一般的github协作流程："></a>一般的github协作流程：</h1><ol>
-<li>fork一个自己的项目</li>
-<li>master分支保持不变，去follow最新变更</li>
-<li>每次开发新功能的时候创建新分支branch1</li>
-<li>在新branch1分支commit 代码</li>
-<li>在push branch1的代码之前回到master分支pull最新的远端代码</li>
-<li>回到branch1运行rebase master命令，保证自己的所有代码提交都在master之后最新</li>
-<li>push branch1到自己的github项目库</li>
-<li>到github界面上提交pull request选择远端master分支
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2018/04/20/git-命令相关/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </li></ol></div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2186,7 +2157,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">68</span>
+                    <span class="site-state-item-count">69</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -2454,7 +2425,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">101</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">103</span>
                     <span class="site-state-item-name">tags</span>
                   </a>
                 </div>
