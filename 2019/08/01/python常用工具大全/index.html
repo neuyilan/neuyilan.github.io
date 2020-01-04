@@ -106,7 +106,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://neuyilan.github.io/2019/08/01/python常用工具大全/md5%20p1.png">
 <meta property="og:image" content="https://neuyilan.github.io/2019/08/01/python常用工具大全/md5%20p2.png">
-<meta property="og:updated_time" content="2019-10-24T06:06:58.445Z">
+<meta property="og:updated_time" content="2019-12-23T12:09:31.566Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="python常用工具大全">
 <meta name="twitter:description" content="文件操作读文件按行读取文件1234f = open(file_name, &amp;apos;r&amp;apos;)for line in f:    // do something with linef.close()">
@@ -432,7 +432,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-10-24 14:06:58" itemprop="dateModified" datetime="2019-10-24T14:06:58+08:00">2019-10-24</time>
+                <time title="Modified: 2019-12-23 20:09:31" itemprop="dateModified" datetime="2019-12-23T20:09:31+08:00">2019-12-23</time>
               
             
           </span>
@@ -505,7 +505,8 @@
 <h1 id="python-main函数接收参数"><a href="#python-main函数接收参数" class="headerlink" title="python main函数接收参数"></a>python main函数接收参数</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">from argparse import ArgumentParser</span><br><span class="line">parser = ArgumentParser()</span><br><span class="line">parser.add_argument(&quot;-o&quot;, &quot;--object&quot;,</span><br><span class="line">                    help=&quot;the cmd to master or master&apos;s http services&quot;, metavar=&quot;master/press&quot;)</span><br><span class="line">parser.add_argument(&quot;-c&quot;, &quot;--command&quot;,</span><br><span class="line">                    help=&quot;the command to execute&quot;, metavar=&quot;start/stop&quot;)</span><br><span class="line">parser.add_argument(&quot;-i&quot;, &quot;--idc&quot;,</span><br><span class="line">                    help=&quot;the idc want to start, default is [all]&quot;, metavar=&quot;[nj/njjs/hba/tc/hna/hnb]&quot;)</span><br><span class="line"></span><br><span class="line">args = parser.parse_args()</span><br><span class="line"></span><br><span class="line">print vars(args) # vars(args)可以使参数转化为字典</span><br></pre></td></tr></table></figure>
 <h1 id="ssh-相关"><a href="#ssh-相关" class="headerlink" title="ssh 相关"></a>ssh 相关</h1><h2 id="ssh-远程执行命令"><a href="#ssh-远程执行命令" class="headerlink" title="ssh 远程执行命令"></a>ssh 远程执行命令</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">import subprocess</span><br><span class="line">import sys</span><br><span class="line"></span><br><span class="line">HOST=&quot;www.example.org&quot;</span><br><span class="line"># Ports are handled in ~/.ssh/config since we use OpenSSH</span><br><span class="line">COMMAND=&quot;uname -a&quot;</span><br><span class="line"></span><br><span class="line">ssh = subprocess.Popen([&quot;ssh&quot;, &quot;%s&quot; % HOST, COMMAND],</span><br><span class="line">                       shell=False,</span><br><span class="line">                       stdout=subprocess.PIPE,</span><br><span class="line">                       stderr=subprocess.PIPE)</span><br><span class="line">result = ssh.stdout.readlines()</span><br><span class="line">if result == []:</span><br><span class="line">    error = ssh.stderr.readlines()</span><br><span class="line">    print &gt;&gt;sys.stderr, &quot;ERROR: %s&quot; % error</span><br><span class="line">else:</span><br><span class="line">    print result</span><br></pre></td></tr></table></figure>
 <h1 id="python-执行shell命令"><a href="#python-执行shell命令" class="headerlink" title="python 执行shell命令"></a>python 执行shell命令</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">import subprocess</span><br><span class="line"># 用subprocess库获取返回值。</span><br><span class="line">p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)</span><br><span class="line">out, err = p.communicate()</span><br><span class="line">for line in out.splitlines():</span><br><span class="line">    print (line)</span><br></pre></td></tr></table></figure>
-<h1 id="python开启http-ftp服务"><a href="#python开启http-ftp服务" class="headerlink" title="python开启http ftp服务"></a>python开启http ftp服务</h1><p>可以用来文件传输<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m SimpleHTTPServer</span><br></pre></td></tr></table></figure></p>
+<h1 id="python开启http-ftp服务"><a href="#python开启http-ftp服务" class="headerlink" title="python开启http ftp服务"></a>python开启http ftp服务</h1><p>可以用来文件传输，方法一<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m SimpleHTTPServer</span><br></pre></td></tr></table></figure></p>
+<p>方法二<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">jumbo install python-httpfileserver</span><br><span class="line">httpfileserver</span><br></pre></td></tr></table></figure></p>
 <h1 id="profile函数和程序耗时"><a href="#profile函数和程序耗时" class="headerlink" title="profile函数和程序耗时"></a>profile函数和程序耗时</h1><ol>
 <li><p>采样，运行：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python -m cProfile -o pprof.out main.py argv1 #如果如参数，则可以不用输入argv1</span><br></pre></td></tr></table></figure>
@@ -642,7 +643,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">69</span>
+                    <span class="site-state-item-count">70</span>
                     <span class="site-state-item-name">posts</span>
                   </a>
                 </div>
@@ -985,7 +986,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
