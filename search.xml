@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[[转载]大话 Select、Poll、Epoll]]></title>
+    <url>%2F2020%2F01%2F16%2F%E8%BD%AC%E8%BD%BD-%E5%A4%A7%E8%AF%9D-Select%E3%80%81Poll%E3%80%81Epoll%2F</url>
+    <content type="text"><![CDATA[大话 Select、Poll、Epoll点评：很详细并且有深度的的讲解了这三者之间的关系]]></content>
+      <tags>
+        <tag>转载</tag>
+        <tag>select</tag>
+        <tag>poll</tag>
+        <tag>epoll</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[InfluxDB vs IotDB]]></title>
     <url>%2F2020%2F01%2F05%2FInfluxDB-vs-IotDB%2F</url>
     <content type="text"><![CDATA[本篇文章主要对比一下时序数据库InfluxDB与IotDB的差异。 周边生态 influxdb： TICK.(Telegraf：数据采集；Influxdb：数据存储；Chronograf：web ui 数据展示；Kapacitor：监控报警等)； InfluxQL Flux查询语句，对流处理支持良好 iotdb：支持数据采集；数据存储(TsFile，hadoop生态)；数据可视化(Grafana)；数据分析(Spark);结论：生态相对都比较完善。但是InfluxDB对于sql语言和流处理支持较好。 参考文献： Introduction to InfluxData’s InfluxDB and TICK Stack Chapter 1: Overview 性能 Load 场景：数据先load到内存，然后直接load到数据库中； IotDB(772,406 points/s) &gt; InfluxDB (631,227 points/s) Append 吞吐 IotDB = InfluxDB， client number &lt;= 300， IotDB(329,172 points/s) &lt; InfluxDB(502,900 points/s)， client number &gt; 300. 延迟 IotDB &gt; InfluxDB， client number &lt;= 300， IotDB = InfluxDB， client number &gt; 300. Query 吞吐 IotDB &gt; InfluxDB 延迟 IotDB &lt; InfluxDB Append压力测试(同时有一个查询程序在运行着) 吞吐 IotDB = InfluxDB 总体结论：IotDB查询性能是InfluxDB的2倍，插入性能稍微优于InfluxDB；不过在高并发(client&gt;300)Append的情况下，IotDB稍微逊色于InfluxDB。 参考文献：]]></content>
