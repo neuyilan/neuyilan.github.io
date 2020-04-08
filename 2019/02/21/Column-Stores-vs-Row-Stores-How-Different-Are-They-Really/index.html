@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next mist use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-CN">
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -103,7 +103,7 @@
 <meta property="og:url" content="https://neuyilan.github.io/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/index.html">
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="概述从论文的标题可以看出这篇论文不是陈述一种新的技术、架构，而更偏议论文一点，它主要的目的在于搞清楚对于分析类的查询为什么Column-Store比Row-Store好那么多？好在哪里？一般认为原因是: 分析类查询往往只查询一个表里面很少的几个字段，Column-Store只需要从磁盘读取用户查询的Column，而Row-Store读取每一条记录的时候你会把所有Column的数据读出来，在IO上C">
-<meta property="og:locale" content="zh-Hans">
+<meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://neuyilan.github.io/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/row-cloum.jpg">
 <meta property="og:image" content="https://neuyilan.github.io/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/Early%20Materialization.jpg">
 <meta property="og:image" content="https://neuyilan.github.io/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/later%20Materialization.jpg">
@@ -173,7 +173,7 @@
 
 </head>
 
-<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
 
   
   
@@ -200,7 +200,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
+    <button aria-label="切换导航栏">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -228,7 +228,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Startseite</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -245,7 +245,7 @@
 
     
 
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -262,7 +262,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Kategorien</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
 
   </li>
         
@@ -279,7 +279,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archiv</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
         
@@ -296,7 +296,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>Über</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
 
@@ -307,7 +307,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Suche</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
         </li>
       
     </ul>
@@ -330,7 +330,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -413,14 +413,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Post created: 2019-02-21 13:26:13 / Updated at: 13:39:28" itemprop="dateCreated datePublished" datetime="2019-02-21T13:26:13+08:00">2019-02-21</time>
+              <time title="创建时间：2019-02-21 13:26:13 / 修改时间：13:39:28" itemprop="dateCreated datePublished" datetime="2019-02-21T13:26:13+08:00">2019-02-21</time>
             
 
             
@@ -440,7 +440,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/02/21/Column-Stores-vs-Row-Stores-How-Different-Are-They-Really/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -633,10 +633,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Inhaltsverzeichnis
+            文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Übersicht
+            站点概览
           </li>
         </ul>
       
@@ -659,7 +659,7 @@
                   <a href="/archives/">
                 
                     <span class="site-state-item-count">72</span>
-                    <span class="site-state-item-name">Artikel</span>
+                    <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
               
@@ -712,7 +712,7 @@
                       
                     
                     <span class="site-state-item-count">20</span>
-                    <span class="site-state-item-name">Kategorien</span>
+                    <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
               
@@ -939,7 +939,7 @@
                       
                     
                     <span class="site-state-item-count">107</span>
-                    <span class="site-state-item-name">Tags</span>
+                    <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
               
@@ -1021,7 +1021,7 @@
 </div>
 
 
-  <div class="powered-by">Erstellt mit  <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
 
 
 
@@ -1029,7 +1029,7 @@
 
 
 
-  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.7.0</div>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.7.0</div>
 
 
 

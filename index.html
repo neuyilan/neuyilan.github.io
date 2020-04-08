@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next mist use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-CN">
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -102,7 +102,7 @@
 <meta property="og:url" content="https://neuyilan.github.io/index.html">
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="记录点滴">
-<meta property="og:locale" content="zh-Hans">
+<meta property="og:locale" content="zh-CN">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="yilan">
 <meta name="twitter:description" content="记录点滴">
@@ -163,7 +163,7 @@
 
 </head>
 
-<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
 
   
   
@@ -191,7 +191,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
+    <button aria-label="切换导航栏">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -219,7 +219,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Startseite</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -236,7 +236,7 @@
 
     
 
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -253,7 +253,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Kategorien</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
 
   </li>
         
@@ -270,7 +270,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archiv</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
         
@@ -287,7 +287,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>Über</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
 
@@ -298,7 +298,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Suche</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
         </li>
       
     </ul>
@@ -321,7 +321,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -406,14 +406,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Post created: 2020-04-08 16:50:52 / Updated at: 16:52:15" itemprop="dateCreated datePublished" datetime="2020-04-08T16:50:52+08:00">2020-04-08</time>
+              <time title="创建时间：2020-04-08 16:50:52 / 修改时间：17:04:44" itemprop="dateCreated datePublished" datetime="2020-04-08T16:50:52+08:00">2020-04-08</time>
             
 
             
@@ -433,7 +433,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2020/04/08/IOTDB-Cluster-源码解析/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2020/04/08/IOTDB-Cluster-源码解析/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020/04/08/IOTDB-Cluster-源码解析/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -462,117 +462,20 @@
 
       
         
-          
-            <h1 id="log-相关"><a href="#log-相关" class="headerlink" title="log 相关"></a>log 相关</h1><h2 id="snapshot解析"><a href="#snapshot解析" class="headerlink" title="snapshot解析"></a>snapshot解析</h2><ol>
+          <h1 id="log-相关"><a href="#log-相关" class="headerlink" title="log 相关"></a>log 相关</h1><h2 id="snapshot解析"><a href="#snapshot解析" class="headerlink" title="snapshot解析"></a>snapshot解析</h2><ol>
 <li>所有的snapshot都继承自父类Snapshot，父类有两个成员变量：lastLogId和lastLogTerm，指的是快照中最后的一条logid和log term</li>
 <li>SimpleSnapshot： 是最简单的快照实现方式，所有的log都保存在内存中，快照是一个list的数组实现方式。</li>
 <li>FileSnapshot：继承了Snapshot的同时，也实现了TimeseriesSchemaSnapshot接口，主要保存了两个属性：Collection<measurementschema>以及List<remotetsfileresource>。RemoteTsFileResource是tsfile的文件描述，而MeasurementSchema也是描述的各个measurement。所以可以看出来FileSnapshot之所以称之为”文件快照“，主要是由于保存了TsFileResource的原因。</remotetsfileresource></measurementschema></li>
-<li>RemoteFileSnapshot：首先看一下官方注释：<strong>RemoteFileSnapshot is a place holder that indicates the slot has unpulled data in the remote node.</strong>， 是用来表明本地的slot有未完成的任务，啥任务呢：就是从其他机器上(同一个复制组的节点中，主要用在新加入的节点需要从同复制组的其他机器上面同步任务)同步数据的任务。关键的一个属性就是pullSnapshotTask，这是一个Future&lt;Map&lt;Integer, FileSnapshot&gt;&gt;的变量，这个task是外部创建RemoteFileSnapshot的时候传进来的参数，这个task是啥呢？其实就是PullSnapshotTask，PullSnapshotTask类中的call 函数返回志就是Map&lt;Integer, T&gt;类型。</li>
-<li>PartitionedSnapshot: 使用一个map保存了每个slot id对应的快照。</li>
-<li>MetaSimpleSnapshot：继承自SimpleSnapshot：多了一个属性storageGroups，保存了所有的storageGroups</li>
-<li>PullSnapshotTask， 他并不是一个快照的实现类，而是封装了执行快照任务的一个类，它实现了Callable接口，可以简单的理解为实现了Runnable接口一样，关于Runnable和Callable接口的差异请google。call 函数是具体实现pullSnapshot 任务的函数，返回值是一个map，key是slot id，value是snapshot，以供调用者可以读取snapshot的数据来进行数据追赶。</li>
 </ol>
-<h2 id="log"><a href="#log" class="headerlink" title="log"></a>log</h2><p>log记录了集群中发生过的操作，每一条log都有4个变量：1.currLogIndex：此条log的索引；2.currLogTerm：此条log的term；3.previousLogIndex：前一条log的索引；4.previousLogTerm：前一条log的term。</p>
-<p>类图非常清晰了，无需在详细解析，目前支持4种类型的log：1.AddNodeLog; 2.RemoveNodeLog; 3.CloseFileLog; 4.PhysicalPlanLog</p>
-<h2 id="log-applier"><a href="#log-applier" class="headerlink" title="log applier"></a>log applier</h2><p>核心函数就是apply(Log)，使得log所描述的action在本机生效，这里其实跟wal有点类似了，wal的作用就是执行任何事情之前先写wal，方式崩溃的时候wal可以恢复，只不过log applier是raft状态机中的组件。</p>
-<p>DataLogApplier目前提供的apply类型：PhysicalPlanLog和CloseFileLog<br>MetaLogApplier目前提供的apply类型：AddNodeLog，RemoveNodeLog和PhysicalPlanLog。</p>
-<p>两种都提供PhysicalPlanLog，会根据具体提供的操作(数据操作、元数据操作)不一样而执行不同的方法。</p>
-<h2 id="log-manager"><a href="#log-manager" class="headerlink" title="log manager"></a>log manager</h2><p>log manager也就是管理log的一些类，也就是log 存在哪里，怎么存？怎么取等，目前的实现都是基于内存的实现方式。如果一个复制组所有的节点都crash的话，则log也就丢失了，基于文件的log管理目前正在开发种(<a href="https://issues.apache.org/jira/browse/IOTDB-351" target="_blank" rel="noopener">https://issues.apache.org/jira/browse/IOTDB-351</a>)</p>
-<ol>
-<li>LogManager接口，主要提供了一些访问Log类属性的一些方法以及存储，读取log的一些函数。其中着重指出void commitLog(long maxLogIndex)函数，此函数会调用log applier中的apply函数。</li>
-<li>MemoryLogManager，虚类，把所有的log都保存在内存中。</li>
-<li>MetaSingleSnapshotLogManager， 继承自MemoryLogManager，其中的snapshot也是内存持有的，不过其getSnapshot函数返回的是MetaSimpleSnapshot。</li>
-<li>PartitionedSnapshotLogManager， 继承自MemoryLogManager，其中的snapshot也是内存持有的，不过其getSnapshot函数返回的是PartitionedSnapshot。</li>
-<li>FilePartitionedSnapshotLogManager，继承自PartitionedSnapshotLogManager，与PartitionedSnapshotLogManager不同之处在于：PartitionedSnapshotLogManager在更新快照的时候会把快照保存在内存中，而FilePartitionedSnapshotLogManager想从tsfile中实时获取快照。笔者理解就是FilePartitionedSnapshotLogManager不想在内存中保存快照，而是在需要的时候实时从tsfile中获取快照，用以减少内存的使用。<strong>但是目前并未达到理想的效果，因为在LogManager append log的时候，已经把log保存在内存中了，所以iotdb作者起了一个issue来研究这个问题 <a href="https://issues.apache.org/jira/browse/IOTDB-439" target="_blank" rel="noopener">https://issues.apache.org/jira/browse/IOTDB-439</a></strong></li>
-</ol>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>以上几个组件的关系为：LogManager管理了log，包括log的存储，读取；LogManager调用了LogApplier来执行真正的操作，snapshot主要有两种：1、包含了一组log的集合；2、包含了一组tsfile的集合。</p>
-<h1 id="Server"><a href="#Server" class="headerlink" title="Server"></a>Server</h1><p>先看一下UML类图，一图胜千言，RaftServer是一个虚类，里面的函数主要是根据一些节点的配置（ip，port）等进行初始化，然后启动服务。其有两个子类，一个是DataClusterServer,主要负责data 操作相关的事情，然后通过rpc传到同一个raft组的其他节点上；另外一个是MetaClusterServer，主要负责meta数据的操作，然后把操作通过rpc传到同一个raft组的其他节点上。</p>
-<h2 id="RaftServer"><a href="#RaftServer" class="headerlink" title="RaftServer"></a>RaftServer</h2><p>主要包括两个大的功能：1. 初始化节点配置；2. 启动节点并且监听rpc端口服务(start()函数)</p>
-<h2 id="MetaClusterServer"><a href="#MetaClusterServer" class="headerlink" title="MetaClusterServer"></a>MetaClusterServer</h2><p>首先看一下官方注释：<strong>MetaCluster manages the whole cluster’s metadata, such as what nodes are in the cluster and the data partition. Each node has one MetaClusterServer instance, the single-node IoTDB instance is started-up at the same time.</strong> 意思就是MetaClusterServer管理了集群中所有的meta信息，主要信息就是数据的分布了(后面会详细讲解节点的分布策略)。每个节点上都会有和一个MetaClusterServer实例（<font color="red">也就是说iotdb的cluster版本每个节点是同质的，假设有1000个节点，则1000个节点上都有meta服务，1000个节点组成了meta信息的raft复制组，性能，结果一致性上面还是有问题的</font>），同时也会启动一个iotdb的实例</p>
-<p>MetaClusterServer还有一个变量:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private MetaGroupMember member;</span><br></pre></td></tr></table></figure></p>
-<p>这个在后面讲解<em>RaftMember</em>的时候在详细讲解</p>
-<h2 id="DataClusterServer"><a href="#DataClusterServer" class="headerlink" title="DataClusterServer"></a>DataClusterServer</h2><p>DataClusterServer的作用就是来管理data一些数据的操作的，与MetaClusterServer不同之处在于他的RaftMember是一个map，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private Map&lt;Node, DataGroupMember&gt; headerGroupMap = new ConcurrentHashMap&lt;&gt;();</span><br></pre></td></tr></table></figure></p>
-<p>key 是raft 复制组的header node， value是DataGroupMember，也就代表了一个复制组。<br>DataClusterServer的任何操作都是先要在这个map中根据rpc传过来的header，找到对应的DataGroupMember，然后在进行操作。</p>
-<h1 id="RaftMember"><a href="#RaftMember" class="headerlink" title="RaftMember"></a>RaftMember</h1><p>先上一个官方注释。<br><strong>RaftMember process the common raft logic like leader election, log appending, catch-up and so on.</strong> 也就是说，raft算法中的一些核心逻辑：领导选举、log复制、快照追赶等逻辑都是RaftMember干的。</p>
-<p>下面介绍一下每个属性的作用：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">// the name of the member, to distinguish several members from the logs</span><br><span class="line">// name就是“META/DATA”+ip+port</span><br><span class="line">String name;</span><br><span class="line"></span><br><span class="line">// to choose nodes to join cluster request randomly</span><br><span class="line">// 当有新的节点加入到集群中的时候，从已经在集群中的节点中随机的选择一个节点来处理加入操作</span><br><span class="line">Random random = new Random();</span><br><span class="line"></span><br><span class="line">protected Node thisNode;</span><br><span class="line">// the nodes known by this node</span><br><span class="line">protected volatile List&lt;Node&gt; allNodes;</span><br><span class="line"></span><br><span class="line">AtomicLong term = new AtomicLong(0);</span><br><span class="line">// 默认开始都是ELECTOR的状态</span><br><span class="line">volatile NodeCharacter character = NodeCharacter.ELECTOR;</span><br><span class="line">volatile Node leader;</span><br><span class="line">volatile long lastHeartbeatReceivedTime;</span><br><span class="line"></span><br><span class="line">// the raft logs are all stored and maintained in the log manager</span><br><span class="line">// logManager管理了所有的log操作，详细分析请看上面logManager</span><br><span class="line">LogManager logManager;</span><br><span class="line"></span><br><span class="line">// the single thread pool that runs the heartbeat thread</span><br><span class="line">ExecutorService heartBeatService;</span><br><span class="line"></span><br><span class="line">// the thread pool that runs catch-up tasks</span><br><span class="line">private ExecutorService catchUpService;</span><br><span class="line"></span><br><span class="line">// lastCatchUpResponseTime records when is the latest response of each node&apos;s catch-up. There</span><br><span class="line">// should be only one catch-up task for each node to avoid duplication, but the task may time out and in that case, the next catch up should be enabled.</span><br><span class="line">// 记录节点上次追赶log的时间，用于防止一个节点建立多个追赶任务，也可以用于判断追赶日志超时使用</span><br><span class="line">private Map&lt;Node, Long&gt; lastCatchUpResponseTime = new ConcurrentHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">// the pool that provides reusable clients to connect to other RaftMembers. It will be initialized according to the implementation of the subclasses</span><br><span class="line">private ClientPool clientPool;</span><br><span class="line"></span><br><span class="line">// when the commit progress is updated by a heart beat, this object is notified so that we may</span><br><span class="line">// know if this node is synchronized with the leader</span><br><span class="line">private Object syncLock = new Object();</span><br><span class="line"></span><br><span class="line">// when the header of the group is removed from the cluster, the members of the group should no</span><br><span class="line">// longer accept writes, but they still can be read candidates for weak consistency reads and</span><br><span class="line">// provide snapshots for the new holders</span><br><span class="line">volatile boolean readOnly = false;</span><br></pre></td></tr></table></figure></p>
-<font color="red">这里要强调一下上面的allNodes变量，这里的allNodes并不是所有的节点，而仅仅是这个复制组里面的节点，通常节点个数与副本数一致 </font>
-
-<h2 id="RaftMember中的重点函数解析"><a href="#RaftMember中的重点函数解析" class="headerlink" title="RaftMember中的重点函数解析"></a>RaftMember中的重点函数解析</h2><p>首先明确一点，心跳是leader发送给follower的。</p>
-<h2 id="心跳算法"><a href="#心跳算法" class="headerlink" title="心跳算法"></a>心跳算法</h2><ol>
-<li>如果收到的请求的term小于本地节点的term，则拒绝这次心跳请求，并且把本地节点保存的term返回给发送者，让leader更新自己的状态。</li>
-<li>如果校验心跳请求参数合格的话，则会把本节点log最后更新的index发送给leader，让leader知道下次给”我”这个节点发送log的时候从哪里开始发送。</li>
-<li>执行回调HeartbeatHandler.onComplete。leader会根据返回的信息做如下几个事情：<ul>
-<li><font color="red"> 如果follower还承认我是leader，则根据follower发送过来的logindex让follower追赶我的日志 </font>，注意LogCatchUpTask和SnapshotCatchUpTask都是leader主动给follower发送数据的，让follower进行追赶leader的日志(快照)。</li>
-<li>如果follower的term比我leader的term还大，则leader主动发起退休(retireFromLeader)。</li>
-</ul>
-</li>
-</ol>
-<p>备注：此函数中有一个syncLock锁，是用来同步leader的CommitLogIndex的，只所有用锁是因为在<strong>syncLeader函数</strong>中也有同步leader的CommitLogIndex的的功能。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Process the HeartBeatRequest from the leader. If the term of the leader is smaller than the</span><br><span class="line"> * local term, turn it down and tell it the newest term. ELse if the local logs catch up the</span><br><span class="line"> * leader&apos;s, commit them. Else help the leader find the last match log. Also update the</span><br><span class="line"> * leadership, heartbeat timer and term of the local node.</span><br><span class="line"> *</span><br><span class="line"> * @param request</span><br><span class="line"> * @param resultHandler</span><br><span class="line"> */</span><br><span class="line">@Override</span><br><span class="line">public void sendHeartbeat(HeartBeatRequest request, AsyncMethodCallback resultHandler) &#123;</span><br><span class="line">  logger.trace(&quot;&#123;&#125; received a heartbeat&quot;, name);</span><br><span class="line">  // term可以理解为一个全局锁</span><br><span class="line">  synchronized (term) &#123;</span><br><span class="line">    long thisTerm = term.get();</span><br><span class="line">    // 解析request中的数据，主要有leader的term</span><br><span class="line">    long leaderTerm = request.getTerm();</span><br><span class="line">    HeartBeatResponse response = new HeartBeatResponse();</span><br><span class="line"></span><br><span class="line">    // 如果leader的term比这个复制组的本节点的term小，则这个leader一定是过期的，忽略这个请求。并且把本节点的term告诉leader</span><br><span class="line">    if (leaderTerm &lt; thisTerm) &#123;</span><br><span class="line">      // a leader with term lower than this node is invalid, send it the local term to inform this</span><br><span class="line">      response.setTerm(thisTerm);</span><br><span class="line">      if (logger.isTraceEnabled()) &#123;</span><br><span class="line">        logger.trace(&quot;&#123;&#125; received a heartbeat from a stale leader &#123;&#125;&quot;, name, request.getLeader());</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      // the heartbeat comes from a valid leader, process it with the sub-class logic</span><br><span class="line">      processValidHeartbeatReq(request, response);</span><br><span class="line"></span><br><span class="line">      response.setTerm(Response.RESPONSE_AGREE);</span><br><span class="line">      // tell the leader who I am in case of catch-up</span><br><span class="line">      response.setFollower(thisNode);</span><br><span class="line">      // TODO-CLuster: the log being sent should be chosen wisely instead of the last log, so that the leader would be able to find the last match log</span><br><span class="line">      // 注释已经说的很好了，发送给leader的log应该让leader知道下次发送给follwer的index是多少！</span><br><span class="line">      response.setLastLogIndex(logManager.getLastLogIndex());</span><br><span class="line">      response.setLastLogTerm(logManager.getLastLogTerm());</span><br><span class="line"></span><br><span class="line">      // The term of the last log needs to be the same with leader&apos;s term in order to preserve safety, otherwise it may come from an invalid leader and is not committed</span><br><span class="line">      if (logManager.getLastLogTerm() == leaderTerm) &#123;</span><br><span class="line">        // syncLock只有两个地方有使用，除了此处之外，还在syncLeader函数中用到了，这里加这个锁就是防止本节点获取的leader信息是过时的。</span><br><span class="line">        synchronized (syncLock) &#123;</span><br><span class="line">          logManager.commitLog(request.getCommitLogIndex());</span><br><span class="line">          syncLock.notifyAll();</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      // if the log is not consistent, the commitment will be blocked until the leader makes the node catch up</span><br><span class="line"></span><br><span class="line">      term.set(leaderTerm);</span><br><span class="line">      setLeader(request.getLeader());</span><br><span class="line">      if (character != NodeCharacter.FOLLOWER) &#123;</span><br><span class="line">        setCharacter(NodeCharacter.FOLLOWER);</span><br><span class="line">      &#125;</span><br><span class="line">      setLastHeartbeatReceivedTime(System.currentTimeMillis());</span><br><span class="line">      if (logger.isTraceEnabled()) &#123;</span><br><span class="line">        logger.trace(&quot;&#123;&#125; received heartbeat from a valid leader &#123;&#125;&quot;, name, request.getLeader());</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    resultHandler.onComplete(response);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="选举算法"><a href="#选举算法" class="headerlink" title="选举算法"></a>选举算法</h2><p>处理选举过程的算法也很简单：</p>
-<ol>
-<li>首先看发送过来的请求的node(也就是要当leader的none)是否与本地节点保存的leader一致，如果一致我就同意。</li>
-<li>如果不一致，则根据请求过来的信息与本地信息进行对比来决定是否同意发起选举的节点作为leader，其算法在processElectionRequest中。主要判断逻辑如下：<ul>
-<li>thatTerm &lt;= thisTerm 拒绝，发起选举的term都比我本地的要小，怎么可能给你投票！</li>
-<li>thatLastLogTerm &lt; thisLastLogTerm 拒绝，发起选举的节点的最后一条一致的term都比我本地的要小，拒绝你。</li>
-<li>(thatLastLogTerm == thisLastLogTerm &amp;&amp; thatLastLogId &lt; thisLastLogIndex) 拒绝，虽然最后一条日志的term一致，但是发起选举节点的最后一条日志的索引比我本地的要小，拒绝你。</li>
-<li>其他情况下就给发起选举的节点投票了。</li>
-</ul>
-</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Process an ElectionRequest. If the request comes from the last leader, agree with it. Else</span><br><span class="line"> * decide whether to accept by examining the log status of the elector.</span><br><span class="line"> *</span><br><span class="line"> * @param electionRequest</span><br><span class="line"> * @param resultHandler</span><br><span class="line"> */</span><br><span class="line">@Override</span><br><span class="line">public void startElection(ElectionRequest electionRequest, AsyncMethodCallback resultHandler) &#123;</span><br><span class="line">  synchronized (term) &#123;</span><br><span class="line">    if (electionRequest.getElector().equals(leader)) &#123;</span><br><span class="line">      // always agree with the last leader</span><br><span class="line">      resultHandler.onComplete(Response.RESPONSE_AGREE);</span><br><span class="line">      return;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // check the log status of the elector</span><br><span class="line">    long response = processElectionRequest(electionRequest);</span><br><span class="line">    logger.info(&quot;&#123;&#125; sending response &#123;&#125; to the elector &#123;&#125;&quot;, name, response,</span><br><span class="line">        electionRequest.getElector());</span><br><span class="line">    resultHandler.onComplete(response);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="syncLeader函数"><a href="#syncLeader函数" class="headerlink" title="syncLeader函数"></a>syncLeader函数</h2><p>在分析心跳算法的时候，在代码注释里面提到了syncLeader这个函数。这个函数主要用来同步leader的commint log index的。</p>
-<ol>
-<li>首先保证所有的快照下载任务都已经完成了。否则就等待所有的快照任务执行结束。</li>
-<li>rpc调用leader节点，请求CommitLogIndex。</li>
-<li>判断本地的CommitLogIndex与leader的CommitLogIndex是否一致，即follwer是否追赶上了leader的日志。如果追赶上了，则返回成功，否则未超时的情况下(20秒)，等待心跳(默认1000ms，因为心跳的时候leader会使得follwer追赶自己的日志)。</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Request and check the leader&apos;s commitId to see whether this node has caught up. If not, wait</span><br><span class="line"> * until this node catches up.</span><br><span class="line"> *</span><br><span class="line"> * @return true if the node has caught up, false otherwise</span><br><span class="line"> */</span><br><span class="line">public boolean syncLeader() &#123;</span><br><span class="line">  // make sure all snapshot pulling are done, otherwise some data will remain in the old nodes</span><br><span class="line">  // 首先要保证所有的的下载快照任务都已经完成了</span><br><span class="line">  logManager.waitRemoteSnapshots();</span><br><span class="line"></span><br><span class="line">  if (character == NodeCharacter.LEADER) &#123;</span><br><span class="line">    return true;</span><br><span class="line">  &#125;</span><br><span class="line">  if (leader == null) &#123;</span><br><span class="line">    // the leader has not been elected, we must assume the node falls behind</span><br><span class="line">    return false;</span><br><span class="line">  &#125;</span><br><span class="line">  logger.debug(&quot;&#123;&#125;: try synchronizing with the leader &#123;&#125;&quot;, name, leader);</span><br><span class="line">  long startTime = System.currentTimeMillis();</span><br><span class="line">  long waitedTime = 0;</span><br><span class="line">  AtomicReference&lt;Long&gt; commitIdResult = new AtomicReference&lt;&gt;(Long.MAX_VALUE);</span><br><span class="line">  // syncLeaderMaxWaitMs = 20 * 1000，也就是20s</span><br><span class="line">  while (waitedTime &lt; RaftServer.syncLeaderMaxWaitMs) &#123;</span><br><span class="line">    // 连接到leader节点</span><br><span class="line">    AsyncClient client = connectNode(leader);</span><br><span class="line">    if (client == null) &#123;</span><br><span class="line">      // cannot connect to the leader</span><br><span class="line">      return false;</span><br><span class="line">    &#125;</span><br><span class="line">    try &#123;</span><br><span class="line">      synchronized (commitIdResult) &#123;</span><br><span class="line">        // rpc调用，请求leader的commitIndex</span><br><span class="line">        client.requestCommitIndex(getHeader(), new GenericHandler&lt;&gt;(leader, commitIdResult));</span><br><span class="line">        commitIdResult.wait(RaftServer.syncLeaderMaxWaitMs);</span><br><span class="line">      &#125;</span><br><span class="line">      long leaderCommitId = commitIdResult.get();</span><br><span class="line">      long localCommitId = logManager.getCommitLogIndex();</span><br><span class="line">      logger.debug(&quot;&#123;&#125;: synchronizing commitIndex &#123;&#125;/&#123;&#125;&quot;, name, localCommitId, leaderCommitId);</span><br><span class="line">      // 判断本地的commitIndex是否已经追赶上leader的commitIndex</span><br><span class="line">      if (leaderCommitId &lt;= localCommitId) &#123;</span><br><span class="line">        // before the response comes, the leader may commit new logs and the localCommitId may be updated by catching up, so it is possible that localCommitId &gt; leaderCommitId at this time,this node has caught up</span><br><span class="line">        // 个人理解这种情况发生在requestCommitIndex请求还未返回的时候，leader提交了新的日志，并且也把这些日志同步给了follower。</span><br><span class="line">        if (logger.isDebugEnabled()) &#123;</span><br><span class="line">          waitedTime = System.currentTimeMillis() - startTime;</span><br><span class="line">          logger.debug(&quot;&#123;&#125;: synchronized with the leader after &#123;&#125;ms&quot;, name, waitedTime);</span><br><span class="line">        &#125;</span><br><span class="line">        return true;</span><br><span class="line">      &#125;</span><br><span class="line">      // wait for next heartbeat to catch up</span><br><span class="line">      // the local node will not perform a commit here according to the leaderCommitId because</span><br><span class="line">      // the node may have some inconsistent logs with the leader</span><br><span class="line">      // 真是一个骚操作啊！！！！！等待heartbeat 追赶日志？heartbeat还有这个功能，在心跳章节中解释了为什么心跳的时候还有日志追赶的功能。</span><br><span class="line">      waitedTime = System.currentTimeMillis() - startTime;</span><br><span class="line">      synchronized (syncLock) &#123;</span><br><span class="line">        // heartBeatIntervalMs 1000ms</span><br><span class="line">        syncLock.wait(RaftServer.heartBeatIntervalMs);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; catch (TException | InterruptedException e) &#123;</span><br><span class="line">      logger.error(&quot;&#123;&#125;: Cannot request commit index from &#123;&#125;&quot;, name, leader, e);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  return false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="DataGroupMember"><a href="#DataGroupMember" class="headerlink" title="DataGroupMember"></a>DataGroupMember</h2><p>里面就是具体的功能实现了，<font color="yellow">// TODO</font><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">* When a DataGroupMember pulls data from another node, the data files will be firstly stored in the &quot;REMOTE_FILE_TEMP_DIR&quot;, and then load file functionality of IoTDB will be used to load the files into the IoTDB instance.</span><br><span class="line">*/</span><br><span class="line">private static final String REMOTE_FILE_TEMP_DIR = &quot;remote&quot;;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">* The MetaGroupMember that in charge of the DataGroupMember. Mainly for providing partition table and MetaLogManager.</span><br><span class="line">*/</span><br><span class="line">private MetaGroupMember metaGroupMember;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">* The thread pool that runs the pull snapshot tasks. Pool size is the # of CPU cores.</span><br><span class="line">*/</span><br><span class="line">private ExecutorService pullSnapshotService;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">* &quot;logManager&quot; manages the logs of this DataGroupMember. Although the logs of different data partitions (slots) are mixed together before a snapshot is taken, after the taking of snapshot, logs of different logs will be stored separately.</span><br><span class="line">*/</span><br><span class="line">private PartitionedSnapshotLogManager logManager;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">* &quot;queryManger&quot; records the remote nodes which have queried this node, and the readers or</span><br><span class="line">* executors this member has created for those queries. When the queries end, an</span><br><span class="line">* EndQueryRequest will be sent to this member and related resources will be released.</span><br><span class="line">*/</span><br><span class="line">private ClusterQueryManager queryManager;</span><br></pre></td></tr></table></figure></p>
-<h2 id="MetaGroupMember"><a href="#MetaGroupMember" class="headerlink" title="MetaGroupMember"></a>MetaGroupMember</h2><p>里面就是具体的功能实现了，<font color="yellow">// TODO</font><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// nodes in the cluster and data partitioning</span><br><span class="line">// 重点是这个PartitionTable的实现，这里面包含了tsfile的数据分布，在partition章节将详细分析</span><br><span class="line"> private PartitionTable partitionTable;</span><br></pre></td></tr></table></figure></p>
-<h1 id="数据分布partition"><a href="#数据分布partition" class="headerlink" title="数据分布partition"></a>数据分布partition</h1><ol>
-<li>PartitionGroup这个类其实就是一个列表，这个列表中所有的节点组成了一个raft复制组的所有节点，第一个节点记为header</li>
-<li>PartitionTable是一个基类，iotdb的实现是SlotPartitionTable，其核心就是如下几个属性</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//The following fields are used for determining which node a data item belongs to.</span><br><span class="line">// the slots held by each node</span><br><span class="line">// key:node，value是这个node上面所有的slot，slot就是tsfile的逻辑单位</span><br><span class="line">private Map&lt;Node, List&lt;Integer&gt;&gt; nodeSlotMap = new ConcurrentHashMap&lt;&gt;();</span><br><span class="line">// each slot is managed by whom</span><br><span class="line">// key:slot id，value是这个slot id所在的node</span><br><span class="line">private Map&lt;Integer, Node&gt; slotNodeMap = new ConcurrentHashMap&lt;&gt;();//TODO a List is enough</span><br><span class="line">// the nodes that each slot belongs to before a new node is added, used for the new node to find the data source</span><br><span class="line">private Map&lt;Node, Map&lt;Integer, Node&gt;&gt; previousNodeMap = new ConcurrentHashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">//the filed is used for determining which nodes need to be a group. the data groups which this node belongs to.</span><br><span class="line">// localGroups保存了本节点上的所有的复制组</span><br><span class="line">private List&lt;PartitionGroup&gt; localGroups;</span><br></pre></td></tr></table></figure>
-<p>下面详细讲解一下SlotPartitionTable中的一些函数</p>
-<h2 id="SlotPartitionTable初始化"><a href="#SlotPartitionTable初始化" class="headerlink" title="SlotPartitionTable初始化"></a>SlotPartitionTable初始化</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">private void init(Collection&lt;Node&gt; nodes) &#123;</span><br><span class="line">  logger.info(&quot;Initializing a new partition table&quot;);</span><br><span class="line">  nodeRing.addAll(nodes);</span><br><span class="line">  // 根据nodeIdentifier对所有的node进行排序，nodeIdentifier的生成是在MetaGroupMember::genNodeIdentifier()函数中，会根据ip，port和当前时间进行hash生成一个数字</span><br><span class="line">  nodeRing.sort(Comparator.comparingInt(Node::getNodeIdentifier));</span><br><span class="line">  // getPartitionGroups 这个函数算法详解在下面单独列出</span><br><span class="line">  localGroups = getPartitionGroups(thisNode);</span><br><span class="line">  assignPartitions();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="getPartitionGroups函数详解"><a href="#getPartitionGroups函数详解" class="headerlink" title="getPartitionGroups函数详解"></a>getPartitionGroups函数详解</h3><ol>
-<li>首先找到这个节点的索引index（所有的节点都已经按照nodeIdentifier排序了）</li>
-<li>找到这个节点的上面的所有的复制组，算法如下。<br><font color="red">todo，需要添加图片</font><ul>
-<li>首先把所有的节点按照索引大小排列为一个环，如下所示（假设有10个节点）,假设此节点的index为1，副本数replicaNum为3，则这个节点上面就会形成3个data group(复制组)</li>
-<li>首先以节点1为起始点，顺时针找replicaNum个节点组成一个复制组，即节点1，2，3组成了一个复制组data group0，这个复制组的header为节点1；</li>
-<li>然后在以节点0(节点1的上一个节点)为起始点，顺时针找replicaNum个节点组成一个复制组，即节点0，1，2组成了一个复制组data group1，这个复制组的header为节点0；</li>
-<li>然后在以节点9(节点0的上一个节点)为起始点，顺时针找replicaNum个节点组成一个复制组，即节点9，0，1组成了和一个复制组data group2，这个复制组的header为节点9；</li>
-</ul>
-</li>
-</ol>
-<p>可以看到每个节点上面最多有replicaNum个复制组。getHeaderGroup(Node node)的作用就是以参数node为起始点，顺时针找到replicaNum个节点作为一个复制组然后返回。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// find replicationNum groups that a node is in</span><br><span class="line">private List&lt;PartitionGroup&gt; getPartitionGroups(Node node) &#123;</span><br><span class="line">  List&lt;PartitionGroup&gt; ret = new ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  int nodeIndex = nodeRing.indexOf(node);</span><br><span class="line">  for (int i = 0; i &lt; replicationNum; i++) &#123;</span><br><span class="line">    // the previous replicationNum nodes (including the node itself) are the headers of the</span><br><span class="line">    // groups the node is in</span><br><span class="line">    int startIndex = nodeIndex - i;</span><br><span class="line">    if (startIndex &lt; 0) &#123;</span><br><span class="line">      startIndex = startIndex + nodeRing.size();</span><br><span class="line">    &#125;</span><br><span class="line">    ret.add(getHeaderGroup(nodeRing.get(startIndex)));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  logger.debug(&quot;The partition groups of &#123;&#125; are: &#123;&#125;&quot;, node, ret);</span><br><span class="line">  return ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h1 id="节点管理"><a href="#节点管理" class="headerlink" title="节点管理"></a>节点管理</h1><h2 id="添加节点"><a href="#添加节点" class="headerlink" title="添加节点"></a>添加节点</h2><p>增加节点这个操作是MetaClusterServer来处理的，MetaClusterServer收到请求之后，调用MetaGroupMember.joinCluster()来处理，这个函数的处理逻辑如下：</p>
-<ol>
-<li>从种子节点中随机的选择一个节点(假设选择的为节点A，待加入节点为B，这个操作也是在节点B操作的，节点B执行shell脚本把自己加入到集群中)，把这个添加节点的请求转发给这个节点(节点A)；<ul>
-<li>连接节点A,给节点A发送addNode的rpc请求（最终请求到达节点A之后，是MetaGroupMember调用的add方法）；<ul>
-<li>节点A首先看本机是否是复制组的leader，如果不是，则把请求转发给leader；否则自己处理；</li>
-<li>当发现自己是所在的复制组的leader的时候：<ul>
-<li>检查一下节点B的参数与节点A本地的参数是否一致（PartitionInterval、HashSalt、ReplicationNum等），不一致则返回。</li>
-<li>构造AddNodeLog，并且把其发送给同一个复制组(目前的实现也就是所有的节点，因为metaDataGroup所有的节点组成了一个复制组)，当大多数节点收到回复的时候，即认为成功；<font color="red">注意：leader发送日志给follower的时候，follower仅仅把日志保存下来，并不去commit日志，commit日志只有在leader与follower通过心跳通信的时候，才让follower去commit日志，然后在走一遍状态机</font></li>
-<li>当节点A收到大多数节点的回复的时候，节点A提交日志，提交日志的时候会走状态机，对于AddNodeLog，状态机会更新本地的partitionTabel；</li>
-<li>节点A序列化本地最新的partitionTabel，返回给节点B;</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>若rpc请求返回成功：接受节点A返回的partitionTable信息，然后调用dataGroupMember.pullSnapshot方法来追赶新复制组的数据。</li>
-<li>其他情况下都是失败的，等待重试。</li>
-</ul>
-</li>
-<li>当加入成功之后，设置自己的角色为FOLLOWER，并且启动心跳服务。结束；</li>
-<li>若第一步加入失败，则等待1000ms(心跳时间)之后，再次重试，最多重试10次；</li>
-</ol>
-<h2 id="删除节点"><a href="#删除节点" class="headerlink" title="删除节点"></a>删除节点</h2><p>删除节点与添加节点逻辑类似，再次不再分析</p>
-
+          <!--noindex-->
           
+            <div class="post-button text-center">
+              <a class="btn" href="/2020/04/08/IOTDB-Cluster-源码解析/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
         
       
     </div>
@@ -665,14 +568,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Post created: 2020-01-16 14:18:29 / Updated at: 14:20:42" itemprop="dateCreated datePublished" datetime="2020-01-16T14:18:29+08:00">2020-01-16</time>
+              <time title="创建时间：2020-01-16 14:18:29 / 修改时间：14:20:42" itemprop="dateCreated datePublished" datetime="2020-01-16T14:18:29+08:00">2020-01-16</time>
             
 
             
@@ -692,7 +595,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2020/01/16/转载-大话-Select、Poll、Epoll/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2020/01/16/转载-大话-Select、Poll、Epoll/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020/01/16/转载-大话-Select、Poll、Epoll/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -817,14 +720,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Post created: 2020-01-05 00:09:34 / Updated at: 01:05:18" itemprop="dateCreated datePublished" datetime="2020-01-05T00:09:34+08:00">2020-01-05</time>
+              <time title="创建时间：2020-01-05 00:09:34 / 修改时间：01:05:18" itemprop="dateCreated datePublished" datetime="2020-01-05T00:09:34+08:00">2020-01-05</time>
             
 
             
@@ -844,7 +747,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2020/01/05/InfluxDB-vs-IotDB/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2020/01/05/InfluxDB-vs-IotDB/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020/01/05/InfluxDB-vs-IotDB/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -878,7 +781,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2020/01/05/InfluxDB-vs-IotDB/#more" rel="contents">
-                Weiterlesen &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -975,14 +878,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Post created: 2019-12-21 16:04:53" itemprop="dateCreated datePublished" datetime="2019-12-21T16:04:53+08:00">2019-12-21</time>
+              <time title="创建时间：2019-12-21 16:04:53" itemprop="dateCreated datePublished" datetime="2019-12-21T16:04:53+08:00">2019-12-21</time>
             
 
             
@@ -997,9 +900,9 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 
-                  <span class="post-meta-item-text">Edited on</span>
+                  <span class="post-meta-item-text">更新于</span>
                 
-                <time title="Updated at: 2019-12-23 09:47:22" itemprop="dateModified" datetime="2019-12-23T09:47:22+08:00">2019-12-23</time>
+                <time title="修改时间：2019-12-23 09:47:22" itemprop="dateModified" datetime="2019-12-23T09:47:22+08:00">2019-12-23</time>
               
             
           </span>
@@ -1014,7 +917,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2019/12/21/小白理财/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/12/21/小白理财/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/12/21/小白理财/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1048,7 +951,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/12/21/小白理财/#more" rel="contents">
-                Weiterlesen &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -1145,14 +1048,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Post created: 2019-12-15 14:18:46" itemprop="dateCreated datePublished" datetime="2019-12-15T14:18:46+08:00">2019-12-15</time>
+              <time title="创建时间：2019-12-15 14:18:46" itemprop="dateCreated datePublished" datetime="2019-12-15T14:18:46+08:00">2019-12-15</time>
             
 
             
@@ -1167,9 +1070,9 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 
-                  <span class="post-meta-item-text">Edited on</span>
+                  <span class="post-meta-item-text">更新于</span>
                 
-                <time title="Updated at: 2019-12-23 09:47:24" itemprop="dateModified" datetime="2019-12-23T09:47:24+08:00">2019-12-23</time>
+                <time title="修改时间：2019-12-23 09:47:24" itemprop="dateModified" datetime="2019-12-23T09:47:24+08:00">2019-12-23</time>
               
             
           </span>
@@ -1184,7 +1087,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2019/12/15/InfluxDB-cluster-高可用方案/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/12/15/InfluxDB-cluster-高可用方案/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/12/15/InfluxDB-cluster-高可用方案/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1227,7 +1130,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/12/15/InfluxDB-cluster-高可用方案/#more" rel="contents">
-                Weiterlesen &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -1324,14 +1227,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Post created: 2019-12-13 10:50:07" itemprop="dateCreated datePublished" datetime="2019-12-13T10:50:07+08:00">2019-12-13</time>
+              <time title="创建时间：2019-12-13 10:50:07" itemprop="dateCreated datePublished" datetime="2019-12-13T10:50:07+08:00">2019-12-13</time>
             
 
             
@@ -1346,9 +1249,9 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 
-                  <span class="post-meta-item-text">Edited on</span>
+                  <span class="post-meta-item-text">更新于</span>
                 
-                <time title="Updated at: 2019-12-15 14:18:50" itemprop="dateModified" datetime="2019-12-15T14:18:50+08:00">2019-12-15</time>
+                <time title="修改时间：2019-12-15 14:18:50" itemprop="dateModified" datetime="2019-12-15T14:18:50+08:00">2019-12-15</time>
               
             
           </span>
@@ -1363,7 +1266,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2019/12/13/InfluxDB-倒排索引之Index文件/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/12/13/InfluxDB-倒排索引之Index文件/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/12/13/InfluxDB-倒排索引之Index文件/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1398,7 +1301,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/12/13/InfluxDB-倒排索引之Index文件/#more" rel="contents">
-                Weiterlesen &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -1495,14 +1398,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Post created: 2019-12-12 20:53:04" itemprop="dateCreated datePublished" datetime="2019-12-12T20:53:04+08:00">2019-12-12</time>
+              <time title="创建时间：2019-12-12 20:53:04" itemprop="dateCreated datePublished" datetime="2019-12-12T20:53:04+08:00">2019-12-12</time>
             
 
             
@@ -1517,9 +1420,9 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 
-                  <span class="post-meta-item-text">Edited on</span>
+                  <span class="post-meta-item-text">更新于</span>
                 
-                <time title="Updated at: 2019-12-13 00:37:42" itemprop="dateModified" datetime="2019-12-13T00:37:42+08:00">2019-12-13</time>
+                <time title="修改时间：2019-12-13 00:37:42" itemprop="dateModified" datetime="2019-12-13T00:37:42+08:00">2019-12-13</time>
               
             
           </span>
@@ -1534,7 +1437,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2019/12/12/InfluxDB-TSM File解析/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/12/12/InfluxDB-TSM File解析/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/12/12/InfluxDB-TSM File解析/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1568,7 +1471,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/12/12/InfluxDB-TSM File解析/#more" rel="contents">
-                Weiterlesen &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -1665,14 +1568,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Post created: 2019-12-12 20:41:02" itemprop="dateCreated datePublished" datetime="2019-12-12T20:41:02+08:00">2019-12-12</time>
+              <time title="创建时间：2019-12-12 20:41:02" itemprop="dateCreated datePublished" datetime="2019-12-12T20:41:02+08:00">2019-12-12</time>
             
 
             
@@ -1687,9 +1590,9 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 
-                  <span class="post-meta-item-text">Edited on</span>
+                  <span class="post-meta-item-text">更新于</span>
                 
-                <time title="Updated at: 2019-12-13 00:10:36" itemprop="dateModified" datetime="2019-12-13T00:10:36+08:00">2019-12-13</time>
+                <time title="修改时间：2019-12-13 00:10:36" itemprop="dateModified" datetime="2019-12-13T00:10:36+08:00">2019-12-13</time>
               
             
           </span>
@@ -1704,7 +1607,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2019/12/12/InfluxDB-存储引擎(store engine)模型介绍/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/12/12/InfluxDB-存储引擎(store engine)模型介绍/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/12/12/InfluxDB-存储引擎(store engine)模型介绍/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1739,7 +1642,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/12/12/InfluxDB-存储引擎(store engine)模型介绍/#more" rel="contents">
-                Weiterlesen &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -1836,14 +1739,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Post created: 2019-12-12 19:22:15 / Updated at: 20:42:32" itemprop="dateCreated datePublished" datetime="2019-12-12T19:22:15+08:00">2019-12-12</time>
+              <time title="创建时间：2019-12-12 19:22:15 / 修改时间：20:42:32" itemprop="dateCreated datePublished" datetime="2019-12-12T19:22:15+08:00">2019-12-12</time>
             
 
             
@@ -1863,7 +1766,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2019/12/12/InfluxDB-基本概念和meta介绍/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/12/12/InfluxDB-基本概念和meta介绍/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/12/12/InfluxDB-基本概念和meta介绍/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -1897,7 +1800,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/12/12/InfluxDB-基本概念和meta介绍/#more" rel="contents">
-                Weiterlesen &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -1994,14 +1897,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Post created: 2019-11-28 20:48:55" itemprop="dateCreated datePublished" datetime="2019-11-28T20:48:55+08:00">2019-11-28</time>
+              <time title="创建时间：2019-11-28 20:48:55" itemprop="dateCreated datePublished" datetime="2019-11-28T20:48:55+08:00">2019-11-28</time>
             
 
             
@@ -2016,9 +1919,9 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 
-                  <span class="post-meta-item-text">Edited on</span>
+                  <span class="post-meta-item-text">更新于</span>
                 
-                <time title="Updated at: 2019-11-29 09:51:34" itemprop="dateModified" datetime="2019-11-29T09:51:34+08:00">2019-11-29</time>
+                <time title="修改时间：2019-11-29 09:51:34" itemprop="dateModified" datetime="2019-11-29T09:51:34+08:00">2019-11-29</time>
               
             
           </span>
@@ -2033,7 +1936,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2019/11/28/Golang-由浅入深聊聊Golang的sync Pool/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/11/28/Golang-由浅入深聊聊Golang的sync Pool/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2019/11/28/Golang-由浅入深聊聊Golang的sync Pool/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -2076,7 +1979,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/11/28/Golang-由浅入深聊聊Golang的sync Pool/#more" rel="contents">
-                Weiterlesen &raquo;
+                阅读全文 &raquo;
               </a>
             </div>
           
@@ -2124,7 +2027,7 @@
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2170,7 +2073,7 @@
                   <a href="/archives/">
                 
                     <span class="site-state-item-count">72</span>
-                    <span class="site-state-item-name">Artikel</span>
+                    <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
               
@@ -2223,7 +2126,7 @@
                       
                     
                     <span class="site-state-item-count">20</span>
-                    <span class="site-state-item-name">Kategorien</span>
+                    <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
               
@@ -2450,7 +2353,7 @@
                       
                     
                     <span class="site-state-item-count">107</span>
-                    <span class="site-state-item-name">Tags</span>
+                    <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
               
@@ -2515,7 +2418,7 @@
 </div>
 
 
-  <div class="powered-by">Erstellt mit  <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
 
 
 
@@ -2523,7 +2426,7 @@
 
 
 
-  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.7.0</div>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.7.0</div>
 
 
 

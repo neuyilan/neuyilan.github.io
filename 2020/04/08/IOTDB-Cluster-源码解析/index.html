@@ -14,7 +14,7 @@
   
 
 
-<html class="theme-next mist use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-CN">
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -103,8 +103,8 @@
 <meta property="og:url" content="https://neuyilan.github.io/2020/04/08/IOTDB-Cluster-源码解析/index.html">
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="log 相关snapshot解析 所有的snapshot都继承自父类Snapshot，父类有两个成员变量：lastLogId和lastLogTerm，指的是快照中最后的一条logid和log term SimpleSnapshot： 是最简单的快照实现方式，所有的log都保存在内存中，快照是一个list的数组实现方式。 FileSnapshot：继承了Snapshot的同时，也实现了Timeser">
-<meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-04-08T08:52:15.824Z">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2020-04-08T09:04:44.217Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IOTDB-Cluster 源码解析">
 <meta name="twitter:description" content="log 相关snapshot解析 所有的snapshot都继承自父类Snapshot，父类有两个成员变量：lastLogId和lastLogTerm，指的是快照中最后的一条logid和log term SimpleSnapshot： 是最简单的快照实现方式，所有的log都保存在内存中，快照是一个list的数组实现方式。 FileSnapshot：继承了Snapshot的同时，也实现了Timeser">
@@ -165,7 +165,7 @@
 
 </head>
 
-<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
 
   
   
@@ -192,7 +192,7 @@
   </div>
 
   <div class="site-nav-toggle">
-    <button aria-label="Toggle navigation bar">
+    <button aria-label="切换导航栏">
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
       <span class="btn-bar"></span>
@@ -220,7 +220,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Startseite</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
 
   </li>
         
@@ -237,7 +237,7 @@
 
     
 
-    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
 
   </li>
         
@@ -254,7 +254,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Kategorien</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
 
   </li>
         
@@ -271,7 +271,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archiv</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
 
   </li>
         
@@ -288,7 +288,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>Über</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
 
   </li>
 
@@ -299,7 +299,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Suche</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
         </li>
       
     </ul>
@@ -322,7 +322,7 @@
       <i class="fa fa-times-circle"></i>
     </span>
     <div class="local-search-input-wrapper">
-      <input autocomplete="off" placeholder="Searching..." spellcheck="false" type="text" id="local-search-input">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
     </div>
   </div>
   <div id="local-search-result"></div>
@@ -405,14 +405,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">发表于</span>
               
 
               
                 
               
 
-              <time title="Post created: 2020-04-08 16:50:52 / Updated at: 16:52:15" itemprop="dateCreated datePublished" datetime="2020-04-08T16:50:52+08:00">2020-04-08</time>
+              <time title="创建时间：2020-04-08 16:50:52 / 修改时间：17:04:44" itemprop="dateCreated datePublished" datetime="2020-04-08T16:50:52+08:00">2020-04-08</time>
             
 
             
@@ -432,7 +432,7 @@
                   <i class="fa fa-comment-o"></i>
                 </span>
                 <a href="/2020/04/08/IOTDB-Cluster-源码解析/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2020/04/08/IOTDB-Cluster-源码解析/" itemprop="commentCount"></span>
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020/04/08/IOTDB-Cluster-源码解析/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -464,6 +464,9 @@
 <li>所有的snapshot都继承自父类Snapshot，父类有两个成员变量：lastLogId和lastLogTerm，指的是快照中最后的一条logid和log term</li>
 <li>SimpleSnapshot： 是最简单的快照实现方式，所有的log都保存在内存中，快照是一个list的数组实现方式。</li>
 <li>FileSnapshot：继承了Snapshot的同时，也实现了TimeseriesSchemaSnapshot接口，主要保存了两个属性：Collection<measurementschema>以及List<remotetsfileresource>。RemoteTsFileResource是tsfile的文件描述，而MeasurementSchema也是描述的各个measurement。所以可以看出来FileSnapshot之所以称之为”文件快照“，主要是由于保存了TsFileResource的原因。</remotetsfileresource></measurementschema></li>
+</ol>
+<a id="more"></a>
+<ol start="4">
 <li>RemoteFileSnapshot：首先看一下官方注释：<strong>RemoteFileSnapshot is a place holder that indicates the slot has unpulled data in the remote node.</strong>， 是用来表明本地的slot有未完成的任务，啥任务呢：就是从其他机器上(同一个复制组的节点中，主要用在新加入的节点需要从同复制组的其他机器上面同步任务)同步数据的任务。关键的一个属性就是pullSnapshotTask，这是一个Future&lt;Map&lt;Integer, FileSnapshot&gt;&gt;的变量，这个task是外部创建RemoteFileSnapshot的时候传进来的参数，这个task是啥呢？其实就是PullSnapshotTask，PullSnapshotTask类中的call 函数返回志就是Map&lt;Integer, T&gt;类型。</li>
 <li>PartitionedSnapshot: 使用一个map保存了每个slot id对应的快照。</li>
 <li>MetaSimpleSnapshot：继承自SimpleSnapshot：多了一个属性storageGroups，保存了所有的storageGroups</li>
@@ -665,10 +668,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Inhaltsverzeichnis
+            文章目录
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Übersicht
+            站点概览
           </li>
         </ul>
       
@@ -691,7 +694,7 @@
                   <a href="/archives/">
                 
                     <span class="site-state-item-count">72</span>
-                    <span class="site-state-item-name">Artikel</span>
+                    <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
               
@@ -744,7 +747,7 @@
                       
                     
                     <span class="site-state-item-count">20</span>
-                    <span class="site-state-item-name">Kategorien</span>
+                    <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
               
@@ -971,7 +974,7 @@
                       
                     
                     <span class="site-state-item-count">107</span>
-                    <span class="site-state-item-name">Tags</span>
+                    <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
               
@@ -1053,7 +1056,7 @@
 </div>
 
 
-  <div class="powered-by">Erstellt mit  <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
 
 
 
@@ -1061,7 +1064,7 @@
 
 
 
-  <div class="theme-info">Theme – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.7.0</div>
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.7.0</div>
 
 
 
