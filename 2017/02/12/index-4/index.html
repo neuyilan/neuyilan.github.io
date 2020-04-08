@@ -106,7 +106,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://neuyilan.github.io/2017/02/12/index-4/disk-cpu-time.png">
 <meta property="og:image" content="https://neuyilan.github.io/2017/02/12/index-4/SQL4.1.png">
-<meta property="og:updated_time" content="2019-01-12T03:17:45.889Z">
+<meta property="og:updated_time" content="2019-01-12T03:17:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="索引优化与设计(4)-为SELECT语句创建理想的索引">
 <meta name="twitter:description" content="本章节主要覆盖如下内容：  影响表以及索引扫描性能的主要因素列表 随机/顺序读时间以及CPU成本 根据三个最重要的需求为查询语句的索引指定星级 三星索引的设计-最理想的索引设计 宽索引 为查询语句设计最好索引的算法 根据现存索引情况设计最使用的索引，将CPU时间、磁盘读时间和耗费时间(elapsed time)考虑在内 从维护开销来看，对现有索引进行所建议的改变可能产生的结果 响应时间、驱动负载和">
@@ -223,7 +223,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Startseite</a>
 
   </li>
         
@@ -257,7 +257,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Kategorien</a>
 
   </li>
         
@@ -274,7 +274,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archiv</a>
 
   </li>
         
@@ -291,7 +291,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>Über</a>
 
   </li>
 
@@ -302,7 +302,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Search</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Suche</a>
         </li>
       
     </ul>
@@ -408,14 +408,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2017-02-12 09:56:48" itemprop="dateCreated datePublished" datetime="2017-02-12T09:56:48+08:00">2017-02-12</time>
+              <time title="Post created: 2017-02-12 09:56:48" itemprop="dateCreated datePublished" datetime="2017-02-12T09:56:48+08:00">2017-02-12</time>
             
 
             
@@ -432,7 +432,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-01-12 11:17:45" itemprop="dateModified" datetime="2019-01-12T11:17:45+08:00">2019-01-12</time>
+                <time title="Updated at: 2019-01-12 11:17:46" itemprop="dateModified" datetime="2019-01-12T11:17:46+08:00">2019-01-12</time>
               
             
           </span>
@@ -446,7 +446,7 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">In</span>
+                <span class="post-meta-item-text">in</span>
               
               
                 <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/索引优化与设计/" itemprop="url" rel="index"><span itemprop="name">索引优化与设计</span></a></span>
@@ -623,10 +623,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
+            Inhaltsverzeichnis
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
+            Übersicht
           </li>
         </ul>
       
@@ -648,8 +648,8 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">71</span>
-                    <span class="site-state-item-name">posts</span>
+                    <span class="site-state-item-count">72</span>
+                    <span class="site-state-item-name">Artikel</span>
                   </a>
                 </div>
               
@@ -702,7 +702,7 @@
                       
                     
                     <span class="site-state-item-count">20</span>
-                    <span class="site-state-item-name">categories</span>
+                    <span class="site-state-item-name">Kategorien</span>
                   </a>
                 </div>
               
@@ -926,8 +926,10 @@
                     
                       
                     
-                    <span class="site-state-item-count">106</span>
-                    <span class="site-state-item-name">tags</span>
+                      
+                    
+                    <span class="site-state-item-count">107</span>
+                    <span class="site-state-item-name">Tags</span>
                   </a>
                 </div>
               
@@ -1009,7 +1011,7 @@
 </div>
 
 
-  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+  <div class="powered-by">Erstellt mit  <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
 
 
 

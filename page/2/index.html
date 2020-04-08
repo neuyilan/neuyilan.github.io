@@ -219,7 +219,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Startseite</a>
 
   </li>
         
@@ -253,7 +253,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Kategorien</a>
 
   </li>
         
@@ -270,7 +270,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archiv</a>
 
   </li>
         
@@ -287,7 +287,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>Über</a>
 
   </li>
 
@@ -298,7 +298,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Search</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Suche</a>
         </li>
       
     </ul>
@@ -368,6 +368,168 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/11/19/redis常见技巧/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="伊蓝">
+      <meta itemprop="description" content="记录点滴">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yilan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                
+                <a href="/2019/11/19/redis常见技巧/" class="post-title-link" itemprop="url">redis常见技巧</a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+
+              
+                
+              
+
+              <time title="Post created: 2019-11-19 11:42:53 / Updated at: 11:47:36" itemprop="dateCreated datePublished" datetime="2019-11-19T11:42:53+08:00">2019-11-19</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/11/19/redis常见技巧/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/11/19/redis常见技巧/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="redis-命令行相关"><a href="#redis-命令行相关" class="headerlink" title="redis 命令行相关"></a>redis 命令行相关</h1><p>当搭建好一个redis 或是twemproxy之后，可以直接采用如下命令来操作redis集群<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 连接上redis server</span><br><span class="line">redis-cli -p port</span><br></pre></td></tr></table></figure></p>
+<p>剩下的就是操作redis的命令了<br>命令参考 <a href="https://redis.io/commands" target="_blank" rel="noopener">https://redis.io/commands</a></p>
+<h1 id="Error-Protocol-error-got-“-“-as-reply-type-byte"><a href="#Error-Protocol-error-got-“-“-as-reply-type-byte" class="headerlink" title="Error: Protocol error, got “{“ as reply type byte"></a>Error: Protocol error, got “{“ as reply type byte</h1><p>It is because twemproxy will listen on two ports when it starts, one of them is port 22222(by default, you can set it with ‘-s’), it is used for monitoring, if you connect to it, the error occurs</p>
+<p>So, connect to another port</p>
+<p>参考：<a href="https://stackoverflow.com/questions/27688394/twemproxynutcracker-error-protocol-error-got-as-reply-type-byte" target="_blank" rel="noopener">https://stackoverflow.com/questions/27688394/twemproxynutcracker-error-protocol-error-got-as-reply-type-byte</a></p>
+          <!--noindex-->
+          
+            <div class="post-button text-center">
+              <a class="btn" href="/2019/11/19/redis常见技巧/#more" rel="contents">
+                Weiterlesen &raquo;
+              </a>
+            </div>
+          
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/11/08/raft-相关资料/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -406,14 +568,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2019-11-08 17:16:25 / Modified: 17:28:53" itemprop="dateCreated datePublished" datetime="2019-11-08T17:16:25+08:00">2019-11-08</time>
+              <time title="Post created: 2019-11-08 17:16:25 / Updated at: 17:28:54" itemprop="dateCreated datePublished" datetime="2019-11-08T17:16:25+08:00">2019-11-08</time>
             
 
             
@@ -480,7 +642,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/11/08/raft-相关资料/#more" rel="contents">
-                Read more &raquo;
+                Weiterlesen &raquo;
               </a>
             </div>
           
@@ -577,14 +739,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2019-10-24 13:28:34 / Modified: 13:41:27" itemprop="dateCreated datePublished" datetime="2019-10-24T13:28:34+08:00">2019-10-24</time>
+              <time title="Post created: 2019-10-24 13:28:34 / Updated at: 13:41:28" itemprop="dateCreated datePublished" datetime="2019-10-24T13:28:34+08:00">2019-10-24</time>
             
 
             
@@ -652,7 +814,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/10/24/c-mmap读写示例/#more" rel="contents">
-                Read more &raquo;
+                Weiterlesen &raquo;
               </a>
             </div>
           
@@ -749,14 +911,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2019-10-16 09:59:26" itemprop="dateCreated datePublished" datetime="2019-10-16T09:59:26+08:00">2019-10-16</time>
+              <time title="Post created: 2019-10-16 09:59:26" itemprop="dateCreated datePublished" datetime="2019-10-16T09:59:26+08:00">2019-10-16</time>
             
 
             
@@ -773,7 +935,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-11-29 09:39:37" itemprop="dateModified" datetime="2019-11-29T09:39:37+08:00">2019-11-29</time>
+                <time title="Updated at: 2019-11-29 09:39:38" itemprop="dateModified" datetime="2019-11-29T09:39:38+08:00">2019-11-29</time>
               
             
           </span>
@@ -822,7 +984,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/10/16/Golang-go slice解析/#more" rel="contents">
-                Read more &raquo;
+                Weiterlesen &raquo;
               </a>
             </div>
           
@@ -919,14 +1081,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2019-10-08 20:52:00" itemprop="dateCreated datePublished" datetime="2019-10-08T20:52:00+08:00">2019-10-08</time>
+              <time title="Post created: 2019-10-08 20:52:00" itemprop="dateCreated datePublished" datetime="2019-10-08T20:52:00+08:00">2019-10-08</time>
             
 
             
@@ -943,7 +1105,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-11-29 09:44:56" itemprop="dateModified" datetime="2019-11-29T09:44:56+08:00">2019-11-29</time>
+                <time title="Updated at: 2019-11-29 09:44:56" itemprop="dateModified" datetime="2019-11-29T09:44:56+08:00">2019-11-29</time>
               
             
           </span>
@@ -992,7 +1154,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/10/08/Golang-redigo源码分析之连接池/#more" rel="contents">
-                Read more &raquo;
+                Weiterlesen &raquo;
               </a>
             </div>
           
@@ -1089,14 +1251,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2019-09-26 12:56:38 / Modified: 13:11:15" itemprop="dateCreated datePublished" datetime="2019-09-26T12:56:38+08:00">2019-09-26</time>
+              <time title="Post created: 2019-09-26 12:56:38 / Updated at: 13:11:16" itemprop="dateCreated datePublished" datetime="2019-09-26T12:56:38+08:00">2019-09-26</time>
             
 
             
@@ -1150,7 +1312,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/09/26/转载-crontab无法执行脚本原因及解决方法/#more" rel="contents">
-                Read more &raquo;
+                Weiterlesen &raquo;
               </a>
             </div>
           
@@ -1247,14 +1409,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2019-08-16 14:45:24" itemprop="dateCreated datePublished" datetime="2019-08-16T14:45:24+08:00">2019-08-16</time>
+              <time title="Post created: 2019-08-16 14:45:24" itemprop="dateCreated datePublished" datetime="2019-08-16T14:45:24+08:00">2019-08-16</time>
             
 
             
@@ -1271,7 +1433,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-09-25 14:34:49" itemprop="dateModified" datetime="2019-09-25T14:34:49+08:00">2019-09-25</time>
+                <time title="Updated at: 2019-09-25 14:34:50" itemprop="dateModified" datetime="2019-09-25T14:34:50+08:00">2019-09-25</time>
               
             
           </span>
@@ -1323,7 +1485,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/08/16/正则表达式常用知识/#more" rel="contents">
-                Read more &raquo;
+                Weiterlesen &raquo;
               </a>
             </div>
           
@@ -1420,14 +1582,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2019-08-10 16:06:44" itemprop="dateCreated datePublished" datetime="2019-08-10T16:06:44+08:00">2019-08-10</time>
+              <time title="Post created: 2019-08-10 16:06:44" itemprop="dateCreated datePublished" datetime="2019-08-10T16:06:44+08:00">2019-08-10</time>
             
 
             
@@ -1444,7 +1606,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-11-29 09:44:50" itemprop="dateModified" datetime="2019-11-29T09:44:50+08:00">2019-11-29</time>
+                <time title="Updated at: 2019-11-29 09:44:50" itemprop="dateModified" datetime="2019-11-29T09:44:50+08:00">2019-11-29</time>
               
             
           </span>
@@ -1493,7 +1655,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/08/10/Golang-go语言常用知识/#more" rel="contents">
-                Read more &raquo;
+                Weiterlesen &raquo;
               </a>
             </div>
           
@@ -1590,14 +1752,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2019-08-01 11:58:27" itemprop="dateCreated datePublished" datetime="2019-08-01T11:58:27+08:00">2019-08-01</time>
+              <time title="Post created: 2019-08-01 11:58:27" itemprop="dateCreated datePublished" datetime="2019-08-01T11:58:27+08:00">2019-08-01</time>
             
 
             
@@ -1614,7 +1776,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-12-23 20:09:31" itemprop="dateModified" datetime="2019-12-23T20:09:31+08:00">2019-12-23</time>
+                <time title="Updated at: 2019-12-23 20:09:32" itemprop="dateModified" datetime="2019-12-23T20:09:32+08:00">2019-12-23</time>
               
             
           </span>
@@ -1663,7 +1825,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/08/01/python常用工具大全/#more" rel="contents">
-                Read more &raquo;
+                Weiterlesen &raquo;
               </a>
             </div>
           
@@ -1760,14 +1922,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2019-07-24 21:31:15" itemprop="dateCreated datePublished" datetime="2019-07-24T21:31:15+08:00">2019-07-24</time>
+              <time title="Post created: 2019-07-24 21:31:15" itemprop="dateCreated datePublished" datetime="2019-07-24T21:31:15+08:00">2019-07-24</time>
             
 
             
@@ -1784,7 +1946,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-11-13 14:15:32" itemprop="dateModified" datetime="2019-11-13T14:15:32+08:00">2019-11-13</time>
+                <time title="Updated at: 2019-11-13 14:15:32" itemprop="dateModified" datetime="2019-11-13T14:15:32+08:00">2019-11-13</time>
               
             
           </span>
@@ -1833,204 +1995,7 @@
           
             <div class="post-button text-center">
               <a class="btn" href="/2019/07/24/c-常用知识/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          
-          <!--/noindex-->
-        
-      
-    </p></div>
-
-    
-
-    
-    
-    
-
-    
-
-    
-      
-    
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2019/07/22/linux-shell常用脚本命令/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="伊蓝">
-      <meta itemprop="description" content="记录点滴">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="yilan">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                
-                <a href="/2019/07/22/linux-shell常用脚本命令/" class="post-title-link" itemprop="url">linux shell常用脚本命令</a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-
-            
-            
-            
-
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-
-              
-                
-              
-
-              <time title="Created: 2019-07-22 19:29:53" itemprop="dateCreated datePublished" datetime="2019-07-22T19:29:53+08:00">2019-07-22</time>
-            
-
-            
-              
-
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">Edited on</span>
-                
-                <time title="Modified: 2019-12-31 19:19:54" itemprop="dateModified" datetime="2019-12-31T19:19:54+08:00">2019-12-31</time>
-              
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">In</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/常用命令/" itemprop="url" rel="index"><span itemprop="name">常用命令</span></a></span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2019/07/22/linux-shell常用脚本命令/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">Comments: </span> <span class="post-comments-count valine-comment-count" data-xid="/2019/07/22/linux-shell常用脚本命令/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="sed用法"><a href="#sed用法" class="headerlink" title="sed用法"></a>sed用法</h1><ol>
-<li><p>打印第n行到最后一行的内容<br>sed -n ‘1673523, $p’ bs.gi.log &gt; /home/work/qhl/bs.gi.log</p>
-</li>
-<li><p>打印匹配abc的行到最后一行的内容。<br>sed -n ‘/abc/,$p’ file.txt<br>注意是单引号</p>
-</li>
-<li>匹配特定字符串<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo $line | sed &apos;s/pattern//g&apos;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>eg<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &apos;DB_TYPE_ARR1: rts-weibo:0.80, dnews-weibo:0.80&apos; |grep DB_TYPE_ARR | sed &apos;s/DB_TYPE_ARR//&apos; | sed &apos;s/:[0-9].[0-9]\+//g&apos;</span><br></pre></td></tr></table></figure></p>
-<p>注意，g是全部替换的意思<br>
-          <!--noindex-->
-          
-            <div class="post-button text-center">
-              <a class="btn" href="/2019/07/22/linux-shell常用脚本命令/#more" rel="contents">
-                Read more &raquo;
+                Weiterlesen &raquo;
               </a>
             </div>
           
@@ -2123,8 +2088,8 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">71</span>
-                    <span class="site-state-item-name">posts</span>
+                    <span class="site-state-item-count">72</span>
+                    <span class="site-state-item-name">Artikel</span>
                   </a>
                 </div>
               
@@ -2177,7 +2142,7 @@
                       
                     
                     <span class="site-state-item-count">20</span>
-                    <span class="site-state-item-name">categories</span>
+                    <span class="site-state-item-name">Kategorien</span>
                   </a>
                 </div>
               
@@ -2401,8 +2366,10 @@
                     
                       
                     
-                    <span class="site-state-item-count">106</span>
-                    <span class="site-state-item-name">tags</span>
+                      
+                    
+                    <span class="site-state-item-count">107</span>
+                    <span class="site-state-item-name">Tags</span>
                   </a>
                 </div>
               
@@ -2467,7 +2434,7 @@
 </div>
 
 
-  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+  <div class="powered-by">Erstellt mit  <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
 
 
 

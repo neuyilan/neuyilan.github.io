@@ -106,7 +106,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/数据读取过程中的同步部分.png">
 <meta property="og:image" content="https://neuyilan.github.io/2018/08/08/Alluxio技术内幕-高性能的异步读缓存/读取数据块后的异步缓存.png">
-<meta property="og:updated_time" content="2019-01-12T03:08:16.321Z">
+<meta property="og:updated_time" content="2019-01-12T03:08:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Alluxio技术内幕:高性能的异步读缓存">
 <meta name="twitter:description" content="概览Alluxio服务通过连接底层持久化存储并按需将数据缓存至内存中，为不同的应用作业提供了一个可以高速并发访问的数据层。在Alluxio中，每一个文件根据其大小在逻辑上被划分成不同的“块”（默认512MB）。块在Alluxio中是缓存的最小单位。当Alluxio客户端用从Alluxio服务中读取文件时，如果被请求的数据块并未缓存在Alluxio中，则会触发缓存操作。将数据缓存在Alluxio空间">
@@ -223,7 +223,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Startseite</a>
 
   </li>
         
@@ -257,7 +257,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Kategorien</a>
 
   </li>
         
@@ -274,7 +274,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archiv</a>
 
   </li>
         
@@ -291,7 +291,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>Über</a>
 
   </li>
 
@@ -302,7 +302,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Search</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Suche</a>
         </li>
       
     </ul>
@@ -408,14 +408,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2018-08-08 00:20:01" itemprop="dateCreated datePublished" datetime="2018-08-08T00:20:01+08:00">2018-08-08</time>
+              <time title="Post created: 2018-08-08 00:20:01" itemprop="dateCreated datePublished" datetime="2018-08-08T00:20:01+08:00">2018-08-08</time>
             
 
             
@@ -432,7 +432,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-01-12 11:08:16" itemprop="dateModified" datetime="2019-01-12T11:08:16+08:00">2019-01-12</time>
+                <time title="Updated at: 2019-01-12 11:08:16" itemprop="dateModified" datetime="2019-01-12T11:08:16+08:00">2019-01-12</time>
               
             
           </span>
@@ -446,7 +446,7 @@
                 <i class="fa fa-folder-o"></i>
               </span>
               
-                <span class="post-meta-item-text">In</span>
+                <span class="post-meta-item-text">in</span>
               
               
                 <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/分布式存储/" itemprop="url" rel="index"><span itemprop="name">分布式存储</span></a></span>
@@ -621,10 +621,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
+            Inhaltsverzeichnis
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
+            Übersicht
           </li>
         </ul>
       
@@ -646,8 +646,8 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">71</span>
-                    <span class="site-state-item-name">posts</span>
+                    <span class="site-state-item-count">72</span>
+                    <span class="site-state-item-name">Artikel</span>
                   </a>
                 </div>
               
@@ -700,7 +700,7 @@
                       
                     
                     <span class="site-state-item-count">20</span>
-                    <span class="site-state-item-name">categories</span>
+                    <span class="site-state-item-name">Kategorien</span>
                   </a>
                 </div>
               
@@ -924,8 +924,10 @@
                     
                       
                     
-                    <span class="site-state-item-count">106</span>
-                    <span class="site-state-item-name">tags</span>
+                      
+                    
+                    <span class="site-state-item-count">107</span>
+                    <span class="site-state-item-name">Tags</span>
                   </a>
                 </div>
               
@@ -1007,7 +1009,7 @@
 </div>
 
 
-  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+  <div class="powered-by">Erstellt mit  <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
 
 
 

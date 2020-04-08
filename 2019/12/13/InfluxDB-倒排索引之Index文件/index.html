@@ -105,7 +105,7 @@
 <meta property="og:description" content="本文主要讲解InfluxDB中的倒排索引，InfluxDB和传统的LSM-tree(hbase使用的模型)不一样的地方是其内部中多了一个倒排索引，这也是让InfluxDB查询较快的秘诀。 在1.7的代码版本中，InfluxDB提供了两种类型的倒排索引，内存和磁盘的，之前只有内存版本的，但是随着数据的增多，内存倒排索引可能导致OOM，所以引入了基于磁盘的倒排索引。下面会基于此进行简单的分析。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://neuyilan.github.io/2019/12/13/InfluxDB-倒排索引之Index文件/influxdb%20倒排索引.png">
-<meta property="og:updated_time" content="2019-12-15T06:18:50.745Z">
+<meta property="og:updated_time" content="2019-12-15T06:18:50.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="InfluxDB-倒排索引之Index文件">
 <meta name="twitter:description" content="本文主要讲解InfluxDB中的倒排索引，InfluxDB和传统的LSM-tree(hbase使用的模型)不一样的地方是其内部中多了一个倒排索引，这也是让InfluxDB查询较快的秘诀。 在1.7的代码版本中，InfluxDB提供了两种类型的倒排索引，内存和磁盘的，之前只有内存版本的，但是随着数据的增多，内存倒排索引可能导致OOM，所以引入了基于磁盘的倒排索引。下面会基于此进行简单的分析。">
@@ -222,7 +222,7 @@
 
     
 
-    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Startseite</a>
 
   </li>
         
@@ -256,7 +256,7 @@
 
     
 
-    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>Kategorien</a>
 
   </li>
         
@@ -273,7 +273,7 @@
 
     
 
-    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archiv</a>
 
   </li>
         
@@ -290,7 +290,7 @@
 
     
 
-    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>Über</a>
 
   </li>
 
@@ -301,7 +301,7 @@
             <a href="javascript:;" class="popup-trigger">
           
             
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Search</a>
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Suche</a>
         </li>
       
     </ul>
@@ -407,14 +407,14 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Posted on</span>
+                <span class="post-meta-item-text">Veröffentlicht am</span>
               
 
               
                 
               
 
-              <time title="Created: 2019-12-13 10:50:07" itemprop="dateCreated datePublished" datetime="2019-12-13T10:50:07+08:00">2019-12-13</time>
+              <time title="Post created: 2019-12-13 10:50:07" itemprop="dateCreated datePublished" datetime="2019-12-13T10:50:07+08:00">2019-12-13</time>
             
 
             
@@ -431,7 +431,7 @@
                 
                   <span class="post-meta-item-text">Edited on</span>
                 
-                <time title="Modified: 2019-12-15 14:18:50" itemprop="dateModified" datetime="2019-12-15T14:18:50+08:00">2019-12-15</time>
+                <time title="Updated at: 2019-12-15 14:18:50" itemprop="dateModified" datetime="2019-12-15T14:18:50+08:00">2019-12-15</time>
               
             
           </span>
@@ -586,10 +586,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            Table of Contents
+            Inhaltsverzeichnis
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            Overview
+            Übersicht
           </li>
         </ul>
       
@@ -611,8 +611,8 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">71</span>
-                    <span class="site-state-item-name">posts</span>
+                    <span class="site-state-item-count">72</span>
+                    <span class="site-state-item-name">Artikel</span>
                   </a>
                 </div>
               
@@ -665,7 +665,7 @@
                       
                     
                     <span class="site-state-item-count">20</span>
-                    <span class="site-state-item-name">categories</span>
+                    <span class="site-state-item-name">Kategorien</span>
                   </a>
                 </div>
               
@@ -889,8 +889,10 @@
                     
                       
                     
-                    <span class="site-state-item-count">106</span>
-                    <span class="site-state-item-name">tags</span>
+                      
+                    
+                    <span class="site-state-item-count">107</span>
+                    <span class="site-state-item-name">Tags</span>
                   </a>
                 </div>
               
@@ -972,7 +974,7 @@
 </div>
 
 
-  <div class="powered-by">Powered by <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
+  <div class="powered-by">Erstellt mit  <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> v3.8.0</div>
 
 
 
