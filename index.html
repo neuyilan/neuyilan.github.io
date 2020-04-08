@@ -413,7 +413,7 @@
                 
               
 
-              <time title="创建时间：2020-04-08 16:50:52 / 修改时间：17:14:26" itemprop="dateCreated datePublished" datetime="2020-04-08T16:50:52+08:00">2020-04-08</time>
+              <time title="创建时间：2020-04-08 16:50:52 / 修改时间：17:17:26" itemprop="dateCreated datePublished" datetime="2020-04-08T16:50:52+08:00">2020-04-08</time>
             
 
             
@@ -462,8 +462,7 @@
 
       
         
-          <h1 id="log-相关"><a href="#log-相关" class="headerlink" title="log 相关"></a>log 相关</h1><h2 id="snapshot解析"><a href="#snapshot解析" class="headerlink" title="snapshot解析"></a>snapshot解析</h2><p><img src="Snapshot.png" alt="snapshot"></p>
-<ol>
+          <h1 id="log-相关"><a href="#log-相关" class="headerlink" title="log 相关"></a>log 相关</h1><h2 id="snapshot解析"><a href="#snapshot解析" class="headerlink" title="snapshot解析"></a>snapshot解析</h2><ol>
 <li>所有的snapshot都继承自父类Snapshot，父类有两个成员变量：lastLogId和lastLogTerm，指的是快照中最后的一条logid和log term</li>
 <li>SimpleSnapshot： 是最简单的快照实现方式，所有的log都保存在内存中，快照是一个list的数组实现方式。</li>
 <li>FileSnapshot：继承了Snapshot的同时，也实现了TimeseriesSchemaSnapshot接口，主要保存了两个属性：Collection<measurementschema>以及List<remotetsfileresource>。RemoteTsFileResource是tsfile的文件描述，而MeasurementSchema也是描述的各个measurement。所以可以看出来FileSnapshot之所以称之为”文件快照“，主要是由于保存了TsFileResource的原因。</remotetsfileresource></measurementschema></li>

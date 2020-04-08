@@ -96,13 +96,13 @@
 
 
 
-  <meta name="description" content="log 相关snapshot解析  所有的snapshot都继承自父类Snapshot，父类有两个成员变量：lastLogId和lastLogTerm，指的是快照中最后的一条logid和log term SimpleSnapshot： 是最简单的快照实现方式，所有的log都保存在内存中，快照是一个list的数组实现方式。 FileSnapshot：继承了Snapshot的同时，也实现了Timese">
+  <meta name="description" content="log 相关snapshot解析 所有的snapshot都继承自父类Snapshot，父类有两个成员变量：lastLogId和lastLogTerm，指的是快照中最后的一条logid和log term SimpleSnapshot： 是最简单的快照实现方式，所有的log都保存在内存中，快照是一个list的数组实现方式。 FileSnapshot：继承了Snapshot的同时，也实现了Timeser">
 <meta name="keywords" content="IoTDB,cluster">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IOTDB-Cluster 源码解析">
 <meta property="og:url" content="https://neuyilan.github.io/2020/04/08/IOTDB-Cluster-源码解析/index.html">
 <meta property="og:site_name" content="yilan">
-<meta property="og:description" content="log 相关snapshot解析  所有的snapshot都继承自父类Snapshot，父类有两个成员变量：lastLogId和lastLogTerm，指的是快照中最后的一条logid和log term SimpleSnapshot： 是最简单的快照实现方式，所有的log都保存在内存中，快照是一个list的数组实现方式。 FileSnapshot：继承了Snapshot的同时，也实现了Timese">
+<meta property="og:description" content="log 相关snapshot解析 所有的snapshot都继承自父类Snapshot，父类有两个成员变量：lastLogId和lastLogTerm，指的是快照中最后的一条logid和log term SimpleSnapshot： 是最简单的快照实现方式，所有的log都保存在内存中，快照是一个list的数组实现方式。 FileSnapshot：继承了Snapshot的同时，也实现了Timeser">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://neuyilan.github.io/2020/04/08/IOTDB-Cluster-源码解析/Snapshot.png">
 <meta property="og:image" content="https://neuyilan.github.io/2020/04/08/IOTDB-Cluster-源码解析/Log.png">
@@ -111,10 +111,10 @@
 <meta property="og:image" content="https://neuyilan.github.io/2020/04/08/IOTDB-Cluster-源码解析/RaftServer.png">
 <meta property="og:image" content="https://neuyilan.github.io/2020/04/08/IOTDB-Cluster-源码解析/RaftMember.png">
 <meta property="og:image" content="https://neuyilan.github.io/2020/04/08/IOTDB-Cluster-源码解析/partition划分图解.png">
-<meta property="og:updated_time" content="2020-04-08T09:14:26.651Z">
+<meta property="og:updated_time" content="2020-04-08T09:17:26.713Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IOTDB-Cluster 源码解析">
-<meta name="twitter:description" content="log 相关snapshot解析  所有的snapshot都继承自父类Snapshot，父类有两个成员变量：lastLogId和lastLogTerm，指的是快照中最后的一条logid和log term SimpleSnapshot： 是最简单的快照实现方式，所有的log都保存在内存中，快照是一个list的数组实现方式。 FileSnapshot：继承了Snapshot的同时，也实现了Timese">
+<meta name="twitter:description" content="log 相关snapshot解析 所有的snapshot都继承自父类Snapshot，父类有两个成员变量：lastLogId和lastLogTerm，指的是快照中最后的一条logid和log term SimpleSnapshot： 是最简单的快照实现方式，所有的log都保存在内存中，快照是一个list的数组实现方式。 FileSnapshot：继承了Snapshot的同时，也实现了Timeser">
 <meta name="twitter:image" content="https://neuyilan.github.io/2020/04/08/IOTDB-Cluster-源码解析/Snapshot.png">
 
 
@@ -420,7 +420,7 @@
                 
               
 
-              <time title="创建时间：2020-04-08 16:50:52 / 修改时间：17:14:26" itemprop="dateCreated datePublished" datetime="2020-04-08T16:50:52+08:00">2020-04-08</time>
+              <time title="创建时间：2020-04-08 16:50:52 / 修改时间：17:17:26" itemprop="dateCreated datePublished" datetime="2020-04-08T16:50:52+08:00">2020-04-08</time>
             
 
             
@@ -468,13 +468,13 @@
       
 
       
-        <h1 id="log-相关"><a href="#log-相关" class="headerlink" title="log 相关"></a>log 相关</h1><h2 id="snapshot解析"><a href="#snapshot解析" class="headerlink" title="snapshot解析"></a>snapshot解析</h2><p><img src="Snapshot.png" alt="snapshot"></p>
-<ol>
+        <h1 id="log-相关"><a href="#log-相关" class="headerlink" title="log 相关"></a>log 相关</h1><h2 id="snapshot解析"><a href="#snapshot解析" class="headerlink" title="snapshot解析"></a>snapshot解析</h2><ol>
 <li>所有的snapshot都继承自父类Snapshot，父类有两个成员变量：lastLogId和lastLogTerm，指的是快照中最后的一条logid和log term</li>
 <li>SimpleSnapshot： 是最简单的快照实现方式，所有的log都保存在内存中，快照是一个list的数组实现方式。</li>
 <li>FileSnapshot：继承了Snapshot的同时，也实现了TimeseriesSchemaSnapshot接口，主要保存了两个属性：Collection<measurementschema>以及List<remotetsfileresource>。RemoteTsFileResource是tsfile的文件描述，而MeasurementSchema也是描述的各个measurement。所以可以看出来FileSnapshot之所以称之为”文件快照“，主要是由于保存了TsFileResource的原因。</remotetsfileresource></measurementschema></li>
 </ol>
 <a id="more"></a>
+<p><img src="Snapshot.png" alt="snapshot"></p>
 <ol start="4">
 <li>RemoteFileSnapshot：首先看一下官方注释：<strong>RemoteFileSnapshot is a place holder that indicates the slot has unpulled data in the remote node.</strong>， 是用来表明本地的slot有未完成的任务，啥任务呢：就是从其他机器上(同一个复制组的节点中，主要用在新加入的节点需要从同复制组的其他机器上面同步任务)同步数据的任务。关键的一个属性就是pullSnapshotTask，这是一个Future&lt;Map&lt;Integer, FileSnapshot&gt;&gt;的变量，这个task是外部创建RemoteFileSnapshot的时候传进来的参数，这个task是啥呢？其实就是PullSnapshotTask，PullSnapshotTask类中的call 函数返回志就是Map&lt;Integer, T&gt;类型。</li>
 <li>PartitionedSnapshot: 使用一个map保存了每个slot id对应的快照。</li>
