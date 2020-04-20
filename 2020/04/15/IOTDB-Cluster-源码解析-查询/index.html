@@ -105,7 +105,7 @@
 <meta property="og:description" content="单机查询流程QueryPlan类：QueryPlan是有关查询相关的类，所有的plan都继承了PhysicalPlan这个虚类，QueryPlan也是一个虚类。其UML类图如下所示：">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://neuyilan.github.io/2020/04/15/IOTDB-Cluster-源码解析-查询/QueryPlan.png">
-<meta property="og:updated_time" content="2020-04-20T03:00:54.118Z">
+<meta property="og:updated_time" content="2020-04-20T06:27:45.032Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IOTDB-Cluster-源码解析-查询">
 <meta name="twitter:description" content="单机查询流程QueryPlan类：QueryPlan是有关查询相关的类，所有的plan都继承了PhysicalPlan这个虚类，QueryPlan也是一个虚类。其UML类图如下所示：">
@@ -431,7 +431,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-04-20 11:00:54" itemprop="dateModified" datetime="2020-04-20T11:00:54+08:00">2020-04-20</time>
+                <time title="修改时间：2020-04-20 14:27:45" itemprop="dateModified" datetime="2020-04-20T14:27:45+08:00">2020-04-20</time>
               
             
           </span>
@@ -524,7 +524,46 @@
 <li><p>从填充的seqTimeSeriesMetadata和unSeqTimeSeriesMetadata中，找出开始时间最早的那个作为firstTimeSeriesMetadata。(<font color="red">个人认为其实没必要，因为在第3步中已经找出来了</font>)</p>
 </li>
 </ol>
-<h1 id="分布式查询流程"><a href="#分布式查询流程" class="headerlink" title="分布式查询流程"></a>分布式查询流程</h1>
+<h1 id="分布式查询流程"><a href="#分布式查询流程" class="headerlink" title="分布式查询流程"></a>分布式查询流程</h1><h2 id="从Cli是怎么路由到IotDB-Server处理？"><a href="#从Cli是怎么路由到IotDB-Server处理？" class="headerlink" title="从Cli是怎么路由到IotDB Server处理？"></a>从Cli是怎么路由到IotDB Server处理？</h2><ol>
+<li><p>Client模块 Client::main()函数，首先解析下host，port，username等参数，根据这些参数建立以下conn；</p>
+</li>
+<li><p>建立conn之后，走到了receiveCommands函数，此函数是一个while(true)，处理用户输入的一些sql；</p>
+</li>
+<li><p>Client::receiveCommands-&gt;AbstractClient::processCommand-&gt;AbstractClient::handleInputCmd。(做一些参数解析(主要是help，SET_TIMESTAMP_DISPLAY，SET_TIME_ZONE等操作)) -&gt; AbstractClient::executeQuery -&gt; IoTDBStatement::execute -&gt;IoTDBStatement::executeSQL</p>
+</li>
+<li><p>下面分析下IoTDBStatement中的executeSQL函数，此函数首先构造了一个TSExecuteStatementReq execReq，execReq封装了sql等信息，然后调用client.executeStatement(execReq)这个rpc接口，client就是调用的本地的单机的6667端口的JDBC服务。</p>
+</li>
+</ol>
+<h2 id="executeStatement的处理逻辑"><a href="#executeStatement的处理逻辑" class="headerlink" title="executeStatement的处理逻辑"></a>executeStatement的处理逻辑</h2><ol>
+<li><p>做一些参数校验，权限校验的工作。</p>
+</li>
+<li><p>解析SQL为PhysicalPlan。然后根据plan是query还是update，执行不同的分支，由于此篇文章讲解query的流程。所以会走到internalExecuteQueryStatement。这个函数的主要任务其实就是创建QueryDataSet，然后作为TSExecuteStatementResp的一个属性返回。</p>
+</li>
+<li><p>createQueryDataSet。最终调用了executor.processQuery，根据executor是ClusterPlanExecutor还是PlanExecutor，决定走cluster流程还是单机流程。(不过目前实现都是一样的)</p>
+</li>
+<li><p>processDataQuery。会根据query的种类(groupBy、groupByFill、Aggregate、FillQuery、LastQuery、RawDataQuery)等走不同的分支，在此以RawDataQueryPlan为例。</p>
+</li>
+<li><p>QueryRouter::rawDataQuery()</p>
+<ul>
+<li>首先对之前生成PhysicalPlan一起生成的过滤表达式IExpression进行优化，具体的优化算法请参考：<a href="http://iotdb.apache.org/zh/SystemDesign/1-TsFile/4-Read.html#_1-%E8%BF%87%E6%BB%A4%E6%9D%A1%E4%BB%B6%E5%92%8C%E6%9F%A5%E8%AF%A2%E8%A1%A8%E8%BE%BE%E5%BC%8F" target="_blank" rel="noopener">http://iotdb.apache.org/zh/SystemDesign/1-TsFile/4-Read.html#_1-%E8%BF%87%E6%BB%A4%E6%9D%A1%E4%BB%B6%E5%92%8C%E6%9F%A5%E8%AF%A2%E8%A1%A8%E8%BE%BE%E5%BC%8F</a></li>
+<li><p>根据filter是GLOBAL_TIME(全局只有一个时间的过滤条件)，还是有值得过滤条件，走不同的分支，我们以值过滤条件为例，走到了RawDataQueryExecutor::executeWithValueFilter()</p>
+</li>
+<li><p>创建TimeGenerator，这里面主要有3个属性：</p>
+</li>
+</ul>
+<ol>
+<li><p>HashMap&lt;Path, List<leafnode>&gt; leafCache，根据过滤表达式IExpression构造出来的，key是seriesPath，value是List<leafnode>,LeafNode是一个包装了一个IBatchReader的类；</leafnode></leafnode></p>
+</li>
+<li><p>Node operatorNode，是一个树，每个叶子都是一个LeafNode。</p>
+</li>
+<li><p>boolean hasOrNode，这颗树种是否有or 节点。</p>
+</li>
+<li><p>上面提到LeafNode里面包含一个IBatchReader，那么这个IBatchReader是怎么创建的呢？<br>6.</p>
+</li>
+</ol>
+</li>
+</ol>
+
       
     </div>
 
@@ -981,7 +1020,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#单机查询流程"><span class="nav-number">1.</span> <span class="nav-text">单机查询流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#QueryPlan类："><span class="nav-number">2.</span> <span class="nav-text">QueryPlan类：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BatchData类："><span class="nav-number">3.</span> <span class="nav-text">BatchData类：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SeriesReader类分析"><span class="nav-number">4.</span> <span class="nav-text">SeriesReader类分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#重点函数分析"><span class="nav-number">4.1.</span> <span class="nav-text">重点函数分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hasNextFile"><span class="nav-number">4.1.1.</span> <span class="nav-text">hasNextFile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hasNextChunk"><span class="nav-number">4.1.2.</span> <span class="nav-text">hasNextChunk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tryToUnpackAllOverlappedFilesToTimeSeriesMetadata"><span class="nav-number">4.1.3.</span> <span class="nav-text">tryToUnpackAllOverlappedFilesToTimeSeriesMetadata</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式查询流程"><span class="nav-number">5.</span> <span class="nav-text">分布式查询流程</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#单机查询流程"><span class="nav-number">1.</span> <span class="nav-text">单机查询流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#QueryPlan类："><span class="nav-number">2.</span> <span class="nav-text">QueryPlan类：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BatchData类："><span class="nav-number">3.</span> <span class="nav-text">BatchData类：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SeriesReader类分析"><span class="nav-number">4.</span> <span class="nav-text">SeriesReader类分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#重点函数分析"><span class="nav-number">4.1.</span> <span class="nav-text">重点函数分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hasNextFile"><span class="nav-number">4.1.1.</span> <span class="nav-text">hasNextFile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hasNextChunk"><span class="nav-number">4.1.2.</span> <span class="nav-text">hasNextChunk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tryToUnpackAllOverlappedFilesToTimeSeriesMetadata"><span class="nav-number">4.1.3.</span> <span class="nav-text">tryToUnpackAllOverlappedFilesToTimeSeriesMetadata</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式查询流程"><span class="nav-number">5.</span> <span class="nav-text">分布式查询流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从Cli是怎么路由到IotDB-Server处理？"><span class="nav-number">5.1.</span> <span class="nav-text">从Cli是怎么路由到IotDB Server处理？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#executeStatement的处理逻辑"><span class="nav-number">5.2.</span> <span class="nav-text">executeStatement的处理逻辑</span></a></li></ol></li></ol></div>
             
 
           </div>
