@@ -105,7 +105,7 @@
 <meta property="og:description" content="单机查询流程QueryPlan类：QueryPlan是有关查询相关的类，所有的plan都继承了PhysicalPlan这个虚类，QueryPlan也是一个虚类。其UML类图如下所示：">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://neuyilan.github.io/2020/04/15/IOTDB-Cluster-源码解析-查询/QueryPlan.png">
-<meta property="og:updated_time" content="2020-04-20T06:27:45.032Z">
+<meta property="og:updated_time" content="2020-04-20T06:31:03.275Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IOTDB-Cluster-源码解析-查询">
 <meta name="twitter:description" content="单机查询流程QueryPlan类：QueryPlan是有关查询相关的类，所有的plan都继承了PhysicalPlan这个虚类，QueryPlan也是一个虚类。其UML类图如下所示：">
@@ -431,7 +431,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-04-20 14:27:45" itemprop="dateModified" datetime="2020-04-20T14:27:45+08:00">2020-04-20</time>
+                <time title="修改时间：2020-04-20 14:31:03" itemprop="dateModified" datetime="2020-04-20T14:31:03+08:00">2020-04-20</time>
               
             
           </span>
@@ -549,8 +549,6 @@
 <li><p>根据filter是GLOBAL_TIME(全局只有一个时间的过滤条件)，还是有值得过滤条件，走不同的分支，我们以值过滤条件为例，走到了RawDataQueryExecutor::executeWithValueFilter()</p>
 </li>
 <li><p>创建TimeGenerator，这里面主要有3个属性：</p>
-</li>
-</ul>
 <ol>
 <li><p>HashMap&lt;Path, List<leafnode>&gt; leafCache，根据过滤表达式IExpression构造出来的，key是seriesPath，value是List<leafnode>,LeafNode是一个包装了一个IBatchReader的类；</leafnode></leafnode></p>
 </li>
@@ -561,6 +559,8 @@
 <li><p>上面提到LeafNode里面包含一个IBatchReader，那么这个IBatchReader是怎么创建的呢？<br>6.</p>
 </li>
 </ol>
+</li>
+</ul>
 </li>
 </ol>
 
