@@ -105,7 +105,7 @@
 <meta property="og:description" content="单机查询流程QueryPlan类：QueryPlan是有关查询相关的类，所有的plan都继承了PhysicalPlan这个虚类，QueryPlan也是一个虚类。其UML类图如下所示：">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://neuyilan.github.io/2020/04/15/IOTDB-Cluster-源码解析-查询/QueryPlan.png">
-<meta property="og:updated_time" content="2020-04-20T06:31:03.275Z">
+<meta property="og:updated_time" content="2020-04-20T07:17:47.915Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IOTDB-Cluster-源码解析-查询">
 <meta name="twitter:description" content="单机查询流程QueryPlan类：QueryPlan是有关查询相关的类，所有的plan都继承了PhysicalPlan这个虚类，QueryPlan也是一个虚类。其UML类图如下所示：">
@@ -431,7 +431,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-04-20 14:31:03" itemprop="dateModified" datetime="2020-04-20T14:31:03+08:00">2020-04-20</time>
+                <time title="修改时间：2020-04-20 15:17:47" itemprop="dateModified" datetime="2020-04-20T15:17:47+08:00">2020-04-20</time>
               
             
           </span>
@@ -545,7 +545,7 @@
 </li>
 <li><p>QueryRouter::rawDataQuery()</p>
 <ul>
-<li>首先对之前生成PhysicalPlan一起生成的过滤表达式IExpression进行优化，具体的优化算法请参考：<a href="http://iotdb.apache.org/zh/SystemDesign/1-TsFile/4-Read.html#_1-%E8%BF%87%E6%BB%A4%E6%9D%A1%E4%BB%B6%E5%92%8C%E6%9F%A5%E8%AF%A2%E8%A1%A8%E8%BE%BE%E5%BC%8F" target="_blank" rel="noopener">http://iotdb.apache.org/zh/SystemDesign/1-TsFile/4-Read.html#_1-%E8%BF%87%E6%BB%A4%E6%9D%A1%E4%BB%B6%E5%92%8C%E6%9F%A5%E8%AF%A2%E8%A1%A8%E8%BE%BE%E5%BC%8F</a></li>
+<li>首先对之前生成PhysicalPlan一起生成的过滤表达式IExpression进行优化，具体的优化算法请参考：<a href="http://iotdb.apache.org/zh/SystemDesign/1-TsFile/4-Read.html#_1-%E8%BF%87%E6%BB%A4%E6%9D%A1%E4%BB%B6%E5%92%8C%E6%9F%A5%E8%AF%A2%E8%A1%A8%E8%BE%BE%E5%BC%8F" target="_blank" rel="noopener">过滤条件和查询表达式</a></li>
 <li><p>根据filter是GLOBAL_TIME(全局只有一个时间的过滤条件)，还是有值得过滤条件，走不同的分支，我们以值过滤条件为例，走到了RawDataQueryExecutor::executeWithValueFilter()</p>
 </li>
 <li><p>创建TimeGenerator，这里面主要有3个属性：</p>
@@ -556,11 +556,25 @@
 </li>
 <li><p>boolean hasOrNode，这颗树种是否有or 节点。</p>
 </li>
-<li><p>上面提到LeafNode里面包含一个IBatchReader，那么这个IBatchReader是怎么创建的呢？<br>6.</p>
+<li><p>上面提到LeafNode里面包含一个IBatchReader，那么这个IBatchReader是怎么创建的呢？请参考下面具体解析。</p>
 </li>
 </ol>
 </li>
 </ul>
+</li>
+</ol>
+<h2 id="LeafNode中的IBatchReader创建逻辑"><a href="#LeafNode中的IBatchReader创建逻辑" class="headerlink" title="LeafNode中的IBatchReader创建逻辑"></a>LeafNode中的IBatchReader创建逻辑</h2><p>在TimeGenerator::construct函数中，调用了generateNewBatchReader来创建TimeGenerator，目前主要有3种实现：ClusterTimeGenerator、ServerTimeGenerator以及TsFileTimeGenerator。</p>
+<p>对于每个leafNode，其对应一个SingleSeriesExpression，也对应一个IBatchReader</p>
+<ol>
+<li><p>ClusterTimeGenerator::generateNewBatchReader</p>
+<ul>
+<li>主要函数：MetaGroupMember::getSeriesReader，首先根据filter和path构造出List<partitiongroup>。如果没有时间过滤条件，则需要广播到所有的partitionGroup；如果有时间过滤条件，则根据时间过滤条件计算出要查询的数据所在的partitionGroup：先找到partitionGroup所在的header(算法如下)，然后在根据header找到partition Group。</partitiongroup></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">  public static void getIntervalHeaders(String storageGroupName, long timeLowerBound, long timeUpperBound,</span><br><span class="line">    PartitionTable partitionTable, Set&lt;Node&gt; result) &#123;</span><br><span class="line">      //  获取配置的partitionInterval</span><br><span class="line">    long partitionInterval = StorageEngine.getTimePartitionInterval();</span><br><span class="line">    // 计算时间下限用于计算slot id时间，之所以先除以partitionInterval，然后在乘以partitionInterval。是因为在routeToHeaderByTime中根据path和time定位slot id的时候有这个逻辑：time / timePartitionInterval。（&lt;font color=&quot;red&quot;&gt; 个人认为此处操作是多此一举，比如时间戳是10，partitionInterval是3，则最终计算出来的partitionInstance=10/3=3, 如果先开始10/3*3=9,然后在计算9/3还是3，所以此处转化没有用，唯一的用处就是后面计算都是整数了？&lt;/font&gt;）</span><br><span class="line">    long currPartitionStart = timeLowerBound / partitionInterval * partitionInterval;</span><br><span class="line">    // 然后遍历，每次增加partitionInterval，直到上限达到timeUpperBound为止。(&lt;font color=&quot;red&quot;&gt;此处有性能问题，如果只设置了下限，没有设置上限，则上限默认为Long.MAX_VALUE，会循环遍历亿亿次；对下限也是同理&lt;/font&gt;)</span><br><span class="line">    while (currPartitionStart &lt;= timeUpperBound) &#123;</span><br><span class="line">      result.add(partitionTable.routeToHeaderByTime(storageGroupName, currPartitionStart));</span><br><span class="line">      currPartitionStart += partitionInterval;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>ServerTimeGenerator::generateNewBatchReader <font color="blue"> todo  </font></p>
+</li>
+<li><p>TsFileTimeGenerator::generateNewBatchReader <font color="blue"> todo  </font></p>
 </li>
 </ol>
 
@@ -1020,7 +1034,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#单机查询流程"><span class="nav-number">1.</span> <span class="nav-text">单机查询流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#QueryPlan类："><span class="nav-number">2.</span> <span class="nav-text">QueryPlan类：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BatchData类："><span class="nav-number">3.</span> <span class="nav-text">BatchData类：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SeriesReader类分析"><span class="nav-number">4.</span> <span class="nav-text">SeriesReader类分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#重点函数分析"><span class="nav-number">4.1.</span> <span class="nav-text">重点函数分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hasNextFile"><span class="nav-number">4.1.1.</span> <span class="nav-text">hasNextFile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hasNextChunk"><span class="nav-number">4.1.2.</span> <span class="nav-text">hasNextChunk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tryToUnpackAllOverlappedFilesToTimeSeriesMetadata"><span class="nav-number">4.1.3.</span> <span class="nav-text">tryToUnpackAllOverlappedFilesToTimeSeriesMetadata</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式查询流程"><span class="nav-number">5.</span> <span class="nav-text">分布式查询流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从Cli是怎么路由到IotDB-Server处理？"><span class="nav-number">5.1.</span> <span class="nav-text">从Cli是怎么路由到IotDB Server处理？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#executeStatement的处理逻辑"><span class="nav-number">5.2.</span> <span class="nav-text">executeStatement的处理逻辑</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#单机查询流程"><span class="nav-number">1.</span> <span class="nav-text">单机查询流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#QueryPlan类："><span class="nav-number">2.</span> <span class="nav-text">QueryPlan类：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BatchData类："><span class="nav-number">3.</span> <span class="nav-text">BatchData类：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SeriesReader类分析"><span class="nav-number">4.</span> <span class="nav-text">SeriesReader类分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#重点函数分析"><span class="nav-number">4.1.</span> <span class="nav-text">重点函数分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hasNextFile"><span class="nav-number">4.1.1.</span> <span class="nav-text">hasNextFile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hasNextChunk"><span class="nav-number">4.1.2.</span> <span class="nav-text">hasNextChunk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tryToUnpackAllOverlappedFilesToTimeSeriesMetadata"><span class="nav-number">4.1.3.</span> <span class="nav-text">tryToUnpackAllOverlappedFilesToTimeSeriesMetadata</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式查询流程"><span class="nav-number">5.</span> <span class="nav-text">分布式查询流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从Cli是怎么路由到IotDB-Server处理？"><span class="nav-number">5.1.</span> <span class="nav-text">从Cli是怎么路由到IotDB Server处理？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#executeStatement的处理逻辑"><span class="nav-number">5.2.</span> <span class="nav-text">executeStatement的处理逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LeafNode中的IBatchReader创建逻辑"><span class="nav-number">5.3.</span> <span class="nav-text">LeafNode中的IBatchReader创建逻辑</span></a></li></ol></li></ol></div>
             
 
           </div>
