@@ -105,7 +105,7 @@
 <meta property="og:description" content="单机查询流程QueryPlan类：QueryPlan是有关查询相关的类，所有的plan都继承了PhysicalPlan这个虚类，QueryPlan也是一个虚类。其UML类图如下所示：">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://neuyilan.github.io/2020/04/15/IOTDB-Cluster-源码解析-查询/QueryPlan.png">
-<meta property="og:updated_time" content="2020-04-20T07:17:47.915Z">
+<meta property="og:updated_time" content="2020-04-20T07:34:07.332Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IOTDB-Cluster-源码解析-查询">
 <meta name="twitter:description" content="单机查询流程QueryPlan类：QueryPlan是有关查询相关的类，所有的plan都继承了PhysicalPlan这个虚类，QueryPlan也是一个虚类。其UML类图如下所示：">
@@ -431,7 +431,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-04-20 15:17:47" itemprop="dateModified" datetime="2020-04-20T15:17:47+08:00">2020-04-20</time>
+                <time title="修改时间：2020-04-20 15:34:07" itemprop="dateModified" datetime="2020-04-20T15:34:07+08:00">2020-04-20</time>
               
             
           </span>
@@ -560,6 +560,10 @@
 </li>
 </ol>
 </li>
+<li><p>遍历所有的序列，为么给序列调用getReaderByTimestamp创建IReaderByTimestamp。</p>
+</li>
+<li><p>调用new RawQueryDataSetWithValueFilter()返回。</p>
+</li>
 </ul>
 </li>
 </ol>
@@ -571,7 +575,12 @@
 <li>主要函数：MetaGroupMember::getSeriesReader，首先根据filter和path构造出List<partitiongroup>。如果没有时间过滤条件，则需要广播到所有的partitionGroup；如果有时间过滤条件，则根据时间过滤条件计算出要查询的数据所在的partitionGroup：先找到partitionGroup所在的header(算法如下)，然后在根据header找到partition Group。</partitiongroup></li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">  public static void getIntervalHeaders(String storageGroupName, long timeLowerBound, long timeUpperBound,</span><br><span class="line">    PartitionTable partitionTable, Set&lt;Node&gt; result) &#123;</span><br><span class="line">      //  获取配置的partitionInterval</span><br><span class="line">    long partitionInterval = StorageEngine.getTimePartitionInterval();</span><br><span class="line">    // 计算时间下限用于计算slot id时间，之所以先除以partitionInterval，然后在乘以partitionInterval。是因为在routeToHeaderByTime中根据path和time定位slot id的时候有这个逻辑：time / timePartitionInterval。（&lt;font color=&quot;red&quot;&gt; 个人认为此处操作是多此一举，比如时间戳是10，partitionInterval是3，则最终计算出来的partitionInstance=10/3=3, 如果先开始10/3*3=9,然后在计算9/3还是3，所以此处转化没有用，唯一的用处就是后面计算都是整数了？&lt;/font&gt;）</span><br><span class="line">    long currPartitionStart = timeLowerBound / partitionInterval * partitionInterval;</span><br><span class="line">    // 然后遍历，每次增加partitionInterval，直到上限达到timeUpperBound为止。(&lt;font color=&quot;red&quot;&gt;此处有性能问题，如果只设置了下限，没有设置上限，则上限默认为Long.MAX_VALUE，会循环遍历亿亿次；对下限也是同理&lt;/font&gt;)</span><br><span class="line">    while (currPartitionStart &lt;= timeUpperBound) &#123;</span><br><span class="line">      result.add(partitionTable.routeToHeaderByTime(storageGroupName, currPartitionStart));</span><br><span class="line">      currPartitionStart += partitionInterval;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>为每个partition 构建一个SeriesReader。然后merge到ManagedMergeReader中，ManagedMergeReader维护了一个最小堆，根据reader的nextTimeValuePair的时间戳进行比较。</li>
+</ul>
 </li>
+</ol>
+<ol start="2">
 <li><p>ServerTimeGenerator::generateNewBatchReader <font color="blue"> todo  </font></p>
 </li>
 <li><p>TsFileTimeGenerator::generateNewBatchReader <font color="blue"> todo  </font></p>
