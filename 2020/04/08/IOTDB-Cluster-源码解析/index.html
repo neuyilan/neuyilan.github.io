@@ -112,7 +112,7 @@
 <meta property="og:image" content="https://neuyilan.github.io/2020/04/08/IOTDB-Cluster-源码解析/RaftServer.png">
 <meta property="og:image" content="https://neuyilan.github.io/2020/04/08/IOTDB-Cluster-源码解析/RaftMember.png">
 <meta property="og:image" content="https://neuyilan.github.io/2020/04/08/IOTDB-Cluster-源码解析/partition划分图解.png">
-<meta property="og:updated_time" content="2020-04-22T09:55:44.518Z">
+<meta property="og:updated_time" content="2020-04-23T02:07:24.461Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IOTDB-Cluster 源码解析">
 <meta name="twitter:description" content="Log 相关loglog记录了集群中发生过的操作，每一条log都有如下4个变量：    属性 含义     currLogIndex 此条log的索引    currLogTerm 此条log的term    previousLogIndex 前一条log的索引    previousLogTerm 前一条log的term">
@@ -438,7 +438,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-04-22 17:55:44" itemprop="dateModified" datetime="2020-04-22T17:55:44+08:00">2020-04-22</time>
+                <time title="修改时间：2020-04-23 10:07:24" itemprop="dateModified" datetime="2020-04-23T10:07:24+08:00">2020-04-23</time>
               
             
           </span>
@@ -523,7 +523,8 @@
 </ol>
 <p>RemoteTsFileResource是tsfile的文件描述，而MeasurementSchema也是描述的各个measurement。所以可以看出来FileSnapshot之所以称之为”文件快照“，主要是由于保存了TsFileResource的原因。</p>
 <ol start="4">
-<li><p>RemoteFileSnapshot：首先看一下官方注释：<strong>RemoteFileSnapshot is a place holder that indicates the slot has unpulled data in the remote node.</strong>， 是用来表明本地的slot有未完成的任务，啥任务呢：就是从其他机器上(同一个复制组的节点中，主要用在新加入的节点需要从同复制组的其他机器上面同步任务)同步数据的任务。关键的一个属性就是pullSnapshotTask，这是一个Future&lt;Map&lt;Integer, FileSnapshot&gt;&gt;的变量，这个task是外部创建RemoteFileSnapshot的时候传进来的参数，这个task是啥呢？其实就是PullSnapshotTask，PullSnapshotTask类中的call 函数返回的就是Map&lt;Integer, T&gt;类型。T就是Snapshot的泛型。所以RemoteFileSnapshot更像是封装了一个从远程拉取快照任务的类。</p>
+<li><p>PullSnapshotTaskDescriptor：首先看一下官方注释：<strong>PullSnapshotTaskDescriptor describes a pull-snapshot-task with the slots to pull.</strong>， 有如下两个数据结构.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">private PartitionGroup previousHolders;</span><br><span class="line">private List&lt;Integer&gt; slots;</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>PartitionedSnapshot: 使用一个map保存了每个slot id对应的快照。核心数据结构如下</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// key是slot id，value是Snapshot的泛型(具体的某一种Snapshot)</span><br><span class="line">private Map&lt;Integer, T&gt; slotSnapshots;</span><br><span class="line">// SnapshotFactory是一个函数式接口，用来反序列化的时候创建Snapshot的实例，</span><br><span class="line">// 可以通过下图看到函数接口的实现都是Snapshot的默认构造函数。</span><br><span class="line">private SnapshotFactory&lt;T&gt; factory;</span><br></pre></td></tr></table></figure>
@@ -532,7 +533,7 @@
 <p><img src="函数接口的实现.png" alt="函数接口的实现"></p>
 <ol start="6">
 <li>MetaSimpleSnapshot：继承自SimpleSnapshot：多了一个属性storageGroups，保存了所有的storageGroups。除了需要保存storageGroups之外，MetaSimpleSnapshot还需要保存所有需要的元数据，例如ttl，dataAuth等。</li>
-<li>PullSnapshotTask， 他并不是一个快照的实现类，而是封装了执行快照任务的一个类，它实现了Callable接口，可以简单的理解为实现了Runnable接口一样，关于Runnable和Callable接口的差异请google。call 函数是具体实现pullSnapshot 任务的函数，返回值是一个map，key是slot id，value是snapshot，以供调用者可以读取snapshot的数据来进行数据追赶。</li>
+<li>PullSnapshotTask， 他并不是一个快照的实现类，而是封装了执行快照任务的一个类，它实现了Callable接口，可以简单的理解为实现了Runnable接口一样，关于Runnable和Callable接口的差异请google。call 函数是具体实现pullSnapshot 任务的函数，返回值是一个map，key是slot id，value是snapshot，以供调用者可以读取snapshot的数据来进行数据追赶。PullSnapshotTask持有PullSnapshotTaskDescriptor，用来描述从哪儿拉取快照。</li>
 </ol>
 <h2 id="log-applier"><a href="#log-applier" class="headerlink" title="log applier"></a>log applier</h2><p><img src="Applier.png" alt="Applier"><br>核心函数就是apply(Log)，使得log所描述的action在本机生效，这里其实跟wal有点类似了，wal的作用就是执行任何事情之前先写wal，防止崩溃的时候wal可以恢复，只不过log applier是raft状态机中的组件。</p>
 <p>DataLogApplier目前提供的apply类型：PhysicalPlanLog和CloseFileLog<br>MetaLogApplier目前提供的apply类型：AddNodeLog，RemoveNodeLog和PhysicalPlanLog。</p>
@@ -545,7 +546,7 @@
 <li><p>MemoryLogManager，虚类，把所有的log都保存在内存中。</p>
 </li>
 <li>MetaSingleSnapshotLogManager， 继承自MemoryLogManager，其中的snapshot也是内存持有的，不过其getSnapshot函数返回的是MetaSimpleSnapshot。</li>
-<li>PartitionedSnapshotLogManager， 继承自MemoryLogManager，其中的snapshot也是内存持有的，不过其getSnapshot函数返回的是PartitionedSnapshot。</li>
+<li>PartitionedSnapshotLogManager， 继承自MemoryLogManager，其中的snapshot也是内存持有的，不过其getSnapshot函数返回的是PartitionedSnapshot。<font color="red">实际中没有</font></li>
 <li>FilePartitionedSnapshotLogManager，继承自PartitionedSnapshotLogManager，与PartitionedSnapshotLogManager不同之处在于：PartitionedSnapshotLogManager在更新快照的时候会把快照保存在内存中，而FilePartitionedSnapshotLogManager想从tsfile中实时获取快照。笔者理解就是FilePartitionedSnapshotLogManager不想在内存中保存快照，而是在需要的时候实时从tsfile中获取快照，用以减少内存的使用。<strong>但是目前并未达到理想的效果，因为在LogManager append log的时候，已经把log保存在内存中了，所以iotdb作者起了一个issue来研究这个问题 <a href="https://issues.apache.org/jira/browse/IOTDB-439" target="_blank" rel="noopener">https://issues.apache.org/jira/browse/IOTDB-439</a></strong></li>
 </ol>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Log,LogManager和LogApplier以及Snapshot之间的关系几个组件的关系为：</p>
