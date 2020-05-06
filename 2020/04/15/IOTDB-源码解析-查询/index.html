@@ -99,27 +99,30 @@
   <meta name="description" content="单机查询流程QueryPlan类：QueryPlan是有关查询相关的类，所有的plan都继承了PhysicalPlan这个虚类，QueryPlan也是一个虚类。其UML类图如下所示：">
 <meta name="keywords" content="IoTDB,cluster,查询流程">
 <meta property="og:type" content="article">
-<meta property="og:title" content="IOTDB-Cluster-源码解析-查询">
-<meta property="og:url" content="https://neuyilan.github.io/2020/04/15/IOTDB-Cluster-源码解析-查询/index.html">
+<meta property="og:title" content="IOTDB-源码解析-查询">
+<meta property="og:url" content="https://neuyilan.github.io/2020/04/15/IOTDB-源码解析-查询/index.html">
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="单机查询流程QueryPlan类：QueryPlan是有关查询相关的类，所有的plan都继承了PhysicalPlan这个虚类，QueryPlan也是一个虚类。其UML类图如下所示：">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://neuyilan.github.io/2020/04/15/IOTDB-Cluster-源码解析-查询/QueryPlan.png">
-<meta property="og:image" content="https://neuyilan.github.io/2020/04/15/IOTDB-Cluster-源码解析-查询/SeriesRawDataBatchReader.png">
-<meta property="og:image" content="https://neuyilan.github.io/2020/04/15/IOTDB-Cluster-源码解析-查询/AggregateReader.png">
-<meta property="og:image" content="https://neuyilan.github.io/2020/04/15/IOTDB-Cluster-源码解析-查询/IReaderByTimestamp.png">
-<meta property="og:updated_time" content="2020-04-20T13:04:50.883Z">
+<meta property="og:image" content="https://neuyilan.github.io/2020/04/15/IOTDB-源码解析-查询/QueryPlan.png">
+<meta property="og:image" content="https://neuyilan.github.io/2020/04/15/IOTDB-源码解析-查询/PointReader.png">
+<meta property="og:image" content="https://neuyilan.github.io/2020/04/15/IOTDB-源码解析-查询/PageReader.png">
+<meta property="og:image" content="https://neuyilan.github.io/2020/04/15/IOTDB-源码解析-查询/ChunkReader.png">
+<meta property="og:image" content="https://neuyilan.github.io/2020/04/15/IOTDB-源码解析-查询/SeriesRawDataBatchReader.png">
+<meta property="og:image" content="https://neuyilan.github.io/2020/04/15/IOTDB-源码解析-查询/AggregateReader.png">
+<meta property="og:image" content="https://neuyilan.github.io/2020/04/15/IOTDB-源码解析-查询/IReaderByTimestamp.png">
+<meta property="og:updated_time" content="2020-05-06T12:27:20.912Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="IOTDB-Cluster-源码解析-查询">
+<meta name="twitter:title" content="IOTDB-源码解析-查询">
 <meta name="twitter:description" content="单机查询流程QueryPlan类：QueryPlan是有关查询相关的类，所有的plan都继承了PhysicalPlan这个虚类，QueryPlan也是一个虚类。其UML类图如下所示：">
-<meta name="twitter:image" content="https://neuyilan.github.io/2020/04/15/IOTDB-Cluster-源码解析-查询/QueryPlan.png">
+<meta name="twitter:image" content="https://neuyilan.github.io/2020/04/15/IOTDB-源码解析-查询/QueryPlan.png">
 
 
 
 
 
 
-  <link rel="canonical" href="https://neuyilan.github.io/2020/04/15/IOTDB-Cluster-源码解析-查询/">
+  <link rel="canonical" href="https://neuyilan.github.io/2020/04/15/IOTDB-源码解析-查询/">
 
 
 
@@ -129,7 +132,7 @@
   };
 </script>
 
-  <title>IOTDB-Cluster-源码解析-查询 | yilan</title>
+  <title>IOTDB-源码解析-查询 | yilan</title>
   
 
 
@@ -374,7 +377,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2020/04/15/IOTDB-Cluster-源码解析-查询/">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2020/04/15/IOTDB-源码解析-查询/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="伊蓝">
@@ -391,7 +394,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">IOTDB-Cluster-源码解析-查询
+          <h1 class="post-title" itemprop="name headline">IOTDB-源码解析-查询
 
               
             
@@ -434,7 +437,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2020-04-20 21:04:50" itemprop="dateModified" datetime="2020-04-20T21:04:50+08:00">2020-04-20</time>
+                <time title="修改时间：2020-05-06 20:27:20" itemprop="dateModified" datetime="2020-05-06T20:27:20+08:00">2020-05-06</time>
               
             
           </span>
@@ -448,8 +451,8 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2020/04/15/IOTDB-Cluster-源码解析-查询/#comments" itemprop="discussionUrl">
-                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020/04/15/IOTDB-Cluster-源码解析-查询/" itemprop="commentCount"></span>
+                <a href="/2020/04/15/IOTDB-源码解析-查询/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020/04/15/IOTDB-源码解析-查询/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -482,8 +485,10 @@
 <p><img src="QueryPlan.png" alt="QueryPlan"></p>
 <h1 id="IotDB中的各种reader"><a href="#IotDB中的各种reader" class="headerlink" title="IotDB中的各种reader"></a>IotDB中的各种reader</h1><p>此章节请酌情参考<a href="http://iotdb.apache.org/zh/SystemDesign/5-DataQuery/2-SeriesReader.html" target="_blank" rel="noopener">查询基础组件</a><br>IoTDB中有太多的reader，容易让人迷乱，此处给其分类然后逐个攻破。从类别上来看，IoTDB中的reader主要有3类，tsfile、server以及cluster模块的。</p>
 <p>下面分别进行讲解一下：</p>
-<h2 id="Tsfile模块的reader"><a href="#Tsfile模块的reader" class="headerlink" title="Tsfile模块的reader"></a>Tsfile模块的reader</h2><font color="blue"> TODO </font>
-
+<h2 id="Tsfile模块的reader"><a href="#Tsfile模块的reader" class="headerlink" title="Tsfile模块的reader"></a>Tsfile模块的reader</h2><h3 id="PointReader"><a href="#PointReader" class="headerlink" title="PointReader"></a>PointReader</h3><p>PointReader， 顾名思义是查询一个点的reader，一个点也就是一条记录，即&lt;time,value&gt;的一个pari。其类图如下所示：<br><img src="PointReader.png" alt="PointReader"><br>其接口如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 是否有下一个time value 对</span><br><span class="line">boolean hasNextTimeValuePair() throws IOException;</span><br><span class="line"></span><br><span class="line">// 下一个time value 对</span><br><span class="line">TimeValuePair nextTimeValuePair() throws IOException;</span><br><span class="line"></span><br><span class="line">// 当前的time value 对</span><br><span class="line">TimeValuePair currentTimeValuePair() throws IOException;</span><br><span class="line"></span><br><span class="line">void close() throws IOException;</span><br></pre></td></tr></table></figure></p>
+<h3 id="PageReader"><a href="#PageReader" class="headerlink" title="PageReader"></a>PageReader</h3><p><img src="PageReader.png" alt="PageReader"></p>
+<p>PageReader 是读取一个page所有的数据，其主要方法如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 返回这个page所有满足的数据</span><br><span class="line">BatchData getAllSatisfiedPageData() throws IOException;</span><br><span class="line"></span><br><span class="line">// 返回这个page的一些元数据</span><br><span class="line">Statistics getStatistics();</span><br><span class="line"></span><br><span class="line">// filter是查询这个page的一个过滤条件</span><br><span class="line">void setFilter(Filter filter);</span><br><span class="line"></span><br><span class="line">boolean isModified();</span><br></pre></td></tr></table></figure></p>
+<h3 id="ChunkReader"><a href="#ChunkReader" class="headerlink" title="ChunkReader"></a>ChunkReader</h3><p><img src="ChunkReader.png" alt="ChunkReader"><br>ChunkReader 是读取这个chunk 所有的数据。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">// 是否还有下一个page</span><br><span class="line">boolean hasNextSatisfiedPage() throws IOException;</span><br><span class="line"></span><br><span class="line">// 获取下一个page数据</span><br><span class="line">BatchData nextPageData() throws IOException;</span><br><span class="line"></span><br><span class="line">void close() throws IOException;</span><br><span class="line"></span><br><span class="line">// 这个chunk所有的page reader</span><br><span class="line">List&lt;IPageReader&gt; loadPageReaderList() throws IOException;</span><br></pre></td></tr></table></figure></p>
 <h2 id="Server模块的reader"><a href="#Server模块的reader" class="headerlink" title="Server模块的reader"></a>Server模块的reader</h2><h3 id="原始数据查询接口"><a href="#原始数据查询接口" class="headerlink" title="原始数据查询接口"></a>原始数据查询接口</h3><p>原始数据查询接口，返回 BatchData，可带时间过滤条件或值过滤条件，两种过滤不可同时存在</p>
 <p><img src="SeriesRawDataBatchReader.png" alt="SeriesRawDataBatchReader"><br>如上是server模块的reader的UML类图。IBatchReader和ManagedSeriesReader都是接口，其中IBatchReader是Tsfile模块中的。</p>
 <p>IBatchReader接口函数如下：</p>
@@ -494,6 +499,14 @@
 <h3 id="聚合查询接口"><a href="#聚合查询接口" class="headerlink" title="聚合查询接口"></a>聚合查询接口</h3><p>聚合查询接口 （主要用于聚合查询和降采样查询）<br><img src="AggregateReader.png" alt="AggregateReader"><br>UML类图如上所示，方法也都是围绕着一个tsfile的3大部分展开的：<br>file、chunk和page。除此之外，每部分都有statistics相关的内容，便于快速聚合函数的计算。</p>
 <p>SeriesAggregateReader类中属性就一个，也是最重要的一个就是SeriesReader，所有的方法也都是调用的SeriesReader的方法。</p>
 <h3 id="按递增时间戳查询"><a href="#按递增时间戳查询" class="headerlink" title="按递增时间戳查询"></a>按递增时间戳查询</h3><p>按递增时间戳查询对应值的接口（主要用于带值过滤的查询）<br><img src="IReaderByTimestamp.png" alt="IReaderByTimestamp"></p>
+<p>其接口如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 获取此timestamp对应的value</span><br><span class="line">Object getValueInTimestamp(long timestamp) throws IOException;</span><br></pre></td></tr></table></figure></p>
+<p>其实现类主要有3种：ByTimestampReaderAdapter、DiskChunkReaderByTimestamp以及SeriesReaderByTimestamp。</p>
+<h4 id="ByTimestampReaderAdapter"><a href="#ByTimestampReaderAdapter" class="headerlink" title="ByTimestampReaderAdapter"></a>ByTimestampReaderAdapter</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">private IPointReader pointReader;</span><br><span class="line">// only cache the first point that &gt;= timestamp</span><br><span class="line">private boolean hasCached;</span><br><span class="line">private TimeValuePair pair;</span><br></pre></td></tr></table></figure>
+<p>ByTimestampReaderAdapter 属性有以上三个，其实现主要是通过调用IPointReader的函数来实现的。</p>
+<h4 id="DiskChunkReaderByTimestamp"><a href="#DiskChunkReaderByTimestamp" class="headerlink" title="DiskChunkReaderByTimestamp"></a>DiskChunkReaderByTimestamp</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">private ChunkReaderByTimestamp chunkReaderByTimestamp;</span><br><span class="line">private BatchData data;</span><br></pre></td></tr></table></figure>
+<p>DiskChunkReaderByTimestamp 主要属性有上面两个，其主要实现也是通过DiskChunkReaderByTimestamp的函数实现的。</p>
+<h4 id="SeriesReaderByTimestamp"><a href="#SeriesReaderByTimestamp" class="headerlink" title="SeriesReaderByTimestamp"></a>SeriesReaderByTimestamp</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">private SeriesReader seriesReader;</span><br><span class="line">private BatchData batchData;</span><br></pre></td></tr></table></figure>
+<p>SeriesReaderByTimestamp 主要属性有上面两个，其主要实现也是通过SeriesReader中的函数来实现的。</p>
 <h2 id="Cluster模块的reader"><a href="#Cluster模块的reader" class="headerlink" title="Cluster模块的reader"></a>Cluster模块的reader</h2><h1 id="BatchData类："><a href="#BatchData类：" class="headerlink" title="BatchData类："></a>BatchData类：</h1><p>封装了存取数据的一些操作。</p>
 <p>本质上是一个二维的数组List&lt;Object[]&gt;，第一维是list，长度可变，长度无限制；第二维是长度初始为16，最大为1000的数组，在没超过阈值1000的情况下，会以2倍的速度扩张。如果达到了阈值1000，则会调用list.add(Object[])，此时object数组的长度就是1000了。</p>
 <h1 id="SeriesReader类分析"><a href="#SeriesReader类分析" class="headerlink" title="SeriesReader类分析"></a>SeriesReader类分析</h1><p><em>参考<a href="http://iotdb.apache.org/zh/SystemDesign/5-DataQuery/2-SeriesReader.html" target="_blank" rel="noopener">http://iotdb.apache.org/zh/SystemDesign/5-DataQuery/2-SeriesReader.html</a></em></p>
@@ -591,7 +604,7 @@
 <ul>
 <li>主要函数：MetaGroupMember::getSeriesReader，首先根据filter和path构造出List<partitiongroup>。如果没有时间过滤条件，则需要广播到所有的partitionGroup；如果有时间过滤条件，则根据时间过滤条件计算出要查询的数据所在的partitionGroup：先找到partitionGroup所在的header(算法如下)，然后在根据header找到partition Group。</partitiongroup></li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">  public static void getIntervalHeaders(String storageGroupName, long timeLowerBound, long timeUpperBound,</span><br><span class="line">    PartitionTable partitionTable, Set&lt;Node&gt; result) &#123;</span><br><span class="line">      //  获取配置的partitionInterval</span><br><span class="line">    long partitionInterval = StorageEngine.getTimePartitionInterval();</span><br><span class="line">    // 计算时间下限用于计算slot id时间，之所以先除以partitionInterval，然后在乘以partitionInterval。</span><br><span class="line">    // 是因为在routeToHeaderByTime中根据path和time定位slot id的时候有这个逻辑：time / timePartitionInterval。</span><br><span class="line">    // 个人认为此处操作是多此一举，比如时间戳是10，partitionInterval是3，则最终计算出来的partitionInstance=10/3=3, 如果先开始10/3*3=9,然后在计算9/3还是3，所以此处转化没有用，唯一的用处就是后面计算都是整数了</span><br><span class="line">    long currPartitionStart = timeLowerBound / partitionInterval * partitionInterval;</span><br><span class="line">    // 然后遍历，每次增加partitionInterval，直到上限达到timeUpperBound为止。</span><br><span class="line">    // 此处有性能问题，如果只设置了下限，没有设置上限，则上限默认为Long.MAX_VALUE，会循环遍历亿亿次；对下限也是同理。</span><br><span class="line">    while (currPartitionStart &lt;= timeUpperBound) &#123;</span><br><span class="line">      result.add(partitionTable.routeToHeaderByTime(storageGroupName, currPartitionStart));</span><br><span class="line">      currPartitionStart += partitionInterval;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">  public static void getIntervalHeaders(String storageGroupName, long timeLowerBound, long timeUpperBound,</span><br><span class="line">    PartitionTable partitionTable, Set&lt;Node&gt; result) &#123;</span><br><span class="line">      //  获取配置的partitionInterval</span><br><span class="line">    long partitionInterval = StorageEngine.getTimePartitionInterval();</span><br><span class="line">    // 计算时间下限用于计算slot id时间，之所以先除以partitionInterval，然后在乘以partitionInterval。</span><br><span class="line">    // 是因为在routeToHeaderByTime中根据path和time定位slot id的时候有这个逻辑：time / timePartitionInterval。</span><br><span class="line">    // 个人认为此处操作是多此一举，比如时间戳是10，partitionInterval是3，则最终计算出来的partitionInstance=10/3=3, 如果先开始10/3*3=9,然后在计算9/3还是3，所以此处转化没有用，唯一的用处就是后面计算都是整数了</span><br><span class="line">    long currPartitionStart = timeLowerBound / partitionInterval * partitionInterval;</span><br><span class="line">    // 然后遍历，每次增加partitionInterval，直到上限达到timeUpperBound为止。</span><br><span class="line">    // 此处有性能不会有问题，因为凡是走到这里的，则时间过滤条件的上限和下限都是配置了的。</span><br><span class="line">    while (currPartitionStart &lt;= timeUpperBound) &#123;</span><br><span class="line">      result.add(partitionTable.routeToHeaderByTime(storageGroupName, currPartitionStart));</span><br><span class="line">      currPartitionStart += partitionInterval;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>为每个partition 构建一个SeriesReader。然后merge到ManagedMergeReader中，ManagedMergeReader维护了一个最小堆，根据reader的nextTimeValuePair的时间戳进行比较。</li>
 </ul>
@@ -1060,7 +1073,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#单机查询流程"><span class="nav-number">1.</span> <span class="nav-text">单机查询流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#QueryPlan类："><span class="nav-number">2.</span> <span class="nav-text">QueryPlan类：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IotDB中的各种reader"><span class="nav-number">3.</span> <span class="nav-text">IotDB中的各种reader</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tsfile模块的reader"><span class="nav-number">3.1.</span> <span class="nav-text">Tsfile模块的reader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Server模块的reader"><span class="nav-number">3.2.</span> <span class="nav-text">Server模块的reader</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原始数据查询接口"><span class="nav-number">3.2.1.</span> <span class="nav-text">原始数据查询接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#聚合查询接口"><span class="nav-number">3.2.2.</span> <span class="nav-text">聚合查询接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#按递增时间戳查询"><span class="nav-number">3.2.3.</span> <span class="nav-text">按递增时间戳查询</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cluster模块的reader"><span class="nav-number">3.3.</span> <span class="nav-text">Cluster模块的reader</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BatchData类："><span class="nav-number">4.</span> <span class="nav-text">BatchData类：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SeriesReader类分析"><span class="nav-number">5.</span> <span class="nav-text">SeriesReader类分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#重点函数分析"><span class="nav-number">5.1.</span> <span class="nav-text">重点函数分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hasNextFile"><span class="nav-number">5.1.1.</span> <span class="nav-text">hasNextFile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hasNextChunk"><span class="nav-number">5.1.2.</span> <span class="nav-text">hasNextChunk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tryToUnpackAllOverlappedFilesToTimeSeriesMetadata"><span class="nav-number">5.1.3.</span> <span class="nav-text">tryToUnpackAllOverlappedFilesToTimeSeriesMetadata</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式查询流程"><span class="nav-number">6.</span> <span class="nav-text">分布式查询流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从Cli是怎么路由到IotDB-Server处理？"><span class="nav-number">6.1.</span> <span class="nav-text">从Cli是怎么路由到IotDB Server处理？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#executeStatement的处理逻辑"><span class="nav-number">6.2.</span> <span class="nav-text">executeStatement的处理逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LeafNode中的IBatchReader创建逻辑"><span class="nav-number">6.3.</span> <span class="nav-text">LeafNode中的IBatchReader创建逻辑</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#单机查询流程"><span class="nav-number">1.</span> <span class="nav-text">单机查询流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#QueryPlan类："><span class="nav-number">2.</span> <span class="nav-text">QueryPlan类：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IotDB中的各种reader"><span class="nav-number">3.</span> <span class="nav-text">IotDB中的各种reader</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Tsfile模块的reader"><span class="nav-number">3.1.</span> <span class="nav-text">Tsfile模块的reader</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PointReader"><span class="nav-number">3.1.1.</span> <span class="nav-text">PointReader</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PageReader"><span class="nav-number">3.1.2.</span> <span class="nav-text">PageReader</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ChunkReader"><span class="nav-number">3.1.3.</span> <span class="nav-text">ChunkReader</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Server模块的reader"><span class="nav-number">3.2.</span> <span class="nav-text">Server模块的reader</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#原始数据查询接口"><span class="nav-number">3.2.1.</span> <span class="nav-text">原始数据查询接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#聚合查询接口"><span class="nav-number">3.2.2.</span> <span class="nav-text">聚合查询接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#按递增时间戳查询"><span class="nav-number">3.2.3.</span> <span class="nav-text">按递增时间戳查询</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ByTimestampReaderAdapter"><span class="nav-number">3.2.3.1.</span> <span class="nav-text">ByTimestampReaderAdapter</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DiskChunkReaderByTimestamp"><span class="nav-number">3.2.3.2.</span> <span class="nav-text">DiskChunkReaderByTimestamp</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SeriesReaderByTimestamp"><span class="nav-number">3.2.3.3.</span> <span class="nav-text">SeriesReaderByTimestamp</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cluster模块的reader"><span class="nav-number">3.3.</span> <span class="nav-text">Cluster模块的reader</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BatchData类："><span class="nav-number">4.</span> <span class="nav-text">BatchData类：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SeriesReader类分析"><span class="nav-number">5.</span> <span class="nav-text">SeriesReader类分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#重点函数分析"><span class="nav-number">5.1.</span> <span class="nav-text">重点函数分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#hasNextFile"><span class="nav-number">5.1.1.</span> <span class="nav-text">hasNextFile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hasNextChunk"><span class="nav-number">5.1.2.</span> <span class="nav-text">hasNextChunk</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#tryToUnpackAllOverlappedFilesToTimeSeriesMetadata"><span class="nav-number">5.1.3.</span> <span class="nav-text">tryToUnpackAllOverlappedFilesToTimeSeriesMetadata</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式查询流程"><span class="nav-number">6.</span> <span class="nav-text">分布式查询流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从Cli是怎么路由到IotDB-Server处理？"><span class="nav-number">6.1.</span> <span class="nav-text">从Cli是怎么路由到IotDB Server处理？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#executeStatement的处理逻辑"><span class="nav-number">6.2.</span> <span class="nav-text">executeStatement的处理逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LeafNode中的IBatchReader创建逻辑"><span class="nav-number">6.3.</span> <span class="nav-text">LeafNode中的IBatchReader创建逻辑</span></a></li></ol></li></ol></div>
             
 
           </div>
