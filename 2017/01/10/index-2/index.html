@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.7.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本篇主要分析以下几个问题  索引表和原表的物理组织是什么样子的； 索引和表的页(page)、索引和表的行(rows)、缓冲池(buffer pool)以及disk cache使用的数据结构； 磁盘顺序IO和随机IO的特性； 一些辅助式顺序或随机读：包括跳跃式顺序读(skip-sequential), 列表预读(list prefetch)以及数据块预读(data block prefetching">
+<meta name="keywords" content="数据库,索引">
+<meta property="og:type" content="article">
+<meta property="og:title" content="索引优化与设计(2)-表以及索引的内部组织">
+<meta property="og:url" content="https://neuyilan.github.io/2017/01/10/index-2/index.html">
+<meta property="og:site_name" content="yilan">
+<meta property="og:description" content="本篇主要分析以下几个问题  索引表和原表的物理组织是什么样子的； 索引和表的页(page)、索引和表的行(rows)、缓冲池(buffer pool)以及disk cache使用的数据结构； 磁盘顺序IO和随机IO的特性； 一些辅助式顺序或随机读：包括跳跃式顺序读(skip-sequential), 列表预读(list prefetch)以及数据块预读(data block prefetching">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/index-row.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/disk_io_cost.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/disk_io_cost_per.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/disk_cache_io_cost.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/Sequential%20reads%20from%20disk%20driver.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/2-6.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/2-7.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/2-8.png">
+<meta property="og:image" content="https://neuyilan.github.io/2017/01/10/index-2/2-9.png">
+<meta property="og:updated_time" content="2019-01-12T03:12:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="索引优化与设计(2)-表以及索引的内部组织">
+<meta name="twitter:description" content="本篇主要分析以下几个问题  索引表和原表的物理组织是什么样子的； 索引和表的页(page)、索引和表的行(rows)、缓冲池(buffer pool)以及disk cache使用的数据结构； 磁盘顺序IO和随机IO的特性； 一些辅助式顺序或随机读：包括跳跃式顺序读(skip-sequential), 列表预读(list prefetch)以及数据块预读(data block prefetching">
+<meta name="twitter:image" content="https://neuyilan.github.io/2017/01/10/index-2/index-row.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://neuyilan.github.io/2017/01/10/index-2/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>索引优化与设计(2)-表以及索引的内部组织 | yilan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">yilan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2017/01/10/index-2/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="伊蓝">
+      <meta itemprop="description" content="记录点滴">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yilan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">索引优化与设计(2)-表以及索引的内部组织
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-01-10 21:32:24" itemprop="dateCreated datePublished" datetime="2017-01-10T21:32:24+08:00">2017-01-10</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-01-12 11:12:04" itemprop="dateModified" datetime="2019-01-12T11:12:04+08:00">2019-01-12</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/索引优化与设计/" itemprop="url" rel="index"><span itemprop="name">索引优化与设计</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/01/10/index-2/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2017/01/10/index-2/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本篇主要分析以下几个问题</p>
+<ul>
+<li>索引表和原表的物理组织是什么样子的；</li>
+<li>索引和表的页(page)、索引和表的行(rows)、缓冲池(buffer pool)以及disk cache使用的数据结构；</li>
+<li>磁盘顺序IO和随机IO的特性；</li>
+<li>一些辅助式顺序或随机读：包括跳跃式顺序读(skip-sequential), 列表预读(list prefetch)以及数据块预读(data block prefetching);</li>
+<li>同步IO和异步IO的重要性；</li>
+<li>各种数据库管理系统的相同点和不同点；</li>
+<li>页和表聚簇，索引行，索引组织表以及页邻接</li>
+<li>B-Tree的代替者</li>
+<li>位图索引(bitmap-index)和哈希(hash)<a id="more"></a>
+</li>
+</ul>
+<h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>首先要明确的是，在数据库系统中，索引和数据中的数据全部在一个叫做页(page)的结构中，一般页的大小为4KB，这个大小并不是唯一的。页的大小影响着每个页中的数据的条数(record)以及总的页的数量。并且，每个页都会留出一定比例的空余空间，以满足向其添加新的表行或是索引行的需求。</p>
+<h1 id="索引行（index-rows）"><a href="#索引行（index-rows）" class="headerlink" title="索引行（index rows）"></a>索引行（index rows）</h1><p>索引列一般分为两种，根据索引列的值的唯一性分为唯一的和不唯一的两种。主键就是其中一个特殊的唯一的索引列，像学生的学号，或是身份证号码等，也一般都是唯一的，不唯一的就更多的了。对于唯一的索引列来说，一个索引行等同于叶子节点中的一个索引条目，这个索引条目的值就是索引列的值，然后每个索引条目都有一个指向原表中记录的指针。一般来说，页表编号(table page number)是这个指针的一部分。对于非唯一索引来说，一个特定的索引值所对应的索引行应该被想象成独立的索引条目(individual index entries),每一个都含有相同的值，但是却有不同的指针。大多数情况下，非唯一索引的实际存储方式是一个相同的值后带着多个不同的指针，指向原表中的记录。之所以将这些非唯一的索引记录想象成独立的索引条目的好处将在后面介绍。<br><img src="index-row.png" alt="index-row" title="图1 索引结构图"></p>
+<h1 id="索引结构-Index-structure"><a href="#索引结构-Index-structure" class="headerlink" title="索引结构(Index structure)"></a>索引结构(Index structure)</h1><p>索引的结构一般是B-Tree结构，非叶子节点包含着一个键值以及指向下一层节点的指针，该键值是下一层页的最大值，如图1所示。B-Tree 是一种平衡索引树，因为通过这种索引来查找任何一条记录都需要访问相同数量的非叶子页。</p>
+<h1 id="表行-Table-Rows"><a href="#表行-Table-Rows" class="headerlink" title="表行(Table Rows)"></a>表行(Table Rows)</h1><p>图1中的每一个索引行都指向了表中的一行记录，这个指针通常都是能够定位这个记录所在的页以及它在页中的位置。同时表中的每一行除了存储行的字段之外，还包含了一些控制信息用于定义行并帮助DBMS处理插入或是删除的操作。</p>
+<p>表行在表中存储的顺序，可以和某一个索引的顺序相同，我们平常都叫这个索引为主键。很显然，在众多的索引中，只能够有一个索引的顺序和表的顺序一模一样。其他的索引就无能为力了。这个和表中的数据一个顺序的索引（主键），可以加快查找的过程。而且非常的高效。其他的索引就没有这个高效。。为什么呢？举例来说，在一个没有和表中的数据保持同一个顺序组织的索引，第一条索引行可能指向了数据表的页17，第二个索引行指向了页2，第三个索引行指向了页85…等等。现在虽然索引是顺序的。但是因为索引和数据表并不是按照相同的顺序组织的，使得去访问数据表的时候变成了随机的。这就会非常的低效。</p>
+<h1 id="缓冲池和磁盘IO"><a href="#缓冲池和磁盘IO" class="headerlink" title="缓冲池和磁盘IO"></a>缓冲池和磁盘IO</h1><p>说白了，缓冲池就是为了能够加快响应时间，并且减少磁盘IO的。如果每次访问的页都能够在缓冲池中，那就不用去磁盘上去找了，显然减少了很多的磁盘IO.缓冲池就是干这个的。你现在仅仅需要知道，数据在不在缓冲池中，访问的成本是不一样的！</p>
+<h2 id="从DBMS中的缓冲池中读数据"><a href="#从DBMS中的缓冲池中读数据" class="headerlink" title="从DBMS中的缓冲池中读数据"></a>从DBMS中的缓冲池中读数据</h2><p>如果一个索引或是表的页在缓冲池中在找到，那么很显然就不需要去磁盘访问了。只需要处理这些索引或是表中的记录就可以了。成本的大小取决于这些记录是否是DBMS想要的。如果不是，只需要很少的处理；如果是，可能需要稍微多一点的处理。</p>
+<h2 id="从磁盘驱动器进行的随机IO"><a href="#从磁盘驱动器进行的随机IO" class="headerlink" title="从磁盘驱动器进行的随机IO"></a>从磁盘驱动器进行的随机IO</h2><p>图2展示了一个页从磁盘中读到缓冲池中所需要等待的时间。这个时间大约是10ms。有一点需要注意的是，一个页包含很多的记录，不管你是访问一个页中全部记录，还是部分记录，甚至仅仅是其中一条的记录，你都需要把一整个页全部load到缓冲池中。所以花费都是一样的，大约是10ms。这10ms又是怎么来的呢？<br><img src="disk_io_cost.png" alt="disk_io_cost" title="图2 一次随机硬盘访问时间"></p>
+<p>图3很好的解释了这10ms的来历。从图中可以看到，我们假设在这10ms中磁盘实际的繁忙时间是6ms。1ms左右的传输时间是将页从磁盘服务器缓存(disk server cache)移至数据库的缓冲池中. 其余的3ms是对于可能发生的排队时间的估计值，这是基于每秒50次读取的磁盘活动情况得出的。这些数字在实际情况中可能有变化，但是我们需要记住这10ms这一个粗略但是合理的数字即可。<br><img src="disk_io_cost_per.png" alt="disk_io_cost_per" title="图3 分解后的磁盘访问时间"></p>
+<h2 id="从磁盘服务器缓存-disk-server-cache-进行读取"><a href="#从磁盘服务器缓存-disk-server-cache-进行读取" class="headerlink" title="从磁盘服务器缓存(disk server cache)进行读取"></a>从磁盘服务器缓存(disk server cache)进行读取</h2><p>磁盘服务器一般都会自带memory(cache)以降低响应时间上的巨大成本。图4展示了从磁盘服务器缓存读取一个表或者索引页的过程。磁盘缓存的作用跟数据库缓冲区的作用一样，磁盘服务器试图将频繁使用的数据保留在内存(cache)中。以降低高昂的磁盘读成本。若DBMS所需的页不在数据库缓冲池中，继而会向磁盘服务器发起请求，磁盘服务器会判断该页是否在反服务器缓存中，只有当它发现页不在磁盘缓存中的时候才从磁盘驱动器上读取该页。如果该页在磁盘服务器的缓冲中，那么花费的时间将会从10ms大幅降低为1ms。<br><img src="disk_cache_io_cost.png" alt="disk_cache_io_cost" title="图4 从磁盘服务器缓存读数据"></p>
+<p>所以，总而言之，当一个索引或表页被请求的时候，它的理想位置是在数据库的缓冲池中。如果它不在那儿，那么下一个最佳的位置就是磁盘服务器的缓存。如果它也不在那儿，那么就必须从磁盘驱动器上进行一个很慢的读取，这一过程可能要花费很长的时间等待磁盘设备空闲下来。</p>
+<h2 id="从磁盘驱动器进行的顺序读取"><a href="#从磁盘驱动器进行的顺序读取" class="headerlink" title="从磁盘驱动器进行的顺序读取"></a>从磁盘驱动器进行的顺序读取</h2><p>到目前为止，我们仅仅考虑到了将一个索引页或是表页读取到缓冲池中。实际中，不仅仅是读一个单页那么简单。有时候要读很多的页到缓冲池中，并且顺序的处理他们。图5展示了这四种场景。DBMS会意识到多个索引或表页需要被顺序的读取，且能够识别出那些不在缓冲池中的页，随后，它将发出多页IO(multiple-page I/O)的请求，每次请求的页的数量由DBMS决定。只有那些不在缓冲池中的页才会被从磁盘服务器中读取，因为那些已经在缓冲池中的页可能包含了尚未被写入磁盘的更新数据。<br><img src="Sequential reads from disk driver.png" alt="Sequential reads from disk driver" title="图5 从磁盘进行数据读取的几种场景"></p>
+<p>顺序的读取页有两个非常重要的优势：</p>
+<ul>
+<li>同时读取多个页意味着平均每个页的读取时间将会很少。在当前磁盘服务器的条件下，对于4KB大小的页而言，这一个值可能会低至0.1ms(假设磁盘是40MB/s，则一秒能够读 40MB/4KB=10000个页，则每个页花费=1s/10000=0.1ms. 现在磁盘速度已经能够达到100MB/s了，40MB/s还是2004年的数据)</li>
+<li>预读，由于DBMS事先知道要读取哪些页，所以可以在页被真正请求之前就提前将其读取出来。</li>
+</ul>
+<p>图5所使用的术语索引片(index slice)以及聚簇索引(clustering index)将在后面讨论。用于代指上述所描述的顺序读取的术语包括：顺序预读(Sequential Prefetch),多块IO(Multi-Block I/Os)以及多重顺序前读(Multiple Serial Read-Ahead Reads)</p>
+<h2 id="辅助式随机读-Assisted-Random-Reads"><a href="#辅助式随机读-Assisted-Random-Reads" class="headerlink" title="辅助式随机读(Assisted Random Reads)"></a>辅助式随机读(Assisted Random Reads)</h2><p>我们从上文中已经看到随机读的代价，并且知道了数据库的缓冲池以及磁盘缓存的作用和好处来降低成本的。还有一些其他的场景也能够降低成本。有时候是自然发生的，有时候是优化器有意为之，我们把它统称为辅助式随机读.注意这并不是DBMS中的术语</p>
+<h3 id="自动跳跃顺序读-Automatic-Skip-Sequential"><a href="#自动跳跃顺序读-Automatic-Skip-Sequential" class="headerlink" title="自动跳跃顺序读(Automatic Skip-Sequential)"></a>自动跳跃顺序读(Automatic Skip-Sequential)</h3><p>从定义的角度看，如果一系列不连续的行被按照同一个方向扫描，那么访问模式将会是跳跃式顺序的。于是，每行的平均IO时间自然比随机访问时间短，跳跃的距离越短则越节省时间。比如，当表行是通过一个聚簇索引读取时候并且筛选掉一些行的时候，访问模式就是跳跃式顺序读的。这带来的好处有以下两个方面。</p>
+<ul>
+<li>磁盘服务器注意到对某一驱动器的访问是顺序的(或者几乎是顺序的)，于是服务器开始提前预读几个页。</li>
+<li>DBMS可能注意到select语句正在以顺序或是几乎顺序的方式访问索引或页表，于是DBMS开始提前预读多个页，这在DB2 for z/OS中被称为动态预读。</li>
+</ul>
+<h3 id="列表预读-List-Prefetch"><a href="#列表预读-List-Prefetch" class="headerlink" title="列表预读(List Prefetch)"></a>列表预读(List Prefetch)</h3><p>在之前的例子中，由于索引行和表行的顺序都是一致的，所以很方便的做到了自动跳跃顺序读。事实上DB2 for z/OS 也能够在索引行和表行顺序不一致的情况下主动创造跳跃式顺序读。为了做到这一点，它事先需要访问满足条件的所有的索引行。然后按照表页的顺序对其进行排序后在访问表行。图2-6和图2-7对不使用和使用列表预读进行了对比，图中的数字代表了操作顺序。<br><img src="2-6.png" alt="Traditional index scan" title="图2-6 传统的索引扫描"><br><img src="2-7.png" alt="DB2 List Prefetch" title="图2-7 DB2的列表预取"></p>
+<h3 id="数据块预读-Data-Block-Prefetching"><a href="#数据块预读-Data-Block-Prefetching" class="headerlink" title="数据块预读(Data Block Prefetching)"></a>数据块预读(Data Block Prefetching)</h3><p>当表行和索引行的访问顺序不一致的时候，Oracle中就会使用数据块预读这一特性。在这种方式下，如图2-8所示，DBMS首先从索引片上收集指针，然后在进行多重随机IO来并行的读取表行。如果第4，5，6步所代表的表行分别位于三个不同的磁盘驱动器上，那么这三个随机IO将会被并行执行。就像列表预取一样。<br>注释：数据库预读就是并行的列表预读。</p>
+<p><img src="2-8.png" alt="Oracle data block prefetching." title="图2-8 Oracle数据块预读"></p>
+<p>在结束辅助式随机读的话题之前，还需要考虑一下结果集的顺序。一个索引也许能够自动提供正确的顺序，但是上述所讨论的机制也许会在访问表行之前就破坏了这一顺序，因此，也就需要对结果集进行一次排序。</p>
+<p>注释：就像设计HBase中IRIndex中索引预读，然后进行排序一样。</p>
+<h3 id="评注"><a href="#评注" class="headerlink" title="评注"></a>评注</h3><p>本书主要提及三种类型的读IO操作:同步读、顺序读以及辅助式随机读。需要提及的是SQL Server使用术语索引前读(Index Read-Ahead), Oracle使用术语索引跳跃扫描(Inedx Skip Scan)。前者是指提前向前读取下一组叶子页，而后者是指读取多个索引片而不进行全索引扫描。</p>
+<h2 id="辅助式顺序读-Assisted-Sequential-Reads"><a href="#辅助式顺序读-Assisted-Sequential-Reads" class="headerlink" title="辅助式顺序读(Assisted Sequential Reads)"></a>辅助式顺序读(Assisted Sequential Reads)</h2><p>当要扫描一个大的表的时候，优化器可能会选择开启并行机制。例如，它可能会将一个游标拆分为多个用范围谓词限定的游标，每一个游标扫描一个索引片。当有多个处理器和磁盘驱动器可用的时候，所花费的时间将相应的减少。我们将在第15章讨论这个话题。请注意，辅助式顺序读这个术语同样也未被任何一个DBMS使用过。</p>
+<h2 id="同步和异步IO-Synchronous-and-Asynchronous-I-Os"><a href="#同步和异步IO-Synchronous-and-Asynchronous-I-Os" class="headerlink" title="同步和异步IO(Synchronous and Asynchronous I/Os)"></a>同步和异步IO(Synchronous and Asynchronous I/Os)</h2><p>术语同步是指在进行IO操作的时候，DBMS不能继续进行其他的操作，必须等待，直至IO操作完成。</p>
+<p>异步读指的是当前页尚在处理的时候就被提前发起了，这一处理时间和IO时间之间可能有很大的一部分重叠。理想情况下，在这些页被实际处理之前，异步IO就已经完成了。每一组页都是以这种方式被预读然后再处理。图2-9展示了这一过程。注意的是，整个预读过程从一次同步读开始，然后才开始预读过程，以此来最小化首次读取的等待时间。</p>
+<p><img src="2-9.png" alt="Synchronous and asynchronous I/O." title="图2-9 同步IO和异步IO"></p>
+<p>#</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据库/" rel="tag"># 数据库</a>
+          
+            <a href="/tags/索引/" rel="tag"># 索引</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/30/index-1/" rel="next" title="索引优化与设计(1)-引言">
+                <i class="fa fa-chevron-left"></i> 索引优化与设计(1)-引言
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/19/collect-blog/" rel="prev" title="技术博客收藏">
+                技术博客收藏 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="伊蓝">
+            
+              <p class="site-author-name" itemprop="name">伊蓝</p>
+              <p class="site-description motion-element" itemprop="description">记录点滴</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">74</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">111</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/neuyilan/" title="GitHub &rarr; https://github.com/neuyilan/" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#介绍"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#索引行（index-rows）"><span class="nav-number">2.</span> <span class="nav-text">索引行（index rows）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#索引结构-Index-structure"><span class="nav-number">3.</span> <span class="nav-text">索引结构(Index structure)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#表行-Table-Rows"><span class="nav-number">4.</span> <span class="nav-text">表行(Table Rows)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#缓冲池和磁盘IO"><span class="nav-number">5.</span> <span class="nav-text">缓冲池和磁盘IO</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#从DBMS中的缓冲池中读数据"><span class="nav-number">5.1.</span> <span class="nav-text">从DBMS中的缓冲池中读数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从磁盘驱动器进行的随机IO"><span class="nav-number">5.2.</span> <span class="nav-text">从磁盘驱动器进行的随机IO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从磁盘服务器缓存-disk-server-cache-进行读取"><span class="nav-number">5.3.</span> <span class="nav-text">从磁盘服务器缓存(disk server cache)进行读取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从磁盘驱动器进行的顺序读取"><span class="nav-number">5.4.</span> <span class="nav-text">从磁盘驱动器进行的顺序读取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#辅助式随机读-Assisted-Random-Reads"><span class="nav-number">5.5.</span> <span class="nav-text">辅助式随机读(Assisted Random Reads)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#自动跳跃顺序读-Automatic-Skip-Sequential"><span class="nav-number">5.5.1.</span> <span class="nav-text">自动跳跃顺序读(Automatic Skip-Sequential)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列表预读-List-Prefetch"><span class="nav-number">5.5.2.</span> <span class="nav-text">列表预读(List Prefetch)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数据块预读-Data-Block-Prefetching"><span class="nav-number">5.5.3.</span> <span class="nav-text">数据块预读(Data Block Prefetching)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#评注"><span class="nav-number">5.5.4.</span> <span class="nav-text">评注</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#辅助式顺序读-Assisted-Sequential-Reads"><span class="nav-number">5.6.</span> <span class="nav-text">辅助式顺序读(Assisted Sequential Reads)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同步和异步IO-Synchronous-and-Asynchronous-I-Os"><span class="nav-number">5.7.</span> <span class="nav-text">同步和异步IO(Synchronous and Asynchronous I/Os)</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">伊蓝</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=6.7.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function (item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'CCj0VULQMKCDsXgP4pmSrOTo-gzGzoHsz',
+    appKey: 'MWSq3U7EEI2dN5qSQKdOMt2X',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
+
+
+
+  
+
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
