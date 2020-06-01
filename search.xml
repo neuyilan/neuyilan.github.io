@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[好文章好工具合集]]></title>
+    <url>%2F2020%2F06%2F01%2F%E5%A5%BD%E6%96%87%E7%AB%A0%E5%A5%BD%E5%B7%A5%E5%85%B7%E5%90%88%E9%9B%86%2F</url>
+    <content type="text"><![CDATA[#kafka 面试题是否要深入了解其背后的原理？Kafka系列9：面试题是否有必要深入了解其背后的原理？我觉得应该刨根究底（上）作用：熟悉kafka的原理，也可以作为面试题来考察应聘者 #linux ##一款霸榜 GitHub 的开源 Linux 资源监视器一款霸榜 GitHub 的开源 Linux 资源监视器！github地址：https://github.com/aristocratos/bashtop 作用：可以用来监控进程等资源消耗]]></content>
+      <tags>
+        <tag>linux</tag>
+        <tag>kafka</tag>
+        <tag>监控</tag>
+        <tag>工具</tag>
+        <tag>文章</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[java heap dump 分析]]></title>
     <url>%2F2020%2F05%2F15%2Fjava-heap-dump-%E5%88%86%E6%9E%90%2F</url>
     <content type="text"><![CDATA[线上程序有时候会遇到OOM的情况，这个时候就需要把其oom的堆dump下来，来分析OOM的原因，如果dump文件比较小，则可以直接拉取到本地，通过使用jvisualvm就可以。但是如果dump文件比较大，应该怎么办呢？要是拉取到本地，是不现实的。比如dump文件有40GB，拉取到本地显然不现实，有没有一种方法可以在远程机器(通常指服务器机器，因为这个机器的内存和磁盘一般比较充足)上分析的呢。eclipse的MAT工具正好可以满足要求。 dump文件传输到本地进行分析， 常常需要大量的等待时间。 使用IBM的eclipse的MAT工具可以直接在服务器上进行快速DUMP分析。 运行环境要求linux操作系统JDK8 以上 下载MAT的linux版本Eclipse的MAT工具下载链接MAT支持各种操作系统，找到Linux版本下载下来123# 运行uname -m 看一下linux是 x86_64还是 x86的帮助你选择下载那个版本。uname -m#x86_64 1wget http://iso.mirrors.ustc.edu.cn/eclipse/mat/1.10.0/rcp/MemoryAnalyzer-1.10.0.20200225-macosx.cocoa.x86_64.zip 解压配置MAT基本参数1234unzip MemoryAnalyzer-1.8.0.20180604-linux.gtk.x86_64.zip## 修改MAT的内存大小， 注意这个大小要根据你dump文件大小来的，如果dump文件是5GB那么 这里最好配&gt;5GB 否则会报MAT内存不足的异常## 修改MemoryAnalyzer.ini 的 -Xmx6024mvi MemoryAnalyzer.ini jmap dump整个堆想了解更详细的请看这篇博文望闻问切使用jstack和jmap剖析java进程各种疑难杂症 1jmap -dump:format=b,file=jmap.info PID MAT分析 dump1./ParseHeapDump.sh jmap.info org.eclipse.mat.api:suspects org.eclipse.mat.api:overview org.eclipse.mat.api:top_components 等待结果….结果会生产如下三个zip文件，很小可以直接拷贝到本机 123jmap_Leak_Suspects.zipjmap_System_Overview.zipjmap_Top_Components.zip 查看报告结果有两种查看报告的方法 直接把zip下载到本地，然后解压用浏览器查看index.html 把zip下载到本地， 用MAT可视化工具解析zip 遇到问题Unable to initialize GTK+ 遇到这个问题的话，是因为ParseHeapDump.sh里面需要调用GTK的一些东西。解决方法： 1234567vi ParseHeapDump.sh#注释掉 &quot;$(dirname -- &quot;$0&quot;)&quot;/MemoryAnalyzer -consolelog -application org.eclipse.mat.api.parse &quot;$@&quot;这一行#然后加入下面#注意plugins/org.eclipse.equinox.launcher_1.5.0.v20180512-1130.jar要根据你自己本地的文件名做修改调整java -Xmx4g -Xms4g \-jar plugins/org.eclipse.equinox.launcher_1.5.0.v20180512-1130.jar \-consoleLog -consolelog -application org.eclipse.mat.api.parse &quot;$@&quot; 然后继续运行1./ParseHeapDump.sh jmap.info org.eclipse.mat.api:suspects org.eclipse.mat.api:overview org.eclipse.mat.api:top_components 问题解决 MAC 如何使用 mat工具MAC 版本 Eclipse的MAT工具下载链接下载加压缩以后 12#修改内存大小，默认1G不够用vi mat.app/Contents/Eclipse/MemoryAnalyzer.ini 运行 123sudo mat.app/Contents/MacOS/MemoryAnalyzer## 1、点击最上面的Overview的 tab## 2、点击最先面的 Open a Head Dump 就可以选择加载dump文件了 参考资料linux使用MAT分析dump文件Java故障诊断和性能分析工具Tool for analyzing large Java heap dumpsLinux下快速分析DUMP文件]]></content>
