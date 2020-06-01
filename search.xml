@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[好文章好工具合集]]></title>
     <url>%2F2020%2F06%2F01%2F%E5%A5%BD%E6%96%87%E7%AB%A0%E5%A5%BD%E5%B7%A5%E5%85%B7%E5%90%88%E9%9B%86%2F</url>
-    <content type="text"><![CDATA[本文章主要索引一些比较不错的技术文章便于查找。例如一些linux性能监控方面的，或是kafka原理讲解等。 kafka面试题是否要深入了解其背后的原理？Kafka系列9：面试题是否有必要深入了解其背后的原理？我觉得应该刨根究底（上）作用：熟悉kafka的原理，也可以作为面试题来考察应聘者 linux##一款霸榜 GitHub 的开源 Linux 资源监视器一款霸榜 GitHub 的开源 Linux 资源监视器！github地址：https://github.com/aristocratos/bashtop 作用：可以用来监控进程等资源消耗]]></content>
+    <content type="text"><![CDATA[本文章主要索引一些比较不错的技术文章便于查找。例如一些linux性能监控方面的，或是kafka原理讲解等。 kafka面试题是否要深入了解其背后的原理？Kafka系列9：面试题是否有必要深入了解其背后的原理？我觉得应该刨根究底（上）作用：熟悉kafka的原理，也可以作为面试题来考察应聘者 linux一款霸榜 GitHub 的开源 Linux 资源监视器一款霸榜 GitHub 的开源 Linux 资源监视器！github地址：https://github.com/aristocratos/bashtop作用：可以用来监控进程等资源消耗]]></content>
       <tags>
         <tag>linux</tag>
         <tag>kafka</tag>
