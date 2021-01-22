@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[JAVA IO模型-BIO,AIO,NIO]]></title>
-    <url>%2F2020%2F07%2F30%2FJAVA-IO%E6%A8%A1%E5%9E%8B-BIO-AIO-NIO%2F</url>
-    <content type="text"><![CDATA[IO模型简介]]></content>
+    <title><![CDATA[Moving From Apache Thrift to gRPC: A Perspective From Alluxio]]></title>
+    <url>%2F2021%2F01%2F22%2FMoving-From-Apache-Thrift-to-gRPC-A-Perspective-From-Alluxio%2F</url>
+    <content type="text"><![CDATA[Moving From Apache Thrift to gRPC: A Perspective From Alluxio]]></content>
+      <tags>
+        <tag>Thrift</tag>
+        <tag>gRPC</tag>
+      </tags>
   </entry>
   <entry>
     <title><![CDATA[转载好文章]]></title>
