@@ -96,23 +96,23 @@
 
 
 
-  <meta name="description" content="Apache IoTDB从2018年11月捐赠给Apache基金会，成为孵化项目，到2020年9月毕业，期间经历了0.8-0.11 4个大的版本，但都是单机版本，社区对Apache IoTDB的分布式版本也呼声越来高。2021年4月，Apache IoTDB 0.12版本的发布，带来了一个期盼已久的好消息：Apache IoTDB 0.12开始支持分布式。今天我们就来看一下Apache IoTDB">
+  <meta name="description" content="​Apache IoTDB从2018年11月捐赠给Apache基金会，成为孵化项目，到2020年9月毕业，期间经历了0.8-0.11 4个大的版本，但都是单机版本，社区对Apache IoTDB的分布式版本呼声也越来越高。2021年4月，Apache IoTDB 0.12版本的发布，带来了一个期盼已久的好消息：Apache IoTDB 0.12开始支持分布式。今天我们就来看一下Apache IoT">
 <meta name="keywords" content="Apache IoTDB,分布式架构,数据分布">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Apache IoTDB分布式数据分布">
 <meta property="og:url" content="https://neuyilan.github.io/2021/04/08/Apache-IoTDB分布式架构初探/index.html">
 <meta property="og:site_name" content="yilan">
-<meta property="og:description" content="Apache IoTDB从2018年11月捐赠给Apache基金会，成为孵化项目，到2020年9月毕业，期间经历了0.8-0.11 4个大的版本，但都是单机版本，社区对Apache IoTDB的分布式版本也呼声越来高。2021年4月，Apache IoTDB 0.12版本的发布，带来了一个期盼已久的好消息：Apache IoTDB 0.12开始支持分布式。今天我们就来看一下Apache IoTDB">
+<meta property="og:description" content="​Apache IoTDB从2018年11月捐赠给Apache基金会，成为孵化项目，到2020年9月毕业，期间经历了0.8-0.11 4个大的版本，但都是单机版本，社区对Apache IoTDB的分布式版本呼声也越来越高。2021年4月，Apache IoTDB 0.12版本的发布，带来了一个期盼已久的好消息：Apache IoTDB 0.12开始支持分布式。今天我们就来看一下Apache IoT">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://neuyilan.github.io/2021/04/08/Apache-IoTDB分布式架构初探/cluster%20module.png">
 <meta property="og:image" content="https://neuyilan.github.io/2021/04/08/Apache-IoTDB分布式架构初探/all%20data%20group.png">
 <meta property="og:image" content="https://neuyilan.github.io/2021/04/08/Apache-IoTDB分布式架构初探/4%20iotdb%20instances.png">
 <meta property="og:image" content="https://neuyilan.github.io/2021/04/08/Apache-IoTDB分布式架构初探/tree%20data%20module.png">
 <meta property="og:image" content="https://neuyilan.github.io/2021/04/08/Apache-IoTDB分布式架构初探/node%20slot%20id.png">
-<meta property="og:updated_time" content="2021-04-09T11:41:20.898Z">
+<meta property="og:updated_time" content="2021-04-09T11:50:55.485Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Apache IoTDB分布式数据分布">
-<meta name="twitter:description" content="Apache IoTDB从2018年11月捐赠给Apache基金会，成为孵化项目，到2020年9月毕业，期间经历了0.8-0.11 4个大的版本，但都是单机版本，社区对Apache IoTDB的分布式版本也呼声越来高。2021年4月，Apache IoTDB 0.12版本的发布，带来了一个期盼已久的好消息：Apache IoTDB 0.12开始支持分布式。今天我们就来看一下Apache IoTDB">
+<meta name="twitter:description" content="​Apache IoTDB从2018年11月捐赠给Apache基金会，成为孵化项目，到2020年9月毕业，期间经历了0.8-0.11 4个大的版本，但都是单机版本，社区对Apache IoTDB的分布式版本呼声也越来越高。2021年4月，Apache IoTDB 0.12版本的发布，带来了一个期盼已久的好消息：Apache IoTDB 0.12开始支持分布式。今天我们就来看一下Apache IoT">
 <meta name="twitter:image" content="https://neuyilan.github.io/2021/04/08/Apache-IoTDB分布式架构初探/cluster%20module.png">
 
 
@@ -435,7 +435,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-04-09 19:41:20" itemprop="dateModified" datetime="2021-04-09T19:41:20+08:00">2021-04-09</time>
+                <time title="修改时间：2021-04-09 19:50:55" itemprop="dateModified" datetime="2021-04-09T19:50:55+08:00">2021-04-09</time>
               
             
           </span>
@@ -478,18 +478,18 @@
       
 
       
-        <p>Apache IoTDB从2018年11月捐赠给Apache基金会，成为孵化项目，到2020年9月毕业，期间经历了0.8-0.11 4个大的版本，但都是单机版本，社区对Apache IoTDB的分布式版本也呼声越来高。2021年4月，Apache IoTDB 0.12版本的发布，带来了一个期盼已久的好消息：Apache IoTDB 0.12开始支持分布式。今天我们就来看一下Apache IoTDB的分布式中的数据分布。<br><a id="more"></a></p>
+        <p>​Apache IoTDB从2018年11月捐赠给Apache基金会，成为孵化项目，到2020年9月毕业，期间经历了0.8-0.11 4个大的版本，但都是单机版本，社区对Apache IoTDB的分布式版本呼声也越来越高。2021年4月，Apache IoTDB 0.12版本的发布，带来了一个期盼已久的好消息：Apache IoTDB 0.12开始支持分布式。今天我们就来看一下Apache IoTDB分布式中的数据分布。<br><a id="more"></a></p>
 <h1 id="分布式架构"><a href="#分布式架构" class="headerlink" title="分布式架构"></a>分布式架构</h1><p>IoTDB采用Share-Nothing的分布式架构(这里指的是数据存本地磁盘的情况下，IoTDB也支持数据存储到HDFS上面，这种情况本文暂且不表)，各个节点都是同质的，每个节点主要模块如下图所示：<br><img src="cluster module.png" alt="Apache-IoTDB分布式架构初探"></p>
 <p>单机有如下几大模块：分别为Physical Plan Generator、SQL Parser、Single Read/Write Engine以及存储文件TsFile。分布式较单机多了如下几大模块：Data Partition、Distributed Query、Distributed Write以及各个节点之间同步协议Raft Synchronization模块。</p>
-<p>IoTDB集群搭建之后，会根据节点的ip和port和当前启动时间生成一个hash值，所有节点按照此hash值排序形成一个圈，hash值最大的节点的后面的节点就是hash值最小的节点，集群会按照配置的副本数N，从hash值最小的节点开始，依次选择N-1个节点组成一个raft组，形成一个data group。所有的meta节点组成一个meta group。<br><img src="all data group.png" alt="Apache-IoTDB分布式架构初探"></p>
+<p>IoTDB集群搭建之后，会根据节点的ip和port和当前启动时间生成一个hash值，所有节点按照此hash值排序形成一个环形，hash值最大的节点的后面的节点就是hash值最小的节点，集群会按照配置的副本数N，从hash值最小的节点开始，依次选择N-1个节点组成一个raft组，形成一个data raft group。所有的meta节点组成一个meta raft group。<br><img src="all data group.png" alt="Apache-IoTDB分布式架构初探"></p>
 <p>以4节点3副本为例，其会形成如下raft复制组，每个节点上面都会有N+1个复制组，N是副本数，即N个data raft group，1指的是所有节点形成一个meta raft group。<br><img src="4 iotdb instances.png" alt="Apache-IoTDB分布式架构初探"></p>
 <h1 id="分布式数据存储"><a href="#分布式数据存储" class="headerlink" title="分布式数据存储"></a>分布式数据存储</h1><p>当初始化好了raft复制组之后，面临的问题就是数据归属问题，哪些raft复制组处理哪些数据呢？这就需要数据分区这个模块来解决了。</p>
 <p>数据分区模块负责元数据、数据分布的计算工作，为了便于表述，本文在此讲述下IoTDB的一些基础概念。</p>
 <h2 id="IoTDB基础概念"><a href="#IoTDB基础概念" class="headerlink" title="IoTDB基础概念"></a>IoTDB基础概念</h2><p>IoTDB模型是树状结构。如下所示，有存储组、设备、测点等概念。存储组可以理解为传统数据库中的表，在存储的时候，不同的存储组的数据是存储在不同的文件夹中的。下图中有<code>root.sgcc</code>、<code>root.ln</code>两个存储组。叶子节点叫做测点，叶子节点的父节点叫做设备。从父节点root到叶子节点的全路径叫做时序。比如下图中有<code>root.sgcc.wf01.status</code>等4条时序。关于这些概念的详细描述，请参考IoTDB官方网站[1]。<br><img src="tree data module.png" alt="Apache-IoTDB分布式架构初探"></p>
-<h2 id="元数据分布"><a href="#元数据分布" class="headerlink" title="元数据分布"></a>元数据分布</h2><p>对于分布式IoTDB来说，有两种类型的元数据信息，一种是存储组、另外一种是时序。为什么说两种类型的元数据呢？因为这两种元数据是不同的复制组管理的。存储组是meta raft group管理的。而时序信息是由data raft group管理的。这样做的好处也是因为存储组元数据比较少，可以在各个节点保存；但是时序信息有可能比较大，有可能高达千万级别，如果每个节点都保存有相同的时序信息，每个节点会浪费太多的内存空间。(这里也是内存和时间的trade off，当然每个节点都有时序的元数据信息是最好的，因为写入、查询会用到这些时序元数据信息。这里将在后面的文章中进行分析)。</p>
-<h3 id="存储组分布"><a href="#存储组分布" class="headerlink" title="存储组分布"></a>存储组分布</h3><p>对于存储组这样的元数据，由于是meta raft group管理的。数据每个节点都会保存，就不存在数据分布的问题了。</p>
-<h3 id="时序分布"><a href="#时序分布" class="headerlink" title="时序分布"></a>时序分布</h3><p>对于时序和数据的存储，其是分布到多台机器存储的。分布的核心是一个数据分区算法，即如何判定我的(元)数据应该存储在哪台机器上？</p>
-<p>IoTDB系统中预先设置了10000个slot，然后会均匀的把这些slot分到集群中各个IoTDB实例中，假设节点数是M，则集群环中的前M-1个节点每个节点分配的slot数是<code>10000/M</code>，最后一个节点是slot数就是<code>10000-10000/M*(M-1)</code>。可能较前M-1个节点会多一些。</p>
+<h2 id="元数据分布"><a href="#元数据分布" class="headerlink" title="元数据分布"></a>元数据分布</h2><p>对于分布式IoTDB来说，有两种类型的元数据信息，一种是存储组、另外一种是时序。为什么说两种类型的元数据呢？因为这两种元数据是不同的复制组管理的。存储组是meta raft group管理的。而时序信息是由data raft group管理的。这样做的好处也是由于存储组元数据比较少，可以在各个节点保存；但是时序信息有可能比较大，有可能高达千万级别，如果每个节点都保存有相同的时序信息，每个节点会浪费太多的内存空间(这里也是内存和时间的trade off，当然每个节点都有时序的元数据信息是最好的，因为写入、查询会用到这些时序元数据信息。这里将在后面的文章中进行分析)。所以会把这些时序​数据信息分散到各个节点进行管理。</p>
+<h3 id="存储组分布"><a href="#存储组分布" class="headerlink" title="存储组分布"></a>存储组分布</h3><p>对于存储组这样的元数据，由于是meta raft group管理的。所以在每个节点都会保存。</p>
+<h3 id="时序分布"><a href="#时序分布" class="headerlink" title="时序分布"></a>时序分布</h3><p>对于时序和数据的存储，是分布到多个节点进行分散存储的。分布的核心是一个数据分区算法，即如何判定我的(元)数据应该存储在哪台机器上？</p>
+<p>IoTDB系统中预先设置了10000个slot，然后会均匀的把这些slot分到集群中各个IoTDB实例中，假设节点数是M，则集群环中的前M-1个节点每个节点分配的slot数是<code>10000/M</code>，最后一个节点是slot数就是<code>10000-10000/M*(M-1)</code>，可能较前M-1个节点会多一些。</p>
 <p>比如，在6个节点组成的集群的情况下，第一个节点会分配0-1665共1666个slot；第二个节点会分配1666-3331共1666个slot；第三个节点会分配3332-4997共1666个slot；第四个节点会分配4998-6663共1666个slot；第五个节点会分配6664-8329共1666个slot；而第六个节点就会分配8330-9999共1670个slot。<br><img src="node slot id.png" alt="Apache-IoTDB分布式架构初探"></p>
 <p>得到了节点和slot id的关系，剩下的就是如何把数据映射到slot中。IoTDB采用了如下hash算法：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slot_id = hash(storage_group, time_partition) % total_slot_num</span><br></pre></td></tr></table></figure>
