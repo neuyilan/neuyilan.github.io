@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Apache IoTDB分布式架构初探]]></title>
+    <url>%2F2021%2F04%2F08%2FApache-IoTDB%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84%E5%88%9D%E6%8E%A2%2F</url>
+    <content type="text"><![CDATA[Apache IoTDB从2018年11月捐赠给Apache基金会，成为孵化项目，到2020年9月毕业，期间经历了0.8-0.11 4个大的版本，但都是单机版本，社区对Apache IoTDB的分布式版本也呼声越来高。2021年4月，Apache IoTDB 0.12版本的发布，带来了一个期盼已久的好消息：Apache IoTDB 0.12开始支持分布式。今天我们就来看一下Apache IoTDB的分布式架构。 分布式架构IoTDB采用Share-Nothing的分布式架构(这里指的是数据存本地磁盘的情况下，IoTDB也支持数据存储到HDFS上面，这种情况本文暂且不表)，各个节点都是同质的。如下图所示： 分布式数据存储元数据分布数据分布]]></content>
+      <tags>
+        <tag>Apache IoTDB</tag>
+        <tag>分布式架构</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Moving From Apache Thrift to gRPC: A Perspective From Alluxio]]></title>
     <url>%2F2021%2F01%2F22%2FMoving-From-Apache-Thrift-to-gRPC-A-Perspective-From-Alluxio%2F</url>
     <content type="text"><![CDATA[Moving From Apache Thrift to gRPC: A Perspective From Alluxio]]></content>
