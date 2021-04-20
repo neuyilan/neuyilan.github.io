@@ -104,7 +104,7 @@
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="线上程序有时候会遇到OOM的情况，这个时候就需要把其oom的堆dump下来，来分析OOM的原因，如果dump文件比较小，则可以直接拉取到本地，通过使用jvisualvm就可以。但是如果dump文件比较大，应该怎么办呢？要是拉取到本地，是不现实的。比如dump文件有40GB，拉取到本地显然不现实，有没有一种方法可以在远程机器(通常指服务器机器，因为这个机器的内存和磁盘一般比较充足)上分析的呢。ecl">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2020-05-15T08:55:56.711Z">
+<meta property="og:updated_time" content="2021-04-20T09:08:45.308Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="java heap dump 分析">
 <meta name="twitter:description" content="线上程序有时候会遇到OOM的情况，这个时候就需要把其oom的堆dump下来，来分析OOM的原因，如果dump文件比较小，则可以直接拉取到本地，通过使用jvisualvm就可以。但是如果dump文件比较大，应该怎么办呢？要是拉取到本地，是不现实的。比如dump文件有40GB，拉取到本地显然不现实，有没有一种方法可以在远程机器(通常指服务器机器，因为这个机器的内存和磁盘一般比较充足)上分析的呢。ecl">
@@ -412,12 +412,24 @@
                 
               
 
-              <time title="创建时间：2020-05-15 16:42:11 / 修改时间：16:55:56" itemprop="dateCreated datePublished" datetime="2020-05-15T16:42:11+08:00">2020-05-15</time>
+              <time title="创建时间：2020-05-15 16:42:11" itemprop="dateCreated datePublished" datetime="2020-05-15T16:42:11+08:00">2020-05-15</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-04-20 17:08:45" itemprop="dateModified" datetime="2021-04-20T17:08:45+08:00">2021-04-20</time>
               
             
           </span>
@@ -461,8 +473,8 @@
 
       
         <p>线上程序有时候会遇到OOM的情况，这个时候就需要把其oom的堆dump下来，来分析OOM的原因，如果dump文件比较小，则可以直接拉取到本地，通过使用jvisualvm就可以。但是如果dump文件比较大，应该怎么办呢？要是拉取到本地，是不现实的。比如dump文件有40GB，拉取到本地显然不现实，有没有一种方法可以在远程机器(通常指服务器机器，因为这个机器的内存和磁盘一般比较充足)上分析的呢。eclipse的MAT工具正好可以满足要求。</p>
-<p>dump文件传输到本地进行分析， 常常需要大量的等待时间。 使用IBM的eclipse的MAT工具可以直接在服务器上进行快速DUMP分析。</p>
 <a id="more"></a>
+<p>dump文件传输到本地进行分析， 常常需要大量的等待时间。 使用IBM的eclipse的MAT工具可以直接在服务器上进行快速DUMP分析。</p>
 <h1 id="运行环境要求"><a href="#运行环境要求" class="headerlink" title="运行环境要求"></a>运行环境要求</h1><p>linux操作系统<br>JDK8 以上</p>
 <h1 id="下载MAT的linux版本"><a href="#下载MAT的linux版本" class="headerlink" title="下载MAT的linux版本"></a>下载MAT的linux版本</h1><p><a href="https://www.eclipse.org/mat/downloads.php" target="_blank" rel="noopener">Eclipse的MAT工具下载链接</a><br>MAT支持各种操作系统，找到Linux版本下载下来<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 运行uname -m 看一下linux是 x86_64还是 x86的帮助你选择下载那个版本。</span><br><span class="line">uname -m</span><br><span class="line">#x86_64</span><br></pre></td></tr></table></figure></p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget http://iso.mirrors.ustc.edu.cn/eclipse/mat/1.10.0/rcp/MemoryAnalyzer-1.10.0.20200225-macosx.cocoa.x86_64.zip</span><br></pre></td></tr></table></figure>
@@ -617,7 +629,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">79</span>
+                    <span class="site-state-item-count">80</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -921,7 +933,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">119</span>
+                      
+                    
+                    <span class="site-state-item-count">120</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
