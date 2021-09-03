@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.7.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="东方国信行云时序数据库CirroData-TimeS，是东方国信面对高速增长的物联网大数据市场和技术挑战推出的创新性的大数据处理产品，它不依赖任何第三方软件，TimeS是吸取众多传统关系型数据库、NoSQL数据库等软件的优点之后自主开发的产品，在时序空间大数据处理上，有着自己独到的优势。经过历时1年多的核心研发，CirroData-TimeS 0.12.1版本重磅发布。">
+<meta name="keywords" content="CirroData-TimeS,发版,0.12.1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CirroData-TimeS 0.12.1 重磅发布">
+<meta property="og:url" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/index.html">
+<meta property="og:site_name" content="yilan">
+<meta property="og:description" content="东方国信行云时序数据库CirroData-TimeS，是东方国信面对高速增长的物联网大数据市场和技术挑战推出的创新性的大数据处理产品，它不依赖任何第三方软件，TimeS是吸取众多传统关系型数据库、NoSQL数据库等软件的优点之后自主开发的产品，在时序空间大数据处理上，有着自己独到的优势。经过历时1年多的核心研发，CirroData-TimeS 0.12.1版本重磅发布。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/cluster%20module.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/all%20data%20group.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/4%20times%20instances.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/tree%20data%20module.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/node%20slot%20id.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/slot%20tsfile.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/6000_insert.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/800w_insert.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/6000_q1.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/6000_q2.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/6000_q3.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/6000_q4.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/6000_q5.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/6000_q6.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/6000_q7.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/6000_q8.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/800w_q1.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/800w_q2.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/800w_q3.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/800w_q4.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/800w_q5.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/800w_q6.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/800w_q7.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/800w_q8.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/6000_compaction.png">
+<meta property="og:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/800w_compaction.png">
+<meta property="og:updated_time" content="2021-06-18T03:40:35.209Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CirroData-TimeS 0.12.1 重磅发布">
+<meta name="twitter:description" content="东方国信行云时序数据库CirroData-TimeS，是东方国信面对高速增长的物联网大数据市场和技术挑战推出的创新性的大数据处理产品，它不依赖任何第三方软件，TimeS是吸取众多传统关系型数据库、NoSQL数据库等软件的优点之后自主开发的产品，在时序空间大数据处理上，有着自己独到的优势。经过历时1年多的核心研发，CirroData-TimeS 0.12.1版本重磅发布。">
+<meta name="twitter:image" content="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/cluster%20module.png">
+
+
+
+
+
+
+  <link rel="canonical" href="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>CirroData-TimeS 0.12.1 重磅发布 | yilan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">yilan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2021/06/10/CirroData-TimeS发版/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="伊蓝">
+      <meta itemprop="description" content="记录点滴">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yilan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CirroData-TimeS 0.12.1 重磅发布
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2021-06-10 10:24:03" itemprop="dateCreated datePublished" datetime="2021-06-10T10:24:03+08:00">2021-06-10</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-06-18 11:40:35" itemprop="dateModified" datetime="2021-06-18T11:40:35+08:00">2021-06-18</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2021/06/10/CirroData-TimeS发版/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2021/06/10/CirroData-TimeS发版/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>东方国信行云时序数据库CirroData-TimeS，是东方国信面对高速增长的物联网大数据市场和技术挑战推出的创新性的大数据处理产品，它不依赖任何第三方软件，TimeS是吸取众多传统关系型数据库、NoSQL数据库等软件的优点之后自主开发的产品，在时序空间大数据处理上，有着自己独到的优势。经过历时1年多的核心研发，CirroData-TimeS 0.12.1版本重磅发布。<br><!--
+前面几篇文章中讲述了[时序数据产生的背景](https://mp.weixin.qq.com/s/uwWqPeBsMwtDBLQVNql0TA)，[极致性能大揭秘](https://mp.weixin.qq.com/s/_LkzR-rlRQhOAlHae8vQUA)等。本文重点讲述TimeS分布式架构以及与业界比较著名的时序数据库InfluxDB的对比，供读者参考。
+--><br><a id="more"></a></p>
+<h1 id="完备的分布式时序数据库"><a href="#完备的分布式时序数据库" class="headerlink" title="完备的分布式时序数据库"></a>完备的分布式时序数据库</h1><p>CirroData-TimeS是针对时间序列数据收集、存储与分析一体化的数据管理引擎。它具有体量轻、性能高、易使用的特点，适用于工业物联网应用中海量时间序列数据高速写入和复杂分析查询的需求。CirroData-TimeS覆盖了对时序数据的采集、存储、查询、分析以及可视化等全生命周期的数据管理功能。具有以下特性：</p>
+<ol>
+<li><p>丰富的功能特性：</p>
+<ul>
+<li>类SQL查询语句，CirroData-TimeS支持类SQL查询语句，对于熟悉SQL使用的用户来说，学习成本较低，使用友好；</li>
+<li>支持基于时间范围的批量数据查询、分组查询、值过滤等查询；</li>
+<li>提供常用的周期聚合函数，如avg，min，max，sum。使用预处理能有效的降低采样聚合函数查询对系统的瞬时查询压力，实现数据计算一次多次查询，同时也能有效的降低查询延迟，提高用户体验；</li>
+<li>提供多种语言的SDK，支持Java，C++，C#，Python，Go，JDBC等主流的SDK，方便用户使用；</li>
+<li>支持自定义数据存储周期，过期数据自动删除等功能；</li>
+<li>多种数据编码压缩方式，支持PLAIN编码、二阶差分编码（TS_2DIFF）、游程编码（RLE）、GORILLA编码；支持SNAPPY压缩、LZ4压缩、GZIP压缩、SDT压缩等多种压缩方式；</li>
+<li>支持用户自定义函数，方便用户二次开发；</li>
+<li>支持对数据库、表、用户等权限管理，从而为用户提供对于数据的权限管理功能，保障数据的安全。</li>
+<li>支持高可用、数据多副本分布存储。</li>
+</ul>
+</li>
+<li><p>极致的性能体验：</p>
+<ul>
+<li>单节点每秒千万点数据写入能力，可支持海量数据的持续写入；</li>
+<li>毫秒级查询性能；</li>
+<li>高压缩比，压缩比可达40倍，节省磁盘带宽。</li>
+</ul>
+</li>
+<li><p>完备的系统周边：</p>
+<ul>
+<li>云端协同同步工具，同步工具是定期将本地磁盘中和新增的已持久化的TsFile文件上传至云端并加载到CirroData-TimeS的套件工具，支持云端协同；</li>
+<li>强大的系统生态，CirroData-TimeS目前集成了Grafana、Hadoop、Spark、Hive、Fink、Zeppelin等组件，极大了丰富了CirroData-TimeS的场景和生态系统；</li>
+<li>完善的系统工具，支持CSV数据导入导出、JMX工具、查询性能追踪工具、数字水印等；</li>
+<li>支持MQTT物联网协议；</li>
+<li>支持多种操作终端：SQL命令行终端，SQL Developer可视化终端等。</li>
+</ul>
+</li>
+</ol>
+<h1 id="高可用分布式架构"><a href="#高可用分布式架构" class="headerlink" title="高可用分布式架构"></a>高可用分布式架构</h1><p>CirroData-TimeS采用Share-Nothing的分布式架构，各个节点都是同质的，每个节点主要模块如下图所示：</p>
+<!--
+![CirroData-TimeS发版](cluster module.png)
+-->
+<div align="center"><img src="../CirroData-TimeS发版/cluster module.png" width="350" height="500"></div>
+
+<p>单机有如下几大模块：分别为Physical Plan Generator、SQL Parser、Single Read/Write Engine以及存储文件TsFile。分布式较单机多了如下几大模块：Data Partition、Distributed Query、Distributed Write以及各个节点之间同步协议Raft Synchronization模块。</p>
+<p>CirroData-TimeS集群搭建之后，会根据节点的ip和port和当前启动时间生成一个hash值，所有节点按照此hash值排序形成一个环形，hash值最大的节点的后面的节点就是hash值最小的节点，集群会按照配置的副本数N，从hash值最小的节点开始，依次选择N-1个节点组成一个raft组，形成一个data raft group。所有的meta节点组成一个meta raft group。</p>
+<div align="center"><img src="../CirroData-TimeS发版/all data group.png" width="600" height="600"></div>
+
+<!--
+![CirroData-TimeS发版](all data group.png)
+-->
+<p>以4节点3副本为例，其会形成如下raft复制组，每个节点上面都会有N+1个复制组，N是副本数，即N个data raft group，1指的是所有节点形成一个meta raft group。</p>
+<div align="center"><img src="../CirroData-TimeS发版/4 times instances.png" width="600"></div>
+
+<!--
+![CirroData-TimeS发版](4 times instances.png)
+-->
+<h1 id="分布式数据存储"><a href="#分布式数据存储" class="headerlink" title="分布式数据存储"></a>分布式数据存储</h1><p>当初始化好了raft复制组之后，面临的问题就是数据归属问题，哪些raft复制组处理哪些数据呢？这就需要数据分区这个模块来解决了。</p>
+<p>数据分区模块负责元数据、数据分布的计算工作，为了便于表述，本文在此讲述下CirroData-TimeS的一些基础概念。</p>
+<h2 id="CirroData-TimeS基础概念"><a href="#CirroData-TimeS基础概念" class="headerlink" title="CirroData-TimeS基础概念"></a>CirroData-TimeS基础概念</h2><p>CirroData-TimeS模型是树状结构。如下所示，有存储组、设备、测点等概念。存储组可以理解为传统数据库中的表，在存储的时候，不同的存储组的数据是存储在不同的文件夹中的。下图中有<code>root.sgcc</code>、<code>root.ln</code>两个存储组。叶子节点叫做测点，叶子节点的父节点叫做设备。从父节点root到叶子节点的全路径叫做时序。比如下图中有<code>root.sgcc.wf01.status</code>等4条时序。</p>
+<div align="center"><img src="../CirroData-TimeS发版/tree data module.png" width="700"></div>
+
+<!--
+![CirroData-TimeS发版](tree data module.png)
+-->
+<h2 id="元数据分布"><a href="#元数据分布" class="headerlink" title="元数据分布"></a>元数据分布</h2><p>对于分布式CirroData-TimeS来说，有两种类型的元数据信息，一种是存储组、另外一种是时序。为什么说两种类型的元数据呢？因为这两种元数据是不同的复制组管理的。存储组是meta raft group管理的。而时序信息是由data raft group管理的。这样做的好处也是由于存储组元数据比较少，可以在各个节点保存；但是时序信息有可能比较大，有可能高达千万级别，如果每个节点都保存有相同的时序信息，每个节点会浪费太多的内存空间(这里也是内存和时间的trade off，当然每个节点都有时序的元数据信息是最好的，因为写入、查询会用到这些时序元数据信息。关于这部分考虑将在后面的文章中进行详细分析)。所以会把这些时序​数据信息分散到各个节点进行管理。</p>
+<h3 id="存储组分布"><a href="#存储组分布" class="headerlink" title="存储组分布"></a>存储组分布</h3><p>对于存储组这样的元数据，由于是meta raft group管理的。所以在每个节点都会保存。</p>
+<h3 id="时序分布"><a href="#时序分布" class="headerlink" title="时序分布"></a>时序分布</h3><p>对于时序和数据的存储，是分布到多个节点进行分散存储的。分布的核心是一个数据分区算法，即如何判定我的(元)数据应该存储在哪个节点上？</p>
+<p>TimeS系统中预先设置了10000个slot，然后会均匀的把这些slot分到集群中各个TimeS实例中，假设节点数是M，则集群环中的前M-1个节点每个节点分配的slot数是<code>10000/M</code>，最后一个节点是slot数就是<code>10000-10000/M*(M-1)</code>，可能较前M-1个节点会多一些。</p>
+<p>比如，在6个节点组成的集群的情况下，第一个节点会分配0-1665共1666个slot；第二个节点会分配1666-3331共1666个slot；第三个节点会分配3332-4997共1666个slot；第四个节点会分配4998-6663共1666个slot；第五个节点会分配6664-8329共1666个slot；而第六个节点就会分配8330-9999共1670个slot。</p>
+<div align="center"><img src="../CirroData-TimeS发版/node slot id.png" width="500"></div>
+
+<!--
+![CirroData-TimeS发版](node slot id.png)
+-->
+<p>得到了节点和slot id的关系，剩下的就是如何把数据映射到slot中。CirroData-TimeS采用了如下hash算法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">slot_id = hash(storage_group, time_partition) % total_slot_num</span><br></pre></td></tr></table></figure>
+<p><code>storage_group</code>即存储组的名字，<code>time_partition</code>会根据元数据操作还是数据操作，执行不同的策略。</p>
+<p>在计算时序的分布的时候，<code>time_partition</code>永远等于0，即可以理解为同一个存储组的所有时序都是保存在同一个data raft组中的。</p>
+<h2 id="数据分布"><a href="#数据分布" class="headerlink" title="数据分布"></a>数据分布</h2><p>数据分布与时序元数据分布的计算公式都是一致的，区别在于其time_partition不是0，而是计算出来的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">time_partition = time_stamp % partition_interval</span><br><span class="line">slot_id = hash(storage_group, time_partition )% total_slot_num</span><br></pre></td></tr></table></figure></p>
+<p>time_stamp是数据插入的时间戳，而partition_interval是时间分区，比如一周、一个月等。由于同一个时间分区的数据是保存在一起的，对于查询和过期数据删除都有优势。</p>
+<p>如下所示，每个data raft group会有许多的slot，每个slot上面会有多个time partition，每个partition会有多个TsFile，一个TsFile会有属于这个时间分区的多条时序的具体数据，关于TsFile的详细描述，请参考前面几篇文章。</p>
+<div align="center"><img src="../CirroData-TimeS发版/slot tsfile.png" width="500"></div>
+
+<!--
+![CirroData-TimeS发版](slot tsfile.png)
+-->
+<h1 id="性能对比"><a href="#性能对比" class="headerlink" title="性能对比"></a>性能对比</h1><p>我们与InfluxDB做了性能对比测试，由于InfluxDB分布式版本未开源，所以我们只对其做了单机版本的性能测试。benchmark采用TimeS-Benchmark，其主要配置如下所示：</p>
+<h2 id="测试方案"><a href="#测试方案" class="headerlink" title="测试方案"></a>测试方案</h2><p>本测试主要测试测点少、测点多两种场景下，各个数据库的写入性能、查询性能以及数据压缩比。测点少情况模拟设备数量为300，每个设备20个测点，共计6000个测点；测点多的场景模拟设备数量为80000，每个设备100个测点，共计800万个测点；写入数据类型和时间戳精度如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>值</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>时间戳精度</td>
+<td>ms</td>
+<td>写入的时间戳精度</td>
+</tr>
+<tr>
+<td>数据类型</td>
+<td>DOUBLE, BOOLEAN, INT32, INT64, FLOAT</td>
+<td>写入的数据类型</td>
+</tr>
+</tbody>
+</table>
+<h2 id="测试环境"><a href="#测试环境" class="headerlink" title="测试环境"></a>测试环境</h2><p><strong>硬件环境</strong></p>
+<table>
+<thead>
+<tr>
+<th>硬件</th>
+<th>参数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cpu</td>
+<td>40核，Intel(R) Xeon(R) Gold 6248 CPU @ 2.50GHz</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>256GB</td>
+</tr>
+</tbody>
+</table>
+<p><strong>软件环境</strong></p>
+<table>
+<thead>
+<tr>
+<th>软件</th>
+<th>参数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CirroData-TimeS</td>
+<td>CirroData-TimeS-0.12.1</td>
+</tr>
+<tr>
+<td>InfluxDB</td>
+<td>InfluxDB-1.8.0</td>
+</tr>
+<tr>
+<td>内存</td>
+<td>64GB(测试少测试场景)、128GB(测试多测试场景)</td>
+</tr>
+</tbody>
+</table>
+<p>CirroData-TimeS分布式采用3节点3副本部署。</p>
+<h2 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h2><h3 id="写入"><a href="#写入" class="headerlink" title="写入"></a>写入</h3><!--
+
+<table border="" width="0">
+  <th><img width="400" height="460" src="../CirroData-TimeS发版/6000_insert.png"></td>
+  <th><img width="400" height="460" src="../CirroData-TimeS发版/800w_insert.png"></td>
+</table>
+测点少场景下，随着batchsize的增大，InfluxDB性能逐渐趋于平稳，达到阈值，而CirroData-TimeS无论是单机还是分布式均呈现上升趋势。CirroData-TimeS单机吞吐是InfluxDB的6.2-23倍，CirroData-TimeS分布式吞吐是InfluxDB的4.7-10.7倍
+
+测点多场景下，随着batchsize的增大，InfluxDB性能逐渐趋于平稳，达到阈值，而CirroData-TimeS无论是单机还是分布式均呈现上升趋势。CirroData-TimeS单机吞吐是InfluxDB的3.5-8.8倍，CirroData-TimeS分布式吞吐是InfluxDB的2.4-3.6倍
+-->
+<!-- 不怎么管用。。。
+
+<div style="float:left;border:solid 1px 000;margin:2px;"><img src="../CirroData-TimeS发版/6000_insert.png" width="400" height="460" ></div><div style="float:left;border:solid 1px 000;margin:2px;"><img src="../CirroData-TimeS发版/800w_insert.png" width="400" height="460" ></div>
+-->
+<!-- not work
+30% width each:
+<p align="center" width="100%">
+    <img width="30%" src="https://i.stack.imgur.com/RJj4x.png">
+    <img width="30%" src="https://i.stack.imgur.com/RJj4x.png">
+    <img width="30%" src="https://i.stack.imgur.com/RJj4x.png">
+</p>
+-->
+<h4 id="测点少场景"><a href="#测点少场景" class="headerlink" title="测点少场景"></a>测点少场景</h4><div align="center"><img src="../CirroData-TimeS发版/6000_insert.png" width="500"></div>
+
+<p>测点少场景下，随着batchsize的增大，InfluxDB性能逐渐趋于平稳，达到阈值，而CirroData-TimeS无论是单机还是分布式均呈现上升趋势。CirroData-TimeS单机吞吐是InfluxDB的6.2-23倍，CirroData-TimeS分布式吞吐是InfluxDB的4.7-10.7倍</p>
+<h4 id="测点多场景"><a href="#测点多场景" class="headerlink" title="测点多场景"></a>测点多场景</h4><div align="center"><img src="../CirroData-TimeS发版/800w_insert.png" width="500"></div>
+
+<p>测点多场景下，随着batchsize的增大，InfluxDB性能逐渐趋于平稳，达到阈值，而CirroData-TimeS无论是单机还是分布式均呈现上升趋势。CirroData-TimeS单机吞吐是InfluxDB的3.5-8.8倍，CirroData-TimeS分布式吞吐是InfluxDB的2.4-3.6倍</p>
+<h3 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h3><p>对于每种数据库，我们采用如下8种查询：</p>
+<table>
+<thead>
+<tr>
+<th>查询</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Q1</td>
+<td>精确点查询 select v1… from data where time = ? and device in ?</td>
+</tr>
+<tr>
+<td>Q2</td>
+<td>范围查询（只限制起止时间）select v1… from data where time &gt; ? and time &lt; ? and device in ?</td>
+</tr>
+<tr>
+<td>Q3</td>
+<td>带值过滤的范围查询 select v1… from data where time &gt; ? and time &lt; ? and v1 &gt; ? and device in ？</td>
+</tr>
+<tr>
+<td>Q4</td>
+<td>带时间过滤的聚合查询 select func(v1)… from data where device in ? and time &gt; ? and time &lt; ？</td>
+</tr>
+<tr>
+<td>Q5</td>
+<td>带值过滤的聚合查询 select func(v1)… from data where device in ? and value &gt; ?</td>
+</tr>
+<tr>
+<td>Q6</td>
+<td>带值过滤和时间过滤的聚合查询 select func(v1)… from data where device in ? and value &gt; ? and time &gt; ? and time &lt; ?</td>
+</tr>
+<tr>
+<td>Q7</td>
+<td>分组聚合查询（GROUP BY）</td>
+</tr>
+<tr>
+<td>Q8</td>
+<td>最近点查询 select time, v1… where device = ? and time = max(time)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="测点少场景-1"><a href="#测点少场景-1" class="headerlink" title="测点少场景"></a>测点少场景</h4><p>在测点少的场景下，为了验证查询不同数据量的性能，针对时间范围的查询，设计了查询时间间隔分别为1s，1min，1h和1d的4种查询，对应查询结果集数量为10，100，10000，100000不等。</p>
+<h5 id="Q1"><a href="#Q1" class="headerlink" title="Q1"></a>Q1</h5><div align="center"><img src="../CirroData-TimeS发版/6000_q1.png" width="500"></div>
+
+<p>对于精确点查询，CirroData-TimeS单机，分布式以及InfluxDB查询延迟均在10ms以内。</p>
+<h5 id="Q2"><a href="#Q2" class="headerlink" title="Q2"></a>Q2</h5><div align="center"><img src="../CirroData-TimeS发版/6000_q2.png" width="500"></div>
+
+<p>对于带时间范围的查询，CirroData-TimeS不论是单机还是分布式均比InfluxDB好，特别是查询的数据量大了之后，CirroData-TimeS查询性能是InfluxDB的10.96倍。这是因为CirroData-TimeS压缩比比InfluxDB高很多，读取同样的数据量，消耗的io资源比较少，就能获得更好的查询性能。</p>
+<h5 id="Q3"><a href="#Q3" class="headerlink" title="Q3"></a>Q3</h5><div align="center"><img src="../CirroData-TimeS发版/6000_q3.png" width="500"></div>
+
+<p>对于带值过滤的范围查询，CirroData-TimeS不论是单机还是分布式查询性能均比InfluxDB好，特别是查询的数据量大了之后，CirroData-TimeS查询性能是InfluxDB的8.23倍。这是因为CirroData-TimeS压缩比比InfluxDB高很多，读取同样的数据量，消耗的io资源比较少，就能获得更好的查询性能。</p>
+<h5 id="Q4"><a href="#Q4" class="headerlink" title="Q4"></a>Q4</h5><div align="center"><img src="../CirroData-TimeS发版/6000_q4.png" width="500"></div>
+
+<p>对于带时间范围的聚合查询，CirroData-TimeS单机，分布式以及InfluxDB查询延迟均在25ms以内。</p>
+<h5 id="Q5"><a href="#Q5" class="headerlink" title="Q5"></a>Q5</h5><div align="center"><img src="../CirroData-TimeS发版/6000_q5.png" width="500"></div>
+
+<p>对于带值过滤的聚合查询，本种查询条件里不包含时间条件，CirroData-TimeS查询性能不论是单机还是分布式均比InfluxDB好，最高达到它的2.86倍，并且能维持比较稳定的查询延迟。上面比较奇怪的是InfluxDB的查询延迟会下降，猜测是测试误差。</p>
+<h5 id="Q6"><a href="#Q6" class="headerlink" title="Q6"></a>Q6</h5><div align="center"><img src="../CirroData-TimeS发版/6000_q6.png" width="500"></div>
+
+<p>对于带值过滤和时间过滤的聚合查询，随着查询数据量的增大CirroData-TimeS不论是单机还是分布式查询性能均比InfluxDB好，最高可达到InfluxDB的1.31倍。</p>
+<h5 id="Q7"><a href="#Q7" class="headerlink" title="Q7"></a>Q7</h5><div align="center"><img src="../CirroData-TimeS发版/6000_q7.png" width="500"></div>
+
+<p>对于分组聚合查询，随着查询数据量的增大CirroData-TimeS不论是单机还是分布式查询性能均比InfluxDB好，最高可达到InfluxDB的2.02倍。</p>
+<h5 id="Q8"><a href="#Q8" class="headerlink" title="Q8"></a>Q8</h5><div align="center"><img src="../CirroData-TimeS发版/6000_q8.png" width="500"></div>
+
+<p>对于最近点查询，和查询时间范围无关，CirroData-TimeS单机，分布式以及InfluxDB查询延迟均在12ms以内。CirroData-TimeS单机的查询性能可以达到InfluxDB的6倍。</p>
+<h4 id="测点多场景-1"><a href="#测点多场景-1" class="headerlink" title="测点多场景"></a>测点多场景</h4><p>在测点多的场景下，为了验证查询不同数据量的性能，针对时间范围的查询，设计了查询时间间隔分别为1s，1min，1h和6h的4种查询，对应查询结果集数量为10，100，4000，20000不等。</p>
+<h5 id="Q1-1"><a href="#Q1-1" class="headerlink" title="Q1"></a>Q1</h5><div align="center"><img src="../CirroData-TimeS发版/800w_q1.png" width="500"></div>
+
+<p>对于精确点查询，和查询时间范围无关，CirroData-TimeS单机，分布式以及InfluxDB查询延迟均在50ms以内。</p>
+<h5 id="Q2-1"><a href="#Q2-1" class="headerlink" title="Q2"></a>Q2</h5><div align="center"><img src="../CirroData-TimeS发版/800w_q2.png" width="500"></div>
+
+<p>对于带时间范围的原始数据查询，CirroData-TimeS分布式查询性能比InfluxDB好，单机查询性能略比InfluxDB差。随着数据量增大，单机版本查询延迟都会增长比较快，而CirroData-TimeS分布式查询延迟增长比较慢，这是因为分布式多个节点都可以提供查询，分摊查询压力，查询性能最高可以达到InfluxDB的1.89倍。</p>
+<h5 id="Q3-1"><a href="#Q3-1" class="headerlink" title="Q3"></a>Q3</h5><div align="center"><img src="../CirroData-TimeS发版/800w_q3.png" width="500"></div>
+
+<p>对于带值过滤的范围查询，CirroData-TimeS分布式查询性能比InfluxDB好，单机略比InfluxDB差，随着数据量增大，单机版本查询延迟都会增长比较快，而CirroData-TimeS分布式查询延迟增长比较慢，这是因为分布式多个节点都可以提供查询，分摊查询压力，查询性能最高可以达到InfluxDB的1.90倍。</p>
+<h5 id="Q4-1"><a href="#Q4-1" class="headerlink" title="Q4"></a>Q4</h5><div align="center"><img src="../CirroData-TimeS发版/800w_q4.png" width="500"></div>
+
+<p>对于带时间范围的聚合查询，CirroData-TimeS查询性能不论是单机还是分布式均比InfluxDB好，特别是查询的数据量大了之后，CirroData-TimeS查询性能是InfluxDB的6.58倍。这是因为CirroData-TimeS压缩比比InfluxDB高很多，读取同样的数据量，消耗的io资源比较少，就能获得更好的性能。</p>
+<h5 id="Q5-1"><a href="#Q5-1" class="headerlink" title="Q5"></a>Q5</h5><div align="center"><img src="../CirroData-TimeS发版/800w_q5.png" width="500"></div>
+
+<p>对于带值过滤的聚合查询，和查询时间范围无关，CirroData-TimeS单机，分布式以及InfluxDB查询延迟均在700ms以内。CirroData-TimeS分布式查询性能可以达到InfluxDB的1.9倍。</p>
+<h5 id="Q6-1"><a href="#Q6-1" class="headerlink" title="Q6"></a>Q6</h5><div align="center"><img src="../CirroData-TimeS发版/800w_q6.png" width="500"></div>
+
+<p>对于带值过滤和时间过滤的聚合查询，CirroData-TimeS分布式查询性能比InfluxDB好，单机查询性能略比InfluxDB差，随着数据量增大，单机版本的查询延迟都会增长比较快，而CirroData-TimeS分布式查询延迟增长比较慢，这是因为分布式多个节点都可以提供查询，分摊查询压力，查询性能最高可以达到InfluxDB的1.54倍。</p>
+<h5 id="Q7-1"><a href="#Q7-1" class="headerlink" title="Q7"></a>Q7</h5><div align="center"><img src="../CirroData-TimeS发版/800w_q7.png" width="500"></div>
+
+<p>对于分组聚合查询，CirroData-TimeS分布式查询性能比InfluxDB好，单机略比InfluxDB差，随着数据量增大，单机版本查询延迟都会增长比较快，而CirroData-TimeS分布式查询延迟增长比较慢，这是因为分布式多个节点都可以提供查询，分摊查询压力，查询性能最高可以达到InfluxDB的1.7倍。</p>
+<h5 id="Q8-1"><a href="#Q8-1" class="headerlink" title="Q8"></a>Q8</h5><div align="center"><img src="../CirroData-TimeS发版/800w_q8.png" width="500"></div>
+
+<p>对于最近点查询，本种查询条件里不包含时间条件，CirroData-TimeS查询性能不论是单机还是分布式均比InfluxDB好，最高达到它的1.8倍。上面比较奇怪的是三者查询延迟均有上升或者下降趋势，猜测是测试误差。</p>
+<h3 id="压缩比"><a href="#压缩比" class="headerlink" title="压缩比"></a>压缩比</h3><h4 id="测点少场景-2"><a href="#测点少场景-2" class="headerlink" title="测点少场景"></a>测点少场景</h4><div align="center"><img src="../CirroData-TimeS发版/6000_compaction.png" width="500"></div>
+
+<p>在测点数为6000的情况下，数据总量为60亿点，原始数据大小约为84GB，CirroData-TimeS压缩后的数据只有原始数据的1/42，压缩比是InfluxDB的6.5倍。</p>
+<h4 id="测点多场景-2"><a href="#测点多场景-2" class="headerlink" title="测点多场景"></a>测点多场景</h4><div align="center"><img src="../CirroData-TimeS发版/800w_compaction.png" width="500"></div>
+
+<p>在测点数为800万的情况下，数据总量约为1600亿点，原始数据大小约为2080GB，CirroData-TimeS压缩后的数据只有原始数据的1/25，压缩比是InfluxDB的4.3倍。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>本文介绍了CirroData-TimeS一些特性，着重分析了CirroData-TimeS高可用分布式架构以及分布式数据存储，并且与InfluxDB做了系统的性能对比测试。</p>
+<p>测试结果显示，不管在测点多还是测点少的场景下，CirroData-TimeS单机和分布式的写入性能均要优于InfluxDB。在测点少的情况下，随着batchsize的不同，CirroData-TimeS单机吞吐是InfluxDB的6.2-23倍，CirroData-TimeS分布式吞吐是InfluxDB的4.7-10.7倍。在测点多的情况下，随着batchsize的不同，CirroData-TimeS单机吞吐是InfluxDB的3.5-8.8倍，CirroData-TimeS分布式吞吐是InfluxDB的2.4-3.6倍。</p>
+<p>查询场景中点查询CirroData-TimeS略差于InfluxDB，但是均可以在50ms之内返回结果。对于其他种类的查询，不管在测点多还是测点少的情况下，CirroData-TimeS均优于InfluxDB，根据查询类别的不同，在测点少的场景下，CirroData-TimeS查询性能最高是InfluxDB的10.96倍，在测点多的场景下，CirroData-TimeS查询性能最高是InfluxDB的6.58倍。</p>
+<p>并且CirroData-TimeS拥有较高的压缩比，在测点少的情况下，CirroData-TimeS压缩后的数据只有原始数据的1/42，压缩比是InfluxDB的6.5倍。在测点多的情况下，CirroData-TimeS压缩后的数据只有原始数据的1/25，压缩比是InfluxDB的4.3倍。高的压缩比能降低磁盘io消耗，也是CirroData-TimeS优秀的查询性能的核心原因之一。</p>
+<p>可以看到不管是写入吞吐，还是查询性能，或是数据压缩比，CirroData-TimeS都具有极致的性能，具备应对高速增长的物联网大数据市场和技术挑战的能力。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CirroData-TimeS/" rel="tag"># CirroData-TimeS</a>
+          
+            <a href="/tags/发版/" rel="tag"># 发版</a>
+          
+            <a href="/tags/0-12-1/" rel="tag"># 0.12.1</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/04/16/Alluxio本地缓存开发配置指南/" rel="next" title="Alluxio本地缓存开发配置指南">
+                <i class="fa fa-chevron-left"></i> Alluxio本地缓存开发配置指南
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/09/03/Guava-cache同步Remove的坑/" rel="prev" title="Guava cache同步Remove与读写锁集合的坑">
+                Guava cache同步Remove与读写锁集合的坑 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="伊蓝">
+            
+              <p class="site-author-name" itemprop="name">伊蓝</p>
+              <p class="site-description motion-element" itemprop="description">记录点滴</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">82</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">126</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/neuyilan/" title="GitHub &rarr; https://github.com/neuyilan/" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#完备的分布式时序数据库"><span class="nav-number">1.</span> <span class="nav-text">完备的分布式时序数据库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高可用分布式架构"><span class="nav-number">2.</span> <span class="nav-text">高可用分布式架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#分布式数据存储"><span class="nav-number">3.</span> <span class="nav-text">分布式数据存储</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#CirroData-TimeS基础概念"><span class="nav-number">3.1.</span> <span class="nav-text">CirroData-TimeS基础概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#元数据分布"><span class="nav-number">3.2.</span> <span class="nav-text">元数据分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#存储组分布"><span class="nav-number">3.2.1.</span> <span class="nav-text">存储组分布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#时序分布"><span class="nav-number">3.2.2.</span> <span class="nav-text">时序分布</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据分布"><span class="nav-number">3.3.</span> <span class="nav-text">数据分布</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#性能对比"><span class="nav-number">4.</span> <span class="nav-text">性能对比</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#测试方案"><span class="nav-number">4.1.</span> <span class="nav-text">测试方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试环境"><span class="nav-number">4.2.</span> <span class="nav-text">测试环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#测试结果"><span class="nav-number">4.3.</span> <span class="nav-text">测试结果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#写入"><span class="nav-number">4.3.1.</span> <span class="nav-text">写入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#测点少场景"><span class="nav-number">4.3.1.1.</span> <span class="nav-text">测点少场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测点多场景"><span class="nav-number">4.3.1.2.</span> <span class="nav-text">测点多场景</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查询"><span class="nav-number">4.3.2.</span> <span class="nav-text">查询</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#测点少场景-1"><span class="nav-number">4.3.2.1.</span> <span class="nav-text">测点少场景</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Q1"><span class="nav-number">4.3.2.1.1.</span> <span class="nav-text">Q1</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Q2"><span class="nav-number">4.3.2.1.2.</span> <span class="nav-text">Q2</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Q3"><span class="nav-number">4.3.2.1.3.</span> <span class="nav-text">Q3</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Q4"><span class="nav-number">4.3.2.1.4.</span> <span class="nav-text">Q4</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Q5"><span class="nav-number">4.3.2.1.5.</span> <span class="nav-text">Q5</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Q6"><span class="nav-number">4.3.2.1.6.</span> <span class="nav-text">Q6</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Q7"><span class="nav-number">4.3.2.1.7.</span> <span class="nav-text">Q7</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Q8"><span class="nav-number">4.3.2.1.8.</span> <span class="nav-text">Q8</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测点多场景-1"><span class="nav-number">4.3.2.2.</span> <span class="nav-text">测点多场景</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Q1-1"><span class="nav-number">4.3.2.2.1.</span> <span class="nav-text">Q1</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Q2-1"><span class="nav-number">4.3.2.2.2.</span> <span class="nav-text">Q2</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Q3-1"><span class="nav-number">4.3.2.2.3.</span> <span class="nav-text">Q3</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Q4-1"><span class="nav-number">4.3.2.2.4.</span> <span class="nav-text">Q4</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Q5-1"><span class="nav-number">4.3.2.2.5.</span> <span class="nav-text">Q5</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Q6-1"><span class="nav-number">4.3.2.2.6.</span> <span class="nav-text">Q6</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Q7-1"><span class="nav-number">4.3.2.2.7.</span> <span class="nav-text">Q7</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Q8-1"><span class="nav-number">4.3.2.2.8.</span> <span class="nav-text">Q8</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#压缩比"><span class="nav-number">4.3.3.</span> <span class="nav-text">压缩比</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#测点少场景-2"><span class="nav-number">4.3.3.1.</span> <span class="nav-text">测点少场景</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#测点多场景-2"><span class="nav-number">4.3.3.2.</span> <span class="nav-text">测点多场景</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">伊蓝</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=6.7.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function (item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'CCj0VULQMKCDsXgP4pmSrOTo-gzGzoHsz',
+    appKey: 'MWSq3U7EEI2dN5qSQKdOMt2X',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
+
+
+
+  
+
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
