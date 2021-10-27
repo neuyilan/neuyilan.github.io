@@ -1,0 +1,1989 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.7.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.7.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.7.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.7.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.7.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="背景根据IDC[1]最新预测，截止到2025年，全球物联网设备可达416亿个，产生约79.4ZB的数据。正如该报告指出，随着联网的设备越来越多，这些设备产生的数据也越来越多。这些数据都有一个共同的特性：数据是时序的，即一定带有时间戳，称之为时间序列的数据。 时间序列在维基百科的定义是一组按照时间发生先后顺序进行排列的数据点序列。通常一组时间序列的时间间隔为一恒定值（如1秒，5分钟，12小时，7天，">
+<meta name="keywords" content="CirroData-TimeS,综述">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CirroData-TimeS 综述">
+<meta property="og:url" content="https://neuyilan.github.io/2020/12/14/CirroData-TimeS-综述/index.html">
+<meta property="og:site_name" content="yilan">
+<meta property="og:description" content="背景根据IDC[1]最新预测，截止到2025年，全球物联网设备可达416亿个，产生约79.4ZB的数据。正如该报告指出，随着联网的设备越来越多，这些设备产生的数据也越来越多。这些数据都有一个共同的特性：数据是时序的，即一定带有时间戳，称之为时间序列的数据。 时间序列在维基百科的定义是一组按照时间发生先后顺序进行排列的数据点序列。通常一组时间序列的时间间隔为一恒定值（如1秒，5分钟，12小时，7天，">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://neuyilan.github.io/2020/12/14/CirroData-TimeS-综述/structure.jpg">
+<meta property="og:image" content="https://neuyilan.github.io/2020/12/14/CirroData-TimeS-综述/insert.png">
+<meta property="og:image" content="https://neuyilan.github.io/2020/12/14/CirroData-TimeS-综述/6000_query.png">
+<meta property="og:image" content="https://neuyilan.github.io/2020/12/14/CirroData-TimeS-综述/200w_query.png">
+<meta property="og:image" content="https://neuyilan.github.io/2020/12/14/CirroData-TimeS-综述/disk_space.png">
+<meta property="og:image" content="https://neuyilan.github.io/2020/12/14/CirroData-TimeS-综述/single_cluster.png">
+<meta property="og:updated_time" content="2021-10-15T07:14:29.425Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CirroData-TimeS 综述">
+<meta name="twitter:description" content="背景根据IDC[1]最新预测，截止到2025年，全球物联网设备可达416亿个，产生约79.4ZB的数据。正如该报告指出，随着联网的设备越来越多，这些设备产生的数据也越来越多。这些数据都有一个共同的特性：数据是时序的，即一定带有时间戳，称之为时间序列的数据。 时间序列在维基百科的定义是一组按照时间发生先后顺序进行排列的数据点序列。通常一组时间序列的时间间隔为一恒定值（如1秒，5分钟，12小时，7天，">
+<meta name="twitter:image" content="https://neuyilan.github.io/2020/12/14/CirroData-TimeS-综述/structure.jpg">
+
+
+
+
+
+
+  <link rel="canonical" href="https://neuyilan.github.io/2020/12/14/CirroData-TimeS-综述/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>CirroData-TimeS 综述 | yilan</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">yilan</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2020/12/14/CirroData-TimeS-综述/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="伊蓝">
+      <meta itemprop="description" content="记录点滴">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yilan">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CirroData-TimeS 综述
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2020-12-14 14:56:12" itemprop="dateCreated datePublished" datetime="2020-12-14T14:56:12+08:00">2020-12-14</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-10-15 15:14:29" itemprop="dateModified" datetime="2021-10-15T15:14:29+08:00">2021-10-15</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2020/12/14/CirroData-TimeS-综述/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2020/12/14/CirroData-TimeS-综述/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>根据IDC[1]最新预测，截止到2025年，全球物联网设备可达416亿个，产生约79.4ZB的数据。正如该报告指出，随着联网的设备越来越多，这些设备产生的数据也越来越多。这些数据都有一个共同的特性：数据是时序的，即一定带有时间戳，称之为时间序列的数据。</p>
+<p>时间序列在维基百科的定义是一组按照时间发生先后顺序进行排列的数据点序列。通常一组时间序列的时间间隔为一恒定值（如1秒，5分钟，12小时，7天，1年），因此时间序列可以作为离散时间数据进行分析处理。时间序列广泛应用于数理统计、信号处理、模式识别、计量经济学、数学金融、天气预报、地震预测、脑电图、控制工程、航空学、通信工程以及绝大多数涉及到时间数据测量的应用科学与工程学[2]。如何高效的存储、管理这些数据成为物联网领域面临的一个很关键的问题。 –&gt;</p>
+<a id="more"></a>
+<h1 id="时序数据库的必要性"><a href="#时序数据库的必要性" class="headerlink" title="时序数据库的必要性"></a>时序数据库的必要性</h1><p>对数据的存储和管理，很自然的会想到数据库。我们来看下使用常见的数据库来处理时序数据会有什么问题？这里我们以广泛应用的关系型数据库和键值数据库为例，</p>
+<p>考虑如下场景，某工厂的供热系统有3个供热设备（device），每个设备有1个测点，每个测点每5秒钟会采集当前时刻的水温（temperature）并且上报，用来实时调整供热系统的水温以达到安全状态。管理员会有如下两种查询需求：</p>
+<ul>
+<li>1) 查询某个设备最近一天水温数据</li>
+<li>2) 查询所有设备最近一小时的水温数据</li>
+</ul>
+<h2 id="关系数据库建模"><a href="#关系数据库建模" class="headerlink" title="关系数据库建模"></a>关系数据库建模</h2><p>那么，基于关系型数据库，应该如何建模呢？</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>timestamp</th>
+<th>temperature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>devie1</td>
+<td>5</td>
+<td>57.5</td>
+</tr>
+<tr>
+<td>devie1</td>
+<td>10</td>
+<td>58</td>
+</tr>
+<tr>
+<td>devie1</td>
+<td>15</td>
+<td>60.6</td>
+</tr>
+<tr>
+<td>devie1</td>
+<td>20</td>
+<td>47.9</td>
+</tr>
+<tr>
+<td>devie2</td>
+<td>6</td>
+<td>60.4</td>
+</tr>
+<tr>
+<td>devie2</td>
+<td>11</td>
+<td>58.5</td>
+</tr>
+<tr>
+<td>devie2</td>
+<td>16</td>
+<td>61.7</td>
+</tr>
+<tr>
+<td>devie2</td>
+<td>21</td>
+<td>58.4</td>
+</tr>
+<tr>
+<td>devie3</td>
+<td>5</td>
+<td>54.6</td>
+</tr>
+<tr>
+<td>devie3</td>
+<td>10</td>
+<td>57.3</td>
+</tr>
+<tr>
+<td>devie3</td>
+<td>15</td>
+<td>62</td>
+</tr>
+<tr>
+<td>devie3</td>
+<td>20</td>
+<td>58</td>
+</tr>
+</tbody>
+</table>
+<p>以上是按照关系型数据库建模得到的表结构数据，如果以设备列有序存储，时间戳（timestamp）和温度（temperature）列存具体的数据。<br>则此建模对于第一种查询比较友好，可以利用索引的优势，但是对于第二种查询，即查询所有设备最近一小时的数据，需要全表扫描，不够友好。</p>
+<p>那如果以时间戳有序存储，则对第二种查询比较友好，但是对第一种查询也是需要全表扫描。</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>timestamp</th>
+<th>temperature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>devie1</td>
+<td>5</td>
+<td>57.5</td>
+</tr>
+<tr>
+<td>devie3</td>
+<td>5</td>
+<td>54.6</td>
+</tr>
+<tr>
+<td>devie2</td>
+<td>6</td>
+<td>60.4</td>
+</tr>
+<tr>
+<td>devie1</td>
+<td>10</td>
+<td>58</td>
+</tr>
+<tr>
+<td>devie3</td>
+<td>10</td>
+<td>57.3</td>
+</tr>
+<tr>
+<td>devie2</td>
+<td>11</td>
+<td>58.5</td>
+</tr>
+<tr>
+<td>devie1</td>
+<td>15</td>
+<td>60.6</td>
+</tr>
+<tr>
+<td>devie3</td>
+<td>15</td>
+<td>62</td>
+</tr>
+<tr>
+<td>devie2</td>
+<td>16</td>
+<td>61.7</td>
+</tr>
+<tr>
+<td>devie1</td>
+<td>20</td>
+<td>47.9</td>
+</tr>
+<tr>
+<td>devie3</td>
+<td>20</td>
+<td>58</td>
+</tr>
+<tr>
+<td>devie2</td>
+<td>21</td>
+<td>58.4</td>
+</tr>
+</tbody>
+</table>
+<p>综上所述，不管哪一种建模方式，为了满足以上两种查询，都需要进行全表扫描。</p>
+<p>如果以每个device分别作为列名，列值存储温度值，按照timestamp有序存储呢？建模如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>timestamp</th>
+<th>device1</th>
+<th>device2</th>
+<th>device3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5</td>
+<td>57.5</td>
+<td>null</td>
+<td>54.6</td>
+</tr>
+<tr>
+<td>6</td>
+<td>null</td>
+<td>60.4</td>
+<td>null</td>
+</tr>
+<tr>
+<td>10</td>
+<td>58</td>
+<td>null</td>
+<td>57.3</td>
+</tr>
+<tr>
+<td>11</td>
+<td>null</td>
+<td>58.5</td>
+<td>null</td>
+</tr>
+<tr>
+<td>15</td>
+<td>60.6</td>
+<td>null</td>
+<td>62</td>
+</tr>
+<tr>
+<td>16</td>
+<td>null</td>
+<td>61.7</td>
+<td>null</td>
+</tr>
+<tr>
+<td>20</td>
+<td>47.9</td>
+<td>null</td>
+<td>58</td>
+</tr>
+<tr>
+<td>21</td>
+<td>null</td>
+<td>58.4</td>
+<td>null</td>
+</tr>
+</tbody>
+</table>
+<p>以上建模方式，对于上面的两种查询方式，都不用全表扫描，但是会有大量的空值，浪费磁盘空间。所以可以看到，关系型数据库对于以上两种查询模式不能够很友好的满足。</p>
+<h2 id="键值数据库建模"><a href="#键值数据库建模" class="headerlink" title="键值数据库建模"></a>键值数据库建模</h2><p>键值数据库基本上有两大类，一类是对key进行hash存储，一种是按照key有序存储。显然hash存储的方式对于我们按照时间范围连续查询的场景不够友好，那如果按照key有序存储呢？由于我们既需要查询某个设备某段时间的数据，也希望能够查询某段时间之内某些设备的数据。所以这就要求key的设计尽量按照设备和时间有序，所有建模方式有如下两种：</p>
+<p>建模1</p>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>temperature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>devie1_5</td>
+<td>57.5</td>
+</tr>
+<tr>
+<td>devie1_10</td>
+<td>58</td>
+</tr>
+<tr>
+<td>devie1_15</td>
+<td>60.6</td>
+</tr>
+<tr>
+<td>devie1_20</td>
+<td>47.9</td>
+</tr>
+<tr>
+<td>devie2_6</td>
+<td>60.4</td>
+</tr>
+<tr>
+<td>devie2_11</td>
+<td>58.5</td>
+</tr>
+<tr>
+<td>devie2_16</td>
+<td>61.7</td>
+</tr>
+<tr>
+<td>devie2_21</td>
+<td>58.4</td>
+</tr>
+<tr>
+<td>devie3_5</td>
+<td>54.6</td>
+</tr>
+<tr>
+<td>devie3_10</td>
+<td>57.3</td>
+</tr>
+<tr>
+<td>devie3_15</td>
+<td>62</td>
+</tr>
+<tr>
+<td>devie3_20</td>
+<td>58</td>
+</tr>
+</tbody>
+</table>
+<p>建模2</p>
+<table>
+<thead>
+<tr>
+<th>key</th>
+<th>temperature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5_devie1</td>
+<td>57.5</td>
+</tr>
+<tr>
+<td>5_devie3</td>
+<td>54.6</td>
+</tr>
+<tr>
+<td>6_devie2</td>
+<td>60.4</td>
+</tr>
+<tr>
+<td>10_devie1</td>
+<td>58</td>
+</tr>
+<tr>
+<td>10_devie3</td>
+<td>57.3</td>
+</tr>
+<tr>
+<td>11_devie2</td>
+<td>58.5</td>
+</tr>
+<tr>
+<td>15_devie1</td>
+<td>60.6</td>
+</tr>
+<tr>
+<td>15_devie3</td>
+<td>62</td>
+</tr>
+<tr>
+<td>16_devie2</td>
+<td>61.7</td>
+</tr>
+<tr>
+<td>20_devie1</td>
+<td>47.9</td>
+</tr>
+<tr>
+<td>20_devie3</td>
+<td>58</td>
+</tr>
+<tr>
+<td>21_devie2</td>
+<td>58.4</td>
+</tr>
+</tbody>
+</table>
+<p>可以看到，建模1对于查询某个设备的数据很友好，但是对于想查询一段时间之内所有设备的数据，就需要全表扫描了；建模2正好相反，对于查询一段时间之内所有设备的数据友好，但是对于想查询某个设备某段时间的数据就需要全表扫描。</p>
+<p>综上所述，采用关系型数据库和键值数据库来管理时间序列的数据都有一定的弊端。虽然在关系型数据库可以采用二级索引的方式避免全表扫描，但是二级索引相比一级索引会多扫描一次磁盘，对性能会有所影响，同时关系型数据库对于动态添加列（测点）等需求支持不够友好。</p>
+<p>其实时序数据的挑战远不止上面两个查询的挑战，时序数据具有如下几个挑战：</p>
+<!--此处填写时序数据的特点-->
+<ol>
+<li>数据是时序的，即一定带有时间戳。<ul>
+<li>由于时序数据是某个测点，或是某个事件源持续不断的产生的，产生数据的时间点对于追溯、分析这个时间下测点，事件的状态非常重要，所以时序数据一般都带有时间戳，这个是时序数据最大的特征。</li>
+</ul>
+<ol start="2">
+<li>写多读少，写入频率高。</li>
+</ol>
+<ul>
+<li>时序数据的产生通常是以一个固定的频率产生，每时每刻都在产生数据，所以产生数据量较大，但是用户可能只关注一些异常指标的数据、或是在特定的场景下会去读数据，是典型的写多读少的场景。</li>
+</ul>
+<ol start="3">
+<li>按时间范围读取。</li>
+</ol>
+<ul>
+<li>通常来说，一般不会关心某个特定点的数据，而且关注一段时间的数据，关注这段时间之内的数据的走势。</li>
+</ul>
+<ol start="4">
+<li>最新数据被读取的概率高。</li>
+</ol>
+<ul>
+<li>数据具有时效性，越新的数据价值越高，所以最新的数据被读取的概率高。</li>
+</ul>
+<ol start="5">
+<li>数据会出现乱序。</li>
+</ol>
+<ul>
+<li>由于网络延迟、设备异常脱网等导致一段时间之内的数据后发送过来，就会出现乱序数据。</li>
+</ul>
+<ol start="6">
+<li>聚合查询价值高。</li>
+</ol>
+<ul>
+<li>用户会对某段时间之内某些测点的一些聚合值感兴趣，比如count、avg、max、last_value、first_value等。</li>
+</ul>
+<ol start="7">
+<li>时间序列多达千万级甚至亿级别。</li>
+</ol>
+<ul>
+<li>由于入网设备的增多，测点数量增加，时间序列就会越来越多，如何管理和存储这些时间序列元信息，也是将要面临的挑战。</li>
+</ul>
+<ol start="8">
+<li>数据量大，压缩率高。</li>
+</ol>
+<ul>
+<li>由于测点数据是不间断持续写入的，随着入网设备逐渐增加，数据量将会越来越大，会占用大量的磁盘空间，这就要求时序数据库具有较高的压缩比，能够节省磁盘空间。</li>
+</ul>
+</li>
+</ol>
+<p>为了应对以上挑战，我们开发了专门处理时序数据的时序数据库CirroData-TimeS。</p>
+<h1 id="CirroData-TimeS介绍"><a href="#CirroData-TimeS介绍" class="headerlink" title="CirroData-TimeS介绍"></a>CirroData-TimeS介绍</h1><p>CirroData-TimeS是一体化收集、存储、管理与分析物联网时序数据的软件系统。CirroData-TimeS采用轻量式架构，具有高性能和丰富的功能，并与Apache Hadoop、Spark和Flink等进行了深度集成，可以满足工业物联网领域的海量数据存储、高速数据读取和复杂数据分析需求。</p>
+<h2 id="数据模型"><a href="#数据模型" class="headerlink" title="数据模型"></a>数据模型</h2><p>首先来看一下CirroData-TimeS一些基本的概念。</p>
+<ol>
+<li>存储组（Storage Group）<ul>
+<li>一个工厂或设备组。</li>
+</ul>
+</li>
+<li>设备（Device）<ul>
+<li>一个机器或者设备实例。</li>
+</ul>
+</li>
+<li>传感器（Measurement，Sensor）<ul>
+<li>机器或设备上的传感器，也称之为测点。</li>
+</ul>
+</li>
+<li>时间序列(Timeseries)<ul>
+<li>由存储组+设备+传感器组成的一个唯一的字符串称之为一个时间序列。</li>
+</ul>
+</li>
+</ol>
+<p>拿上面的例子做一下说明，比如某工厂是factory1，则存储组是root.factory1，root是系统保留关键字；设备有3个，分别为device1，device2，device3；每个设备目前只有1个测点就是temperature，则会产生3条时间序列并且其代表的意义如下所示：</p>
+<ul>
+<li>root.factory1.device1.temperature：工厂1的设备1的温度</li>
+<li>root.factory1.device2.temperature：工厂1的设备2的温度</li>
+<li>root.factory1.device3.temperature：工厂1的设备3的温度</li>
+</ul>
+<p>如果每个设备下面不仅有温度一个测点，还有水压这个测点（pressure），则会产生6条时间序列并且其代表的意义如下所示：</p>
+<ul>
+<li>root.factory1.device1.temperature：工厂1的设备1的温度</li>
+<li>root.factory1.device1.pressure：工厂1的设备1的水压</li>
+<li>root.factory1.device2.temperature：工厂1的设备2的温度</li>
+<li>root.factory1.device2.pressure：工厂1的设备2的水压</li>
+<li>root.factory1.device3.temperature：工厂1的设备3的温度</li>
+<li>root.factory1.device3.pressure：工厂1的设备3的水压</li>
+</ul>
+<p>其树形结构如下所示：<br><img src="structure.jpg" alt="树形结构"></p>
+<p>为了便于理解，可以用关系型数据库的概念来对应上述概念，存储组相当于关系型数据库的database的概念；设备相当于一张表，每个传感器相当于列。则上述时间序列相当于有如下database和表。</p>
+<p>database：factory1</p>
+<p>table：device1、device2、device3</p>
+<p>每个表的结构如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>timestamp</th>
+<th>temperature</th>
+<th>pressure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>57.5</td>
+<td>0.4</td>
+</tr>
+<tr>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+</tbody>
+</table>
+<p>CirroData-TimeS在存储这些数据的时候，针对上述模型设计了自己独有的存储引擎。CirroData-TimeS会对每个设备建立一个索引，通过这个索引，可以快速的定位到查询某个设备的数据所在的文件。而且文件头部记录有数据的开始时间、起止时间、此文件包含的时序等一些元数据信息，通过此元数据信息可以快速的筛选出想要查询的数据。同时CirroData-TimeS还有数据时间分区的功能，即会把某一段时间的数据保存在一个时间分区的文件夹下，这样用户查询某段时间的数据的时候，就会很快定位到所在的文件，会大大提升查询性能。所以对于上面的两种查询需求，CirroData-TimeS都可以在很短的时间内返回查询结果。</p>
+<p>了解了CirroData-TimeS的数据模型之后，我们先看下其性能如何。</p>
+<h1 id="测试性能"><a href="#测试性能" class="headerlink" title="测试性能"></a>测试性能</h1><p>我们与目前市面上比较流行的InfluxDB做了插入、查询以及压缩比的测试。CirroData-TimeS的版本是0.10，InfluxDB的版本是1.8。我们设计了如下两种负载：6000测点和200万测点，分别模拟测点少和测点多的情况下，系统的性能表现。</p>
+<p>6000测点配置是20个存储组，20个设备，每个设备300个测点；200万测点配置是20个存储组，1000个设备，每个设备2000个测点。</p>
+<p>测试结果如下所示。</p>
+<h2 id="插入性能测试"><a href="#插入性能测试" class="headerlink" title="插入性能测试"></a>插入性能测试</h2><p>通过下图可以看到，不管是在6000测点还是在200万测点的情况下，CirroData-TimeS的性能都要远远高于InfluxDB。</p>
+<p><img src="insert.png" alt="插入性能对比"></p>
+<h2 id="查询性能测试"><a href="#查询性能测试" class="headerlink" title="查询性能测试"></a>查询性能测试</h2><p>再看一下常用的聚合查询的性能，Q1是带时间过滤的聚合查询，Q2是带值过滤的聚合查询，6000测点查询结果集约为100万点，200万测点的查询结果集约为10万点。</p>
+<p><img src="6000_query.png" alt="600测点查询对比"><br><img src="200w_query.png" alt="200万测点查询对比"></p>
+<p>可以看到不管在6000测点还是在200万测点下，CirroData-TimeS查询延迟要比InfluxDB低很多。</p>
+<h2 id="压缩比测试"><a href="#压缩比测试" class="headerlink" title="压缩比测试"></a>压缩比测试</h2><p>如下测试是对比CirroData-TimeS和InfluxDB的压缩比，每个点数据是12byte，总数据量大约为112GB，可以看到CirroData-TimeS是InfluxDB的5倍，CirroData-TimeS的压缩比可以达到13倍。<br><img src="disk_space.png" alt="压缩比"></p>
+<h2 id="单机和分布式性能对比"><a href="#单机和分布式性能对比" class="headerlink" title="单机和分布式性能对比"></a>单机和分布式性能对比</h2><p>以上都是测试单机的性能，CirroData-TimeS不仅仅支持单机，也提供了基于raft协议的分布式高可用版本，如下是3节点3副本的分布式和单机性能对比。<br><img src="single_cluster.png" alt="单机vs分布式"></p>
+<p>可以看到CirroData-TimeS分布式性能可以达到约单机性能的80%。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过以上可以看到，CirroData-TimeS是为了应对未来IoT大爆发而产生的专门用来处理时序数据的数据库，在写入、查询、压缩率等上面均有较高的性能，同时也实现了基于raft协议的分布式高可用版本。那么CirroData-TimeS是怎样完成如此高的压缩比、如此高的写入速度、如此高效的查询呢？其raft协议如何能够达到这么优秀的性能？我们将在接下来的一系列文章中进行解密。</p>
+<p>备注：CirroData-TimeS时序数据库是基于开源Apache IoTDB改进、东方国信深度参与的国产时序数据库。CirroData-TimeS时序数据库团队有2名Apache IoTDB Committer。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><ul>
+<li>[1]<a href="https://www.idc.com/getdoc.jsp?containerId=prUS45213219" target="_blank" rel="noopener">The Growth in Connected IoT Devices Is Expected to Generate 79.4ZB of Data in 2025, According to a New IDC Forecast. https://www.idc.com/getdoc.jsp?containerId=prUS45213219</a></li>
+<li>[2]<a href="https://zh.wikipedia.org/wiki/%E6%99%82%E9%96%93%E5%BA%8F%E5%88%97" target="_blank" rel="noopener">时间序列. https://zh.wikipedia.org/wiki/%E6%99%82%E9%96%93%E5%BA%8F%E5%88%97</a></li>
+</ul>
+<h1 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h1><ul>
+<li>[1] <a href="https://www.idc.com/getdoc.jsp?containerId=IDC_P24793" target="_blank" rel="noopener">Internet of Things Ecosystem and Trends</a></li>
+<li>[2] <a href="https://iotbusinessnews.com/2020/08/10/08984-connected-devices-will-generate-79-zettabytes-of-data-by-2025/" target="_blank" rel="noopener">Connected Devices Will Generate 79 Zettabytes of data by 2025</a></li>
+</ul>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CirroData-TimeS/" rel="tag"># CirroData-TimeS</a>
+          
+            <a href="/tags/综述/" rel="tag"># 综述</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/06/29/转载好文章/" rel="next" title="转载好文章">
+                <i class="fa fa-chevron-left"></i> 转载好文章
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/01/22/Moving-From-Apache-Thrift-to-gRPC-A-Perspective-From-Alluxio/" rel="prev" title="Moving From Apache Thrift to gRPC: A Perspective From Alluxio">
+                Moving From Apache Thrift to gRPC: A Perspective From Alluxio <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="伊蓝">
+            
+              <p class="site-author-name" itemprop="name">伊蓝</p>
+              <p class="site-description motion-element" itemprop="description">记录点滴</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">84</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">20</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">128</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  
+                  
+                    
+                  
+                  
+                    
+                  
+                  <a href="https://github.com/neuyilan/" title="GitHub &rarr; https://github.com/neuyilan/" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+            </div>
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#时序数据库的必要性"><span class="nav-number">2.</span> <span class="nav-text">时序数据库的必要性</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关系数据库建模"><span class="nav-number">2.1.</span> <span class="nav-text">关系数据库建模</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#键值数据库建模"><span class="nav-number">2.2.</span> <span class="nav-text">键值数据库建模</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CirroData-TimeS介绍"><span class="nav-number">3.</span> <span class="nav-text">CirroData-TimeS介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据模型"><span class="nav-number">3.1.</span> <span class="nav-text">数据模型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试性能"><span class="nav-number">4.</span> <span class="nav-text">测试性能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#插入性能测试"><span class="nav-number">4.1.</span> <span class="nav-text">插入性能测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查询性能测试"><span class="nav-number">4.2.</span> <span class="nav-text">查询性能测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#压缩比测试"><span class="nav-number">4.3.</span> <span class="nav-text">压缩比测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单机和分布式性能对比"><span class="nav-number">4.4.</span> <span class="nav-text">单机和分布式性能对比</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">6.</span> <span class="nav-text">参考文献</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#附录"><span class="nav-number">7.</span> <span class="nav-text">附录</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">伊蓝</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动 v3.8.0</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> v6.7.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.7.0"></script>
+
+  <script src="/js/src/motion.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/schemes/muse.js?v=6.7.0"></script>
+
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.7.0"></script>
+
+
+
+  
+  
+
+
+
+
+  
+
+<script src="//cdn1.lncld.net/static/js/3.11.1/av-min.js"></script>
+
+
+
+<script src="//unpkg.com/valine/dist/Valine.min.js"></script>
+
+<script>
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(function (item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: false,
+    notify: false,
+    appId: 'CCj0VULQMKCDsXgP4pmSrOTo-gzGzoHsz',
+    appKey: 'MWSq3U7EEI2dN5qSQKdOMt2X',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+</script>
+
+
+
+  
+
+  <script>
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url).replace(/\/{2,}/g, '/');
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x"></i></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x"></i></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
