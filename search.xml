@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[常见问题以及解决方式]]></title>
     <url>%2F2021%2F10%2F27%2F%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%BB%A5%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E5%BC%8F%2F</url>
-    <content type="text"><![CDATA[maven编译报错IO Error: EOFExceptionmaven编译的时候，出现如下的IO Error: EOFException错误，则需要清除 ~/.m2/settings.xml 配置下面的 localRepository目录下面的.cache文件夹就行了。]]></content>
+    <content type="text"><![CDATA[本文章记录日常使用中常见的错误以及解决方案。 maven编译报错IO Error: EOFExceptionmaven编译的时候，出现如下的IO Error: EOFException错误，则需要清除 ~/.m2/settings.xml 配置下面的 localRepository目录下面的.cache文件夹就行了。]]></content>
       <tags>
         <tag>常见问题</tag>
       </tags>
