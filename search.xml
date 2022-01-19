@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[These are the numbers every computer engineer should know]]></title>
+    <url>%2F2022%2F01%2F19%2FThese-are-the-numbers-every-computer-engineer-should-know%2F</url>
+    <content type="text"><![CDATA[一个很好的，可以看到像cpu，memory，ssd，disk等io速度的一个网站，并且提供了不同年代不同的数值。 Latency Numbers Every Programmer Should Know 其github地址是：https://github.com/colin-scott/interactive_latencies]]></content>
+      <tags>
+        <tag>numbers</tag>
+        <tag>计算机</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[c++读取HDFS HarFileSystem archive文件示例]]></title>
+    <url>%2F2022%2F01%2F13%2Fc-%E8%AF%BB%E5%8F%96HDFS-HarFileSystem-archive%E6%96%87%E4%BB%B6%E7%A4%BA%E4%BE%8B%2F</url>
+    <content type="text"><![CDATA[关键就是创建fs的时候，需要指明schema：har://scheme-hostname:port/archivepath/fileinarchive到最上层的archive文件目录即可。fs = hdfsConnect(“har://hdfs-172.16.48.4:9000/qhl/real_archive_max/archive_max.har/“,9000); 需要注意的是，上面必须要以”/“结尾，否则hdfs就会认为是文件，而不是目录，就会报文件不存在的错误。 执行命令如下, hello.csv_4是archive_max.har里面归档前的一个文件。即har://hdfs-172.16.48.4:9000/qhl/real_archive_max/archive_max.har/hello.csv_4是一个完成的归档后的文件。 1./hdfs_small_file_optim hello.csv_4 100 100 附录编译脚本1234#!/bin/bashsource /etc/profilesource ~/.bash_profilegcc hdfs_small_file_optim.c -I/home/test/hadoop/include/ -L/home/test/hadoop/lib/native -lhdfs -o hdfs_small_file_optim 测试代码123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960#include &quot;hdfs.h&quot;#include &lt;stdio.h&gt;#include &lt;stdlib.h&gt;/** * An example of using libhdfs to read files. The usage of this file is as follows: * * Usage: hdfs_read &lt;filename&gt; &lt;filesize&gt; &lt;buffersize&gt; */int main(int argc, char **argv) &#123; hdfsFS fs; const char *rfile = argv[1]; tSize bufferSize = strtoul(argv[3], NULL, 10); hdfsFile readFile; char* buffer; tSize curSize; if (argc != 4) &#123; fprintf(stderr, &quot;Usage: hdfs_read &lt;filename&gt; &lt;filesize&gt; &lt;buffersize&gt;\n&quot;); exit(-1); &#125; // 这里要写成这样的格式：har://scheme-hostname:port/archivepath/fileinarchive fs = hdfsConnect(&quot;har://hdfs-172.16.48.4:9000/qhl/real_archive_max/archive_max.har/&quot;,9000); if (!fs) &#123; fprintf(stderr, &quot;Oops! Failed to connect to hdfs!\n&quot;); exit(-1); &#125; readFile = hdfsOpenFile(fs, rfile, O_RDONLY, bufferSize, 0, 0); if (!readFile) &#123; fprintf(stderr, &quot;Failed to open %s for reading!\n&quot;, rfile); exit(-2); &#125; // data to be written to the file buffer = malloc(sizeof(char) * bufferSize); if(buffer == NULL) &#123; return -2; &#125; // read from the file curSize = bufferSize; fprintf(stdout,&quot;bufferSize=%d, curSize=%d\n&quot;, bufferSize, curSize); for (; curSize == bufferSize;) &#123; curSize = hdfsRead(fs, readFile, (void*)buffer, curSize); fprintf(stdout, &quot;read length=%d\n&quot;, curSize); &#125; fprintf(stdout, &quot;hahahahah=%d\n&quot;,curSize); fprintf(stdout, &quot;buffer=%s\n&quot;, buffer); free(buffer); hdfsCloseFile(fs, readFile); hdfsDisconnect(fs); //sleep(1000); return 0;&#125;/** * vim: ts=4: sw=4: et: */ 参考文献[1] https://hadoop.apache.org/docs/r2.6.0/hadoop-mapreduce-client/hadoop-mapreduce-client-core/HadoopArchives.html]]></content>
+      <tags>
+        <tag>hadoop</tag>
+        <tag>HarFileSystem</tag>
+        <tag>小文件</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[常见问题以及解决方式]]></title>
     <url>%2F2021%2F10%2F27%2F%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98%E4%BB%A5%E5%8F%8A%E8%A7%A3%E5%86%B3%E6%96%B9%E5%BC%8F%2F</url>
-    <content type="text"><![CDATA[本文章记录日常使用中常见的错误以及解决方案。 maven编译报错IO Error: EOFExceptionmaven编译的时候，出现如下的IO Error: EOFException错误，则需要清除 ~/.m2/settings.xml 配置下面的 localRepository目录下面的.cache文件夹就行了。 maven 某些插件下载东西失败比如如下download-maven-plugin插件，下载东西失败。则直接手动下载，并且把其拷贝到localRepository路径下面的.cache文件夹下面就行了。 12345678910111213141516171819&lt;plugin&gt; &lt;groupId&gt;com.googlecode.maven-download-plugin&lt;/groupId&gt; &lt;artifactId&gt;download-maven-plugin&lt;/artifactId&gt; &lt;version&gt;1.3.0&lt;/version&gt; &lt;executions&gt; &lt;execution&gt; &lt;id&gt;get-thrift-executable&lt;/id&gt; &lt;phase&gt;generate-sources&lt;/phase&gt; &lt;goals&gt; &lt;goal&gt;wget&lt;/goal&gt; &lt;/goals&gt; &lt;configuration&gt; &lt;url&gt;$&#123;thrift.download-url&#125;&lt;/url&gt; &lt;outputDirectory&gt;$&#123;project.build.directory&#125;/tools&lt;/outputDirectory&gt; &lt;outputFileName&gt;$&#123;thrift.executable&#125;&lt;/outputFileName&gt; &lt;/configuration&gt; &lt;/execution&gt; &lt;/executions&gt;&lt;/plugin&gt; 如果还是不行，那么就先把这个文件下载下来，自己起一个python的http服务，从本机下载下来以后，然后修改localRepository路径下面的.cache的]]></content>
+    <content type="text"><![CDATA[本文章记录日常使用中常见的错误以及解决方案。 maven编译报错IO Error: EOFExceptionmaven编译的时候，出现如下的IO Error: EOFException错误，则需要清除 ~/.m2/settings.xml 配置下面的 localRepository目录下面的.cache文件夹就行了。 maven 某些插件下载东西失败比如如下download-maven-plugin插件，下载东西失败。则直接手动下载，并且把其拷贝到localRepository路径下面的.cache文件夹下面就行了。 12345678910111213141516171819&lt;plugin&gt; &lt;groupId&gt;com.googlecode.maven-download-plugin&lt;/groupId&gt; &lt;artifactId&gt;download-maven-plugin&lt;/artifactId&gt; &lt;version&gt;1.3.0&lt;/version&gt; &lt;executions&gt; &lt;execution&gt; &lt;id&gt;get-thrift-executable&lt;/id&gt; &lt;phase&gt;generate-sources&lt;/phase&gt; &lt;goals&gt; &lt;goal&gt;wget&lt;/goal&gt; &lt;/goals&gt; &lt;configuration&gt; &lt;url&gt;$&#123;thrift.download-url&#125;&lt;/url&gt; &lt;outputDirectory&gt;$&#123;project.build.directory&#125;/tools&lt;/outputDirectory&gt; &lt;outputFileName&gt;$&#123;thrift.executable&#125;&lt;/outputFileName&gt; &lt;/configuration&gt; &lt;/execution&gt; &lt;/executions&gt;&lt;/plugin&gt; 如果还是不行，那么就先把这个文件下载下来，自己起一个python的http服务，从本机下载下来以后，然后修改localRepository路径下面的.cache的 GitHub无法访问、443 Operation timed out的解决办法https://juejin.cn/post/6844904193170341896]]></content>
       <tags>
         <tag>常见问题</tag>
       </tags>
@@ -83,15 +102,13 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[好文章好工具合集]]></title>
-    <url>%2F2020%2F06%2F01%2F%E5%A5%BD%E6%96%87%E7%AB%A0%E5%A5%BD%E5%B7%A5%E5%85%B7%E5%90%88%E9%9B%86%2F</url>
+    <title><![CDATA[好工具合集]]></title>
+    <url>%2F2020%2F06%2F01%2F%E5%A5%BD%E5%B7%A5%E5%85%B7%E5%90%88%E9%9B%86%2F</url>
     <content type="text"><![CDATA[本文章主要索引一些比较不错的工具便于查找。例如一些linux性能监控方面的工具。 linux一款霸榜 GitHub 的开源 Linux 资源监视器一款霸榜 GitHub 的开源 Linux 资源监视器！github地址：https://github.com/aristocratos/bashtop作用：可以用来监控进程等资源消耗 代码统计工具clochttps://github.com/AlDanial/cloc]]></content>
       <tags>
         <tag>linux</tag>
-        <tag>kafka</tag>
         <tag>监控</tag>
         <tag>工具</tag>
-        <tag>文章</tag>
       </tags>
   </entry>
   <entry>
