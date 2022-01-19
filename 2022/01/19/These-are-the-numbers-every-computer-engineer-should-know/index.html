@@ -104,7 +104,7 @@
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="一个很好的，可以看到像cpu，memory，ssd，disk等io速度的一个网站，并且提供了不同年代不同的数值。 Latency Numbers Every Programmer Should Know 其github地址是：https://github.com/colin-scott/interactive_latencies">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2022-01-19T02:26:31.065Z">
+<meta property="og:updated_time" content="2022-01-19T03:10:53.958Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="These are the numbers every computer engineer should know">
 <meta name="twitter:description" content="一个很好的，可以看到像cpu，memory，ssd，disk等io速度的一个网站，并且提供了不同年代不同的数值。 Latency Numbers Every Programmer Should Know 其github地址是：https://github.com/colin-scott/interactive_latencies">
@@ -412,7 +412,7 @@
                 
               
 
-              <time title="创建时间：2022-01-19 10:23:54 / 修改时间：10:26:31" itemprop="dateCreated datePublished" datetime="2022-01-19T10:23:54+08:00">2022-01-19</time>
+              <time title="创建时间：2022-01-19 10:23:54 / 修改时间：11:10:53" itemprop="dateCreated datePublished" datetime="2022-01-19T10:23:54+08:00">2022-01-19</time>
             
 
             
@@ -463,6 +463,12 @@
         <p>一个很好的，可以看到像cpu，memory，ssd，disk等io速度的一个网站，并且提供了不同年代不同的数值。</p>
 <p><a href="https://colin-scott.github.io/personal_website/research/interactive_latency.html" target="_blank" rel="noopener">Latency Numbers Every Programmer Should Know</a></p>
 <p>其github地址是：<a href="https://github.com/colin-scott/interactive_latencies" target="_blank" rel="noopener">https://github.com/colin-scott/interactive_latencies</a></p>
+<a id="more"></a>
+<p>实测：</p>
+<p>随机读<br>fio -filename=./unsequence_test -iodepth=64 -ioengine=libaio -direct=1 -rw=randread -bs=4k -size=2G -numjobs=64 -runtime=20 -group_reporting -name=test-rand-read</p>
+<p>顺序读</p>
+<p>fio –filename=./sequence_read -iodepth=64 -ioengine=libaio –direct=1 –rw=read –bs=1m –size=2g –numjobs=4 –runtime=10 –group_reporting –name=test-read</p>
+<p>单块disk盘： 顺序读 200MB/s; 随机读8MB/s<br>6块盘做raid: 顺序读 1200MB/s; 随机读45MB/s</p>
 
       
     </div>

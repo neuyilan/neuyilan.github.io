@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[These are the numbers every computer engineer should know]]></title>
     <url>%2F2022%2F01%2F19%2FThese-are-the-numbers-every-computer-engineer-should-know%2F</url>
-    <content type="text"><![CDATA[一个很好的，可以看到像cpu，memory，ssd，disk等io速度的一个网站，并且提供了不同年代不同的数值。 Latency Numbers Every Programmer Should Know 其github地址是：https://github.com/colin-scott/interactive_latencies]]></content>
+    <content type="text"><![CDATA[一个很好的，可以看到像cpu，memory，ssd，disk等io速度的一个网站，并且提供了不同年代不同的数值。 Latency Numbers Every Programmer Should Know 其github地址是：https://github.com/colin-scott/interactive_latencies 实测： 随机读fio -filename=./unsequence_test -iodepth=64 -ioengine=libaio -direct=1 -rw=randread -bs=4k -size=2G -numjobs=64 -runtime=20 -group_reporting -name=test-rand-read 顺序读 fio –filename=./sequence_read -iodepth=64 -ioengine=libaio –direct=1 –rw=read –bs=1m –size=2g –numjobs=4 –runtime=10 –group_reporting –name=test-read 单块disk盘： 顺序读 200MB/s; 随机读8MB/s6块盘做raid: 顺序读 1200MB/s; 随机读45MB/s]]></content>
       <tags>
         <tag>numbers</tag>
         <tag>计算机</tag>
