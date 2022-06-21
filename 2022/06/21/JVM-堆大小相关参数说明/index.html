@@ -111,9 +111,10 @@
 <meta property="og:image" content="https://neuyilan.github.io/2022/06/21/JVM-堆大小相关参数说明/print_flags_final.png">
 <meta property="og:image" content="https://neuyilan.github.io/2022/06/21/JVM-堆大小相关参数说明/jcmd_flags.png">
 <meta property="og:image" content="https://neuyilan.github.io/2022/06/21/JVM-堆大小相关参数说明/设置参数.png">
-<meta property="og:image" content="https://neuyilan.github.io/2022/06/21/JVM-堆大小相关参数说明/设置参数.png">
+<meta property="og:image" content="https://neuyilan.github.io/2022/06/21/JVM-堆大小相关参数说明/java_heap_设置参数.png">
 <meta property="og:image" content="https://neuyilan.github.io/2022/06/21/JVM-堆大小相关参数说明/设置_jcmd.png">
-<meta property="og:updated_time" content="2022-06-21T01:27:52.359Z">
+<meta property="og:image" content="https://neuyilan.github.io/2022/06/21/JVM-堆大小相关参数说明/java_heap_size_options.png">
+<meta property="og:updated_time" content="2022-06-21T01:52:06.348Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JVM 堆大小相关参数说明">
 <meta name="twitter:description" content="大家都知道JAVA进程必须运行在Java虚拟机中，当启动一个Java进程的时候，也必须给其给其分配内存方可运行，那么jvm 虚拟机到底给此进程分配了多少内存呢？是否有默认值呢? 我指定的-Xmx、-Xms、-Xmn到底有什么作用呢？本篇文章就是对齐进行讲解。">
@@ -422,7 +423,7 @@
                 
               
 
-              <time title="创建时间：2022-06-21 08:10:23 / 修改时间：09:27:52" itemprop="dateCreated datePublished" datetime="2022-06-21T08:10:23+08:00">2022-06-21</time>
+              <time title="创建时间：2022-06-21 08:10:23 / 修改时间：09:52:06" itemprop="dateCreated datePublished" datetime="2022-06-21T08:10:23+08:00">2022-06-21</time>
             
 
             
@@ -495,12 +496,14 @@
 <p><img src="print_flags_final.png" alt="print_flags_final" title="图5 print_flags_final"></p>
 <p>通过命令 <code>jcmd ${pid} VM.flags</code> 可以再次确认此进程分配内存相关参数。可以看到与预期一致。</p>
 <p><img src="jcmd_flags.png" alt="jcmd_flags" title="图6 jcmd_flags"></p>
-<h1 id="参数的作用"><a href="#参数的作用" class="headerlink" title="参数的作用"></a>参数的作用</h1><p>如果我们启动的时候，指定Xmx,Xms等参数，又如何呢？<br><img src="设置参数.png" alt="设置JVM相关参数的进程" title="图6 设置参数"></p>
-<p>通过java -heap 命令可以看到分配内存如下所示：<br><img src="设置参数.png" alt="设置JVM相关参数的进程" title="图6 设置参数">，也是符合上面的规律的。</p>
+<h1 id="参数的作用"><a href="#参数的作用" class="headerlink" title="参数的作用"></a>参数的作用</h1><p>如果我们启动的时候，指定Xmx,Xms等参数，又如何呢？<br><img src="设置参数.png" alt="设置JVM相关参数的进程" title="图7 设置参数"></p>
+<p>通过java -heap 命令可以看到分配内存如下所示：<br><img src="java_heap_设置参数.png" alt="java_heap" title="图8 java heap 查看内存分配">，也是符合上面的规律的。</p>
 <p>(<strong>但是Eden Space+From Space+To Space+PS Old Generation 的总和要大于NewSize + OldSize，所以通过这两个实验，猜测Eden Space+From Space+To Space+PS Old Generation仅仅是分配的内存，只要小于MaxHeapSize即可。与InitialHeapSize无关</strong>)</p>
 <p>通过命令 <code>jcmd ${pid} VM.flags</code> 可以再次确认此进程分配内存相关参数。可以看到与预期一致。最大值为10GB，初始堆空间大小为3G。</p>
-<p><img src="设置_jcmd.png" alt="jcmd_flags" title="图6 设置参数的时候内存分配"></p>
-<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1] <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/parallel.html#parallel_collector_excessive_gc" target="_blank" rel="noopener">https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/parallel.html#parallel_collector_excessive_gc</a><br>[2] <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gc-ergonomics.html" target="_blank" rel="noopener">https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gc-ergonomics.html</a><br>[3] <a href="https://blog.csdn.net/csj50/article/details/122544491" target="_blank" rel="noopener">https://blog.csdn.net/csj50/article/details/122544491</a></p>
+<p><img src="设置_jcmd.png" alt="jcmd_flags" title="图9 设置参数的时候内存分配"></p>
+<h1 id="Xmx与Xms如何设置"><a href="#Xmx与Xms如何设置" class="headerlink" title="Xmx与Xms如何设置"></a>Xmx与Xms如何设置</h1><p>通过以上分析我们知道，Xmx是最大堆大小限制，Xms是初始堆大小。通过jvm手册[7]，可以看到设置Xms与Xmx相等，可以减少GC发生的次数。</p>
+<p><img src="java_heap_size_options.png" alt="java_heap_size_options" title="图10 java堆大小相关参数">。<br>所以在以后的实际经验中，可以设置Xms与Xmx一致即可[8]。</p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1] <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/parallel.html#parallel_collector_excessive_gc" target="_blank" rel="noopener">https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gctuning/parallel.html#parallel_collector_excessive_gc</a><br>[2] <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gc-ergonomics.html" target="_blank" rel="noopener">https://docs.oracle.com/javase/8/docs/technotes/guides/vm/gc-ergonomics.html</a><br>[3] <a href="https://blog.csdn.net/csj50/article/details/122544491" target="_blank" rel="noopener">https://blog.csdn.net/csj50/article/details/122544491</a><br>[4] JVM Server与Client运行模式 <a href="https://blog.csdn.net/xlxxcc/article/details/52388195" target="_blank" rel="noopener">https://blog.csdn.net/xlxxcc/article/details/52388195</a><br>[5] jvm调优 <a href="https://blog.csdn.net/weixin_45735355/article/details/121397268" target="_blank" rel="noopener">https://blog.csdn.net/weixin_45735355/article/details/121397268</a><br>[6] -X Command-line Options <a href="https://docs.oracle.com/cd/E13150_01/jrockit_jvm/jrockit/jrdocs/refman/optionX.html" target="_blank" rel="noopener">https://docs.oracle.com/cd/E13150_01/jrockit_jvm/jrockit/jrdocs/refman/optionX.html</a><br>[7] Java HotSpot VM Heap Size Options <a href="https://docs.oracle.com/cd/E21764_01/web.1111/e13814/jvm_tuning.htm#PERFM161" target="_blank" rel="noopener">https://docs.oracle.com/cd/E21764_01/web.1111/e13814/jvm_tuning.htm#PERFM161</a><br>[8] JVM的Xms和Xmx参数设置为相同值有什么好处？ <a href="https://cloud.tencent.com/developer/article/1695047" target="_blank" rel="noopener">https://cloud.tencent.com/developer/article/1695047</a></p>
 
       
     </div>
@@ -1016,7 +1019,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#默认分配多少"><span class="nav-number">1.</span> <span class="nav-text">默认分配多少</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参数的作用"><span class="nav-number">2.</span> <span class="nav-text">参数的作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">3.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#默认分配多少"><span class="nav-number">1.</span> <span class="nav-text">默认分配多少</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参数的作用"><span class="nav-number">2.</span> <span class="nav-text">参数的作用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Xmx与Xms如何设置"><span class="nav-number">3.</span> <span class="nav-text">Xmx与Xms如何设置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">4.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
             
 
           </div>
