@@ -3,7 +3,7 @@
   <entry>
     <title><![CDATA[【使用调优】Apache Fink连接CirroData-TimeS入库方式调优]]></title>
     <url>%2F2022%2F08%2F14%2F%E3%80%90%E4%BD%BF%E7%94%A8%E8%B0%83%E4%BC%98%E3%80%91Apache-Fink%E8%BF%9E%E6%8E%A5CirroData-TimeS%E5%85%A5%E5%BA%93%E6%96%B9%E5%BC%8F%E8%B0%83%E4%BC%98%2F</url>
-    <content type="text"><![CDATA[CirroData-TimeS作为物联网分析和存储与一体的时序数据库系统，提供了多种入库的方式，不同入库方式在使用方式和性能上有所差异，本文主要讲解下在项目中有可能由于没有采用合理的入库方式导致的性能瓶颈问题。 现在物联网设备的数据经过端侧采集过来之后，一般数据源端会接入到Apache Kafka这种消息队列中中，做一个数据汇总以及暂存，以缓解下游的压力。Apache Flink作为Apache kafka的下游，来做一些实时计算，然后把实时计算的结果和接收到的原数据，根据业务需求分发到不同的数据库中来做分析和存储。其数据流图如下所示。 本文重点分析红色虚线框图中的部分，数据写入到Kakfa之后，经过下游的Flink计算，最终把一些计算结果和一些原始数据存储到CirroData-TimeS中的过程。]]></content>
+    <content type="text"><![CDATA[CirroData-TimeS作为物联网分析和存储与一体的时序数据库系统，提供了多种入库的方式，不同入库方式在使用方式和性能上有所差异，本文主要讲解下在项目中有可能由于没有采用合理的入库方式导致的性能瓶颈问题。 数据流向现在物联网设备的数据经过端侧采集过来之后，一般数据源端会接入到Apache Kafka这种消息队列中中，做一个数据汇总以及暂存，以缓解下游的压力。Apache Flink作为Apache kafka的下游，来做一些实时计算，然后把实时计算的结果和接收到的原数据，根据业务需求分发到不同的数据库中来做分析和存储。其数据流图如下所示。 本文重点分析红色虚线框图中的部分，数据写入到Kakfa之后，经过下游的Flink计算，最终把一些计算结果和一些原始数据存储到CirroData-TimeS中的过程。 Kafka数据格式Flink计算转发CirroData-TimeS入库方式总结]]></content>
       <tags>
         <tag>kafka</tag>
         <tag>调优</tag>

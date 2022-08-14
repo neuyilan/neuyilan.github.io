@@ -104,12 +104,12 @@
 <meta property="og:site_name" content="yilan">
 <meta property="og:description" content="CirroData-TimeS作为物联网分析和存储与一体的时序数据库系统，提供了多种入库的方式，不同入库方式在使用方式和性能上有所差异，本文主要讲解下在项目中有可能由于没有采用合理的入库方式导致的性能瓶颈问题。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://neuyilan.github.io/2022/08/14/【使用调优】Apache-Fink连接CirroData-TimeS入库方式调优/数据流.jpg">
-<meta property="og:updated_time" content="2022-08-14T07:08:13.971Z">
+<meta property="og:image" content="https://neuyilan.github.io/2022/08/14/【使用调优】Apache-Fink连接CirroData-TimeS入库方式调优/数据流.png">
+<meta property="og:updated_time" content="2022-08-14T07:10:53.277Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="【使用调优】Apache Fink连接CirroData-TimeS入库方式调优">
 <meta name="twitter:description" content="CirroData-TimeS作为物联网分析和存储与一体的时序数据库系统，提供了多种入库的方式，不同入库方式在使用方式和性能上有所差异，本文主要讲解下在项目中有可能由于没有采用合理的入库方式导致的性能瓶颈问题。">
-<meta name="twitter:image" content="https://neuyilan.github.io/2022/08/14/【使用调优】Apache-Fink连接CirroData-TimeS入库方式调优/数据流.jpg">
+<meta name="twitter:image" content="https://neuyilan.github.io/2022/08/14/【使用调优】Apache-Fink连接CirroData-TimeS入库方式调优/数据流.png">
 
 
 
@@ -414,7 +414,7 @@
                 
               
 
-              <time title="创建时间：2022-08-14 11:09:38 / 修改时间：15:08:13" itemprop="dateCreated datePublished" datetime="2022-08-14T11:09:38+08:00">2022-08-14</time>
+              <time title="创建时间：2022-08-14 11:09:38 / 修改时间：15:10:53" itemprop="dateCreated datePublished" datetime="2022-08-14T11:09:38+08:00">2022-08-14</time>
             
 
             
@@ -463,9 +463,9 @@
 
       
         <p>CirroData-TimeS作为物联网分析和存储与一体的时序数据库系统，提供了多种入库的方式，不同入库方式在使用方式和性能上有所差异，本文主要讲解下在项目中有可能由于没有采用合理的入库方式导致的性能瓶颈问题。<br><a id="more"></a></p>
-<p>现在物联网设备的数据经过端侧采集过来之后，一般数据源端会接入到Apache Kafka这种消息队列中中，做一个数据汇总以及暂存，以缓解下游的压力。Apache Flink作为Apache kafka的下游，来做一些实时计算，然后把实时计算的结果和接收到的原数据，根据业务需求分发到不同的数据库中来做分析和存储。其数据流图如下所示。<br><img src="数据流.jpg" alt="数据流"></p>
+<h1 id="数据流向"><a href="#数据流向" class="headerlink" title="数据流向"></a>数据流向</h1><p>现在物联网设备的数据经过端侧采集过来之后，一般数据源端会接入到Apache Kafka这种消息队列中中，做一个数据汇总以及暂存，以缓解下游的压力。Apache Flink作为Apache kafka的下游，来做一些实时计算，然后把实时计算的结果和接收到的原数据，根据业务需求分发到不同的数据库中来做分析和存储。其数据流图如下所示。<br><img src="数据流.png" alt="数据流"></p>
 <p>本文重点分析红色虚线框图中的部分，数据写入到Kakfa之后，经过下游的Flink计算，最终把一些计算结果和一些原始数据存储到CirroData-TimeS中的过程。</p>
-
+<h1 id="Kafka数据格式"><a href="#Kafka数据格式" class="headerlink" title="Kafka数据格式"></a>Kafka数据格式</h1><h1 id="Flink计算转发"><a href="#Flink计算转发" class="headerlink" title="Flink计算转发"></a>Flink计算转发</h1><h1 id="CirroData-TimeS入库方式"><a href="#CirroData-TimeS入库方式" class="headerlink" title="CirroData-TimeS入库方式"></a>CirroData-TimeS入库方式</h1><h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1>
       
     </div>
 
@@ -562,8 +562,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -966,6 +975,23 @@
         </div>
       </div>
 
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#数据流向"><span class="nav-number">1.</span> <span class="nav-text">数据流向</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Kafka数据格式"><span class="nav-number">2.</span> <span class="nav-text">Kafka数据格式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Flink计算转发"><span class="nav-number">3.</span> <span class="nav-text">Flink计算转发</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CirroData-TimeS入库方式"><span class="nav-number">4.</span> <span class="nav-text">CirroData-TimeS入库方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
       
 
       
