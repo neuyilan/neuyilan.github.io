@@ -96,23 +96,30 @@
 
 
 
-  <meta name="description" content="记录点滴">
-<meta property="og:type" content="website">
-<meta property="og:title" content="yilan">
-<meta property="og:url" content="https://neuyilan.github.io/archives/2022/index.html">
+  <meta name="description" content="maven shade模式解决两个版本的冲突是比较常用的解决方案，特别在A模块引用了两个B模块和C模块，但是B和C的引用的两个jar包的版本不一致，导致冲突，而且两个版本的jar包不兼容，还必须要都保留，这种情况下，如果其中一个模块是自己能够控制的，则可以通过shaded模式，把其中这个模块在pom文件中把这个jar包改名即可，但是，如果两个模块都不是自己控制的呢？那应该怎么办呢？能不能对一个不是">
+<meta name="keywords" content="jar包冲突,maven shade">
+<meta property="og:type" content="article">
+<meta property="og:title" content="maven shade模式解决jar包冲突">
+<meta property="og:url" content="https://neuyilan.github.io/2022/10/10/maven-shade模式解决jar包冲突/index.html">
 <meta property="og:site_name" content="yilan">
-<meta property="og:description" content="记录点滴">
+<meta property="og:description" content="maven shade模式解决两个版本的冲突是比较常用的解决方案，特别在A模块引用了两个B模块和C模块，但是B和C的引用的两个jar包的版本不一致，导致冲突，而且两个版本的jar包不兼容，还必须要都保留，这种情况下，如果其中一个模块是自己能够控制的，则可以通过shaded模式，把其中这个模块在pom文件中把这个jar包改名即可，但是，如果两个模块都不是自己控制的呢？那应该怎么办呢？能不能对一个不是">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://neuyilan.github.io/2022/10/10/maven-shade模式解决jar包冲突/冲突示例.png">
+<meta property="og:image" content="https://neuyilan.github.io/2022/10/10/maven-shade模式解决jar包冲突/maven%20shaded打包.png">
+<meta property="og:image" content="https://neuyilan.github.io/2022/10/10/maven-shade模式解决jar包冲突/修改过后的包名.png">
+<meta property="og:image" content="https://neuyilan.github.io/2022/10/10/maven-shade模式解决jar包冲突/shaded解决冲突之后.png">
+<meta property="og:updated_time" content="2022-10-10T13:08:41.843Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="yilan">
-<meta name="twitter:description" content="记录点滴">
+<meta name="twitter:title" content="maven shade模式解决jar包冲突">
+<meta name="twitter:description" content="maven shade模式解决两个版本的冲突是比较常用的解决方案，特别在A模块引用了两个B模块和C模块，但是B和C的引用的两个jar包的版本不一致，导致冲突，而且两个版本的jar包不兼容，还必须要都保留，这种情况下，如果其中一个模块是自己能够控制的，则可以通过shaded模式，把其中这个模块在pom文件中把这个jar包改名即可，但是，如果两个模块都不是自己控制的呢？那应该怎么办呢？能不能对一个不是">
+<meta name="twitter:image" content="https://neuyilan.github.io/2022/10/10/maven-shade模式解决jar包冲突/冲突示例.png">
 
 
 
 
 
 
-  <link rel="canonical" href="https://neuyilan.github.io/archives/2022/">
+  <link rel="canonical" href="https://neuyilan.github.io/2022/10/10/maven-shade模式解决jar包冲突/">
 
 
 
@@ -122,7 +129,7 @@
   };
 </script>
 
-  <title>归档 | yilan</title>
+  <title>maven shade模式解决jar包冲突 | yilan</title>
   
 
 
@@ -170,7 +177,7 @@
     
   
 
-  <div class="container sidebar-position-right page-archive">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -259,7 +266,7 @@
         
         
           
-          <li class="menu-item menu-item-archives menu-item-active">
+          <li class="menu-item menu-item-archives">
 
     
     
@@ -306,28 +313,6 @@
   
     
 
-    
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-      
-      
-    
-    
-
-  
-
-
   
 
   
@@ -373,217 +358,201 @@
           <div id="content" class="content">
             
 
-  
-  
-  
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-      
-      <span class="archive-page-counter">
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://neuyilan.github.io/2022/10/10/maven-shade模式解决jar包冲突/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="伊蓝">
+      <meta itemprop="description" content="记录点滴">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="yilan">
+    </span>
+
+    
+      <header class="post-header">
+
         
         
-         
+          <h1 class="post-title" itemprop="name headline">maven shade模式解决jar包冲突
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2022-10-10 17:33:23 / 修改时间：21:08:41" itemprop="dateCreated datePublished" datetime="2022-10-10T17:33:23+08:00">2022-10-10</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
           
-        很好! 目前共计 89 篇日志。 继续努力。
-      </span>
-      
 
-      
-
-        
-        
-        
-
-        
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2022">2022</h1>
-          </div>
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2022/10/10/maven-shade模式解决jar包冲突/" itemprop="url">
             
-              <span itemprop="name">maven shade模式解决jar包冲突</span>
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2022/10/10/maven-shade模式解决jar包冲突/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count valine-comment-count" data-xid="/2022/10/10/maven-shade模式解决jar包冲突/" itemprop="commentCount"></span>
+                </a>
+              </span>
             
-          </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2022-10-10T17:33:23+08:00" content="2022-10-10">
-          10-10
-        </time>
-      </div>
+          
+          
 
-    </header>
-  </article>
+          
 
+          
 
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2022/07/19/zookeeper-常见问题/" itemprop="url">
-            
-              <span itemprop="name">zookeeper 常见问题</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2022-07-19T15:54:30+08:00" content="2022-07-19">
-          07-19
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2022/06/21/JVM-堆大小相关参数说明/" itemprop="url">
-            
-              <span itemprop="name">JVM 堆大小相关参数说明</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2022-06-21T08:10:23+08:00" content="2022-06-21">
-          06-21
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <p>maven shade模式解决两个版本的冲突是比较常用的解决方案，特别在A模块引用了两个B模块和C模块，但是B和C的引用的两个jar包的版本不一致，导致冲突，而且<strong>两个版本的jar包不兼容，还必须要都保留</strong>，这种情况下，如果其中一个模块是自己能够控制的，则可以通过shaded模式，把其中这个模块在pom文件中把这个jar包改名即可，但是，如果两个模块都不是自己控制的呢？那应该怎么办呢？能不能对一个不是自己控制的里面的jar包进行改名呢？</p>
+<a id="more"></a>
+<p>对于这个问题呢，文章<a href="https://www.playpi.org/2019120101.html?from_wecom=1" target="_blank" rel="noopener">解决ja 包冲突的神器：maven-shade-plugin</a>给出了一个一个解决思路，但是没有给出例子，本文给出一个例子。</p>
+<p>Thrift 0.9版本和0.14版本是不兼容的，有些项目使用了thrift 0.9版本，有些项目使用了0.14版本，而且都必须存在，比如Apache HBase，使用了0.14版本。我们的项目还必须要引用HBase，还要使用一个别的项目，我们假设此项目是Module-A，Module-A使用的thrift 0.9版本。我们能不能把Apache HBase的thrift给改名呢？其模块引用如下所示：</p>
+<p><img src="冲突示例.png" alt="冲突示例"></p>
+<p>下面， 我们就看如何给Apache HBase引用的thrift进行改名。</p>
+<p>我们创建一个空的maven工程，起名为maven-shaded，里面引用hbase，并且把hbase和hbase引用的thrift改名为com.yourself.shaded为前缀的jar包。pom文件如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;</span><br><span class="line">  xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><br><span class="line">  xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line"></span><br><span class="line">  &lt;groupId&gt;org.example&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;maven_shaded&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;</span><br><span class="line"></span><br><span class="line">  &lt;properties&gt;</span><br><span class="line">    &lt;maven.compiler.source&gt;8&lt;/maven.compiler.source&gt;</span><br><span class="line">    &lt;maven.compiler.target&gt;8&lt;/maven.compiler.target&gt;</span><br><span class="line">    &lt;shading.prefix&gt;com.yourself.shaded&lt;/shading.prefix&gt;</span><br><span class="line">  &lt;/properties&gt;</span><br><span class="line"></span><br><span class="line">  &lt;dependencies&gt;</span><br><span class="line"></span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;org.apache.thrift&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;libthrift&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;0.14.1&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line"></span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;org.apache.hbase&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;hbase-thrift&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;2.5.0&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">  &lt;/dependencies&gt;</span><br><span class="line"></span><br><span class="line">  &lt;build&gt;</span><br><span class="line">  &lt;plugins&gt;</span><br><span class="line">  &lt;!-- 指定项目java编译版本 --&gt;</span><br><span class="line">  &lt;plugin&gt;</span><br><span class="line">    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;</span><br><span class="line">    &lt;configuration&gt;</span><br><span class="line">      &lt;source&gt;1.8&lt;/source&gt;</span><br><span class="line">      &lt;target&gt;1.8&lt;/target&gt;</span><br><span class="line">    &lt;/configuration&gt;</span><br><span class="line">  &lt;/plugin&gt;</span><br><span class="line">  &lt;plugin&gt;</span><br><span class="line">  &lt;!-- 使用maven-shade-plugin进行打包 --&gt;</span><br><span class="line">  &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;maven-shade-plugin&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;3.2.4&lt;/version&gt;</span><br><span class="line">  &lt;executions&gt;</span><br><span class="line">  &lt;execution&gt;</span><br><span class="line">  &lt;phase&gt;package&lt;/phase&gt;</span><br><span class="line">  &lt;goals&gt;</span><br><span class="line">    &lt;goal&gt;shade&lt;/goal&gt;</span><br><span class="line">  &lt;/goals&gt;</span><br><span class="line">    &lt;configuration&gt;</span><br><span class="line">      &lt;createDependencyReducedPom&gt;false&lt;/createDependencyReducedPom&gt;</span><br><span class="line">      &lt;relocations&gt;</span><br><span class="line">        &lt;!-- 重新定义包路径 --&gt;</span><br><span class="line">        &lt;relocation&gt;</span><br><span class="line">          &lt;!-- 匹配路径和重新定义的包路径 --&gt;</span><br><span class="line">          &lt;pattern&gt;org.apache.hadoop.hbase&lt;/pattern&gt;</span><br><span class="line">          &lt;shadedPattern&gt;$&#123;shading.prefix&#125;.org.apache.hadoop.hbase&lt;/shadedPattern&gt;</span><br><span class="line">        &lt;/relocation&gt;</span><br><span class="line"></span><br><span class="line">        &lt;relocation&gt;</span><br><span class="line">          &lt;!-- 匹配路径和重新定义的包路径 --&gt;</span><br><span class="line">          &lt;pattern&gt;org.apache.thrift&lt;/pattern&gt;</span><br><span class="line">          &lt;shadedPattern&gt;$&#123;shading.prefix&#125;.org.apache.thrift&lt;/shadedPattern&gt;</span><br><span class="line">        &lt;/relocation&gt;</span><br><span class="line">      &lt;/relocations&gt;</span><br><span class="line">      &lt;filters&gt;</span><br><span class="line">        &lt;filter&gt;</span><br><span class="line">          &lt;artifact&gt;*:*&lt;/artifact&gt;</span><br><span class="line">          &lt;excludes&gt;</span><br><span class="line">            &lt;exclude&gt;META-INF/*.SF&lt;/exclude&gt;</span><br><span class="line">            &lt;exclude&gt;META-INF/*.DSA&lt;/exclude&gt;</span><br><span class="line">            &lt;exclude&gt;META-INF/*.RSA&lt;/exclude&gt;</span><br><span class="line">          &lt;/excludes&gt;</span><br><span class="line">        &lt;/filter&gt;</span><br><span class="line">      &lt;/filters&gt;</span><br><span class="line">    &lt;/configuration&gt;</span><br><span class="line">  &lt;/execution&gt;</span><br><span class="line">  &lt;/executions&gt;</span><br><span class="line">  &lt;/plugin&gt;</span><br><span class="line">  &lt;/plugins&gt;</span><br><span class="line">  &lt;/build&gt;</span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure></p>
+<p>执行如下命令打包，就可以打包出一个已经把HBase中的thrift名字修改完的jar包。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn clean package</span><br></pre></td></tr></table></figure></p>
+<p><img src="maven shaded打包.png" alt="maven shaded打包"><br>我们可以打开这个打包好的jar包验证一下，如上图所示，可以看到HBase和Thrift都已经改名为com.yourself.shaded为前缀的jar包，同时，我们打开HBase里面import的thrift源码，如下所示，看到hbase引用的thrift的包名也已经修改了。</p>
+<p><img src="修改过后的包名.png" alt="修改过后的包名"></p>
+<p>经过上述maven shaded改名操作之后，我们把HBase里面的thrift包名已经修改了，后续我们自己的项目Parent-Project想引用HBase之后，就可以通过引用我们刚才打包的maven-project间接来引用hbase了，其引用关系如下所示：</p>
+<p><img src="shaded解决冲突之后.png" alt="shaded解决冲突之后"></p>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1] 解决 jar 包冲突的神器：maven-shade-plugin <a href="https://www.playpi.org/2019120101.html?from_wecom=1" target="_blank" rel="noopener">https://www.playpi.org/2019120101.html?from_wecom=1</a></p>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2022/01/19/These-are-the-numbers-every-computer-engineer-should-know/" itemprop="url">
-            
-              <span itemprop="name">These are the numbers every computer engineer should know</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2022-01-19T10:23:54+08:00" content="2022-01-19">
-          01-19
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-          <a class="post-title-link" href="/2022/01/13/c-读取HDFS-HarFileSystem-archive文件示例/" itemprop="url">
-            
-              <span itemprop="name">c++读取HDFS HarFileSystem archive文件示例</span>
-            
-          </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2022-01-13T19:43:05+08:00" content="2022-01-13">
-          01-13
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/jar包冲突/" rel="tag"># jar包冲突</a>
+          
+            <a href="/tags/maven-shade/" rel="tag"># maven shade</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/07/19/zookeeper-常见问题/" rel="next" title="zookeeper 常见问题">
+                <i class="fa fa-chevron-left"></i> zookeeper 常见问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+  </div>
 
 
           </div>
           
+
+  
+    <div class="comments" id="comments">
+    </div>
+
+  
+
+
 
         </div>
         
@@ -604,8 +573,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <div class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -1009,6 +987,23 @@
       </div>
 
       
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">1.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
 
       
 
@@ -1136,6 +1131,10 @@
 
 
   
+  <script src="/js/src/scrollspy.js?v=6.7.0"></script>
+<script src="/js/src/post-details.js?v=6.7.0"></script>
+
+
 
   
 
@@ -1145,6 +1144,8 @@
 
 
   
+  
+
 
 
 
