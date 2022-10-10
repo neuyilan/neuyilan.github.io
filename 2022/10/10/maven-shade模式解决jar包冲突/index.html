@@ -108,7 +108,7 @@
 <meta property="og:image" content="https://neuyilan.github.io/2022/10/10/maven-shade模式解决jar包冲突/maven%20shaded打包.png">
 <meta property="og:image" content="https://neuyilan.github.io/2022/10/10/maven-shade模式解决jar包冲突/修改过后的包名.png">
 <meta property="og:image" content="https://neuyilan.github.io/2022/10/10/maven-shade模式解决jar包冲突/shaded解决冲突之后.png">
-<meta property="og:updated_time" content="2022-10-10T13:08:41.843Z">
+<meta property="og:updated_time" content="2022-10-10T13:18:03.855Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="maven shade模式解决jar包冲突">
 <meta name="twitter:description" content="maven shade模式解决两个版本的冲突是比较常用的解决方案，特别在A模块引用了两个B模块和C模块，但是B和C的引用的两个jar包的版本不一致，导致冲突，而且两个版本的jar包不兼容，还必须要都保留，这种情况下，如果其中一个模块是自己能够控制的，则可以通过shaded模式，把其中这个模块在pom文件中把这个jar包改名即可，但是，如果两个模块都不是自己控制的呢？那应该怎么办呢？能不能对一个不是">
@@ -417,7 +417,7 @@
                 
               
 
-              <time title="创建时间：2022-10-10 17:33:23 / 修改时间：21:08:41" itemprop="dateCreated datePublished" datetime="2022-10-10T17:33:23+08:00">2022-10-10</time>
+              <time title="创建时间：2022-10-10 17:33:23 / 修改时间：21:18:03" itemprop="dateCreated datePublished" datetime="2022-10-10T17:33:23+08:00">2022-10-10</time>
             
 
             
@@ -477,6 +477,7 @@
 <p><img src="修改过后的包名.png" alt="修改过后的包名"></p>
 <p>经过上述maven shaded改名操作之后，我们把HBase里面的thrift包名已经修改了，后续我们自己的项目Parent-Project想引用HBase之后，就可以通过引用我们刚才打包的maven-project间接来引用hbase了，其引用关系如下所示：</p>
 <p><img src="shaded解决冲突之后.png" alt="shaded解决冲突之后"></p>
+<p>至此，</p>
 <h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>[1] 解决 jar 包冲突的神器：maven-shade-plugin <a href="https://www.playpi.org/2019120101.html?from_wecom=1" target="_blank" rel="noopener">https://www.playpi.org/2019120101.html?from_wecom=1</a></p>
 
       
